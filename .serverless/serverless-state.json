@@ -220,7 +220,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/aws-hellokids-api/dev/1693448879212-2023-08-31T02:27:59.212Z/aws-hellokids-api.zip"
+                "S3Key": "serverless/aws-hellokids-api/dev/1693452356621-2023-08-31T03:25:56.621Z/aws-hellokids-api.zip"
               },
               "Handler": "s_api.handler",
               "Runtime": "python3.9",
@@ -238,14 +238,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersionAMKKI7rhkkGGp6LZqe6HZrVPwkvxRewRd5MPldV6K0": {
+          "ApiLambdaVersionsktw2iyKuM1UMGMm4PKEaH3egJghFQ4vCJTchZA": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "M/xwkX56F+wH0n/qMPA/ic/f4U05Akc2v9E8xzXQNOU="
+              "CodeSha256": "EDjsmNudFhRwbOyVdE1BGrKjPCKkJuZAW65PT5QmpfY="
             }
           },
           "HttpApi": {
@@ -400,7 +400,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionAMKKI7rhkkGGp6LZqe6HZrVPwkvxRewRd5MPldV6K0"
+              "Ref": "ApiLambdaVersionsktw2iyKuM1UMGMm4PKEaH3egJghFQ4vCJTchZA"
             },
             "Export": {
               "Name": "sls-aws-hellokids-api-dev-ApiLambdaFunctionQualifiedArn"
@@ -556,7 +556,7 @@
         "timeout": 6,
         "runtime": "python3.9",
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersionAMKKI7rhkkGGp6LZqe6HZrVPwkvxRewRd5MPldV6K0"
+        "versionLogicalId": "ApiLambdaVersionsktw2iyKuM1UMGMm4PKEaH3egJghFQ4vCJTchZA"
       }
     },
     "configValidationMode": "warn",
@@ -589,7 +589,7 @@
     "artifact": "C:\\Users\\405\\Documents\\GitHub\\aws-hellokids-api\\.serverless\\aws-hellokids-api.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/aws-hellokids-api/dev/1693448879212-2023-08-31T02:27:59.212Z",
+    "artifactDirectoryName": "serverless/aws-hellokids-api/dev/1693452356621-2023-08-31T03:25:56.621Z",
     "artifact": "aws-hellokids-api.zip"
   }
 }

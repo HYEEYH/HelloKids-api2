@@ -1,5 +1,4 @@
-org: bopool
-app: aws-hellokids-api
+
 service: aws-hellokids-api
 
 frameworkVersion: '3'
@@ -10,7 +9,9 @@ custom:
 
 provider:
   name: aws
-  runtime: python3.9
+  runtime: python3.10
+  region: ap-northeast-2
+
 
 functions:
   api:
@@ -21,3 +22,5 @@ functions:
 plugins:
   - serverless-wsgi
   - serverless-python-requirements
+
+
