@@ -1,3 +1,9 @@
 Flask==1.1.4
 Werkzeug==1.0.1
 markupsafe==2.0.1
+flask-restful
+flask-jwt-extended
+mysql-connector-python
+email-validator
+psycopg-binary
+passlib
