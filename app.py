@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_from_root():
-    return jsonify(message='Hello from root!')
+    return jsonify(message='Hello from root! 배포 확인!')
 
 
 @app.route("/hello")
