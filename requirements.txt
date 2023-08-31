@@ -8,3 +8,4 @@ email-validator
 psycopg-binary
 passlib
 googlemaps
+boto3

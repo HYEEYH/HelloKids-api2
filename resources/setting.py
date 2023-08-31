@@ -236,6 +236,7 @@ class SettingClassDeleteResource(Resource) :
 
 
 
+
 # 원 생성
 
 class SettingNurseryResource(Resource) :
@@ -268,8 +269,11 @@ class SettingNurseryResource(Resource) :
             connection.commit()
 
             nursery_id = cursor.lastrowid
+
             try:
-                s3 = boto3.client('s3')
+                s3 = boto3.client('s3', 
+                                    aws_access_key_id =  Config.AWS_ACCESS_KEY_ID,
+                                    aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
                 nursery_id_str = str(nursery_id)
                 folder_name = nursery_id_str+'_'+data['nurseryName']
                 bucket_name = Config.S3_BUCKET
