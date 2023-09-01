@@ -11,7 +11,7 @@ from resources.register1 import ParentRegisterpResource, ParentEditResource, Par
 from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
 
-from resources.schoolbus import LocationNow, SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusResource, SchoolBusEditResource, SchoolBusSearchResource, SchoolBusSearchListResource, SchoolBusTeacherAddResource, SchoolBusTeacherListResource
+from resources.schoolbus import LocationNow, SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusResource, SchoolBusEditResource, SchoolBusSearchResource, SchoolBusSearchListResource, SchoolBusTeacherAddResource, SchoolBusTeacherListResource
 from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusSearchResource, SchoolBusDeleteResource
 
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
@@ -108,8 +108,9 @@ api.add_resource(SchoolBusDriveListResource,'/schoolbus/drive') # 차량 운행 
 
 # 실시간 위치 등록
 api.add_resource(SchoolBusLocationAddResource,'/schoolbus/drive/<int:id>/location') # 인솔교사의 현재 위치 테이블에 저장
-# 실시간 위치 가져오기
-api.add_resource(LocationNow,'/schoolbus/drive/now')
+api.add_resource(SchoolBusLocationViewResource,'/schoolbus/drive/<int:id>/location') # 가장 최근 위치 가져오기
+# 실시간 위치 가져오기(구글 API이용)(안쓸꺼지만 아까워서 남겨놓았다!)
+# api.add_resource(LocationNow,'/schoolbus/drive/now')
 
 
 # 사진첩 

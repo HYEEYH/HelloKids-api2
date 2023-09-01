@@ -658,30 +658,61 @@ class SchoolBusLocationAddResource(Resource):
             # 상태코드 에러에 맞게 내가 설계한다
         return{'result': 'success'} 
      
-class LocationNow(Resource):
-    def get(self):
+class SchoolBusLocationViewResource(Resource):
+    #@jwt_required()
+    def get(self, id):
 
-        url = f'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAFlVtXMR1k224QEstsniTQOW0vckiuYbA'
-        data = {
-            'considerIp': False,
-            'wifiAccessPoints': {
-                'macAddress': 'c8:bd:4d:6d:13:10',
-                'signalStrength': -35,
-                'signalToNoiseRatio': 0
-            }
-        }
+        try : 
+            connection = get_connection()
 
-        result = requests.post(url, data) # 해당 API에 요청을 보내며 데이터를 추출한다.
+            query ='''select lat,lng
+                    from location
+                    where dailyRecordId= %s and id = (SELECT max(id) FROM location);'''
+            
+            record = (id, )
 
-        print(result.text)
-        result2 = json.loads(result.text)
+        # 커서 가져온다
+            cursor = connection.cursor(dictionary= True)
 
-        lat = result2["location"]["lat"] # 현재 위치의 위도 추출
-        lng = result2["location"]["lng"] # 현재 위치의 경도 추출
+        # 쿼리문을 커서로 실행한다.
+            cursor.execute(query, record)
 
-        gmaps = googlemaps.Client('AIzaSyAFlVtXMR1k224QEstsniTQOW0vckiuYbA')
-        reverse_geocode_result = gmaps.reverse_geocode((lat, lng),language='ko')
-        # 좌표값을 이용해 목적지를 알아내는 코드
+        # 실행 결과를 가져온다.
+            result_list = cursor.fetchall()
 
-        print(lat)
-        print(lng)
+            cursor.close()
+            connection.close()
+
+        except Error as e :
+            print(e)
+            return { 'result' : 'fail', 'error' : str(e)}, 500
+
+        return { "items": result_list }, 200  # 200은 안써도 됨.    
+     
+# class LocationNow(Resource):
+#     def get(self):
+
+#         url = f'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAFlVtXMR1k224QEstsniTQOW0vckiuYbA'
+#         data = {
+#             'considerIp': False,
+#             'wifiAccessPoints': {
+#                 'macAddress': 'c8:bd:4d:6d:13:10',
+#                 'signalStrength': -35,
+#                 'signalToNoiseRatio': 0
+#             }
+#         }
+
+#         result = requests.post(url, data) # 해당 API에 요청을 보내며 데이터를 추출한다.
+
+#         print(result.text)
+#         result2 = json.loads(result.text)
+
+#         lat = result2["location"]["lat"] # 현재 위치의 위도 추출
+#         lng = result2["location"]["lng"] # 현재 위치의 경도 추출
+
+#         gmaps = googlemaps.Client('AIzaSyAFlVtXMR1k224QEstsniTQOW0vckiuYbA')
+#         reverse_geocode_result = gmaps.reverse_geocode((lat, lng),language='ko')
+#         # 좌표값을 이용해 목적지를 알아내는 코드
+
+#         print(lat)
+#         print(lng)
