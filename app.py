@@ -7,7 +7,7 @@ from resources.PhotoAlbum import PhotoAlbumAddResource, PhotoAlbumListResource
 
 from resources.dailynote import DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteViewResource
 from resources.login import LoginResource, LogoutResource
-from resources.menu import MenuAddResource
+from resources.menu import MenuAddResource, MenuDeleteResource, MenuEditResource, MenuListDayResource, MenuListResource, MenuViewResource
 from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticeResource, NoticeWillResource, NoticeViewResource, NoticeListResource
 from resources.register1 import ParentRegisterpResource, ParentEditResource, ParentViewResource, ParentDeleteResource
 from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
@@ -129,7 +129,6 @@ api.add_resource(PhotoAlbumListResource,'/photoAlbum/list/<int:nurseryId>/<int:c
 # 사진첩 보기 권한 설정을 해 줘야 한다. 원별사진첩:1 반별 사진첩:2 개인사진첩:3
 
 
-
 # 알림장
 api.add_resource(DailyNoteAddResource,'/dailynote/write/<int:childId>') # 알림장 등록
 api.add_resource(DailyNoteViewResource,'/dailynote/<int:id>') # 알림장 상세보기
@@ -148,11 +147,12 @@ api.add_resource(ScheduleClassListResource,'/schedule/<int:classId>/class')
 api.add_resource(ScheduleAllListResource,'/schedule/<int:nurseryId>/all')
 
 # mealMenu
-api.add_resource(MenuAddResource,'/menu/add') # 하루 메뉴 입력 
-# api.add_resource(MenuListResource,'/menu/list') # 원 별 메뉴 목록  
-# api.add_resource(MenuViewResource,'/menu/<int:id>') # 개별 메뉴 정보 보기
-# api.add_resource(MenuEditResource,'/menu/<int:id>') # 개별 메뉴 정보 수정
-# api.add_resource(MenuDeleteResource,'/menu/<int:id>') # 개별 메뉴 삭제 
+api.add_resource(MenuAddResource,'/menu/add') # 개별 메뉴 입력 
+api.add_resource(MenuListResource,'/menu/<int:nurseryId>/list') # 원 별 메뉴 목록 
+api.add_resource(MenuListDayResource,'/menu/<int:nurseryId>/<str:mealDate>') # 하루 메뉴 목록 /menu/1/2023-09-01
+api.add_resource(MenuViewResource,'/menu/<int:id>') # 개별 메뉴 정보 보기
+api.add_resource(MenuEditResource,'/menu/<int:id>') # 개별 메뉴 정보 수정
+api.add_resource(MenuDeleteResource,'/menu/<int:id>') # 개별 메뉴 삭제 
 
 
 
