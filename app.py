@@ -65,7 +65,7 @@ api.add_resource(SettingNurseryDeleteResource,'/setting/nursery/<int:id>') # 원
 # 반 입력
 api.add_resource(SettingClassResource,'/setting/class') # 반 입력
 api.add_resource(SettingClassViewResource,'/setting/class/<int:id>/view') # 반 정보 보기
-api.add_resource(SettingClassListResource,'/setting/class/<int:id>/list') # 반 목록 보기 id: nurseryId
+api.add_resource(SettingClassListResource,'/setting/class/list') # 반 목록 보기 id: nurseryId
 api.add_resource(SettingClassEditResource,'/setting/class/<int:id>/edit') # 반 정보 수정
 api.add_resource(SettingClassDeleteResource,'/setting/class/<int:id>') # 반 정보 삭제
 

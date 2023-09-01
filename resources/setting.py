@@ -154,13 +154,18 @@ class SettingClassViewResource(Resource) :
 class SettingClassListResource(Resource) :
 
     @jwt_required()
-    def get(self, nurseryId):
+    def get(self):
+
+        teacherId = get_jwt_identity()
 
         try:
             connection = get_connection()
-            query = '''select * from class 
-                    where nurseryId = %s;'''
-            record = (nurseryId, )
+            query = '''select className
+                    from class c
+                    left join teacher t
+                    on t.nurseryId = c.nurseryId
+                    where t.id = %s;'''
+            record = (teacherId, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
             result_list = cursor.fetchall()
@@ -173,13 +178,8 @@ class SettingClassListResource(Resource) :
         
         print(result_list)
          # 가공이 필요하면 가공한다. 
-        i = 0
-        for row in result_list :
-            result_list[i]['createdAt']= row['createdAt'].isoformat()
-            result_list[i]['updatedAt']= row['updatedAt'].isoformat()
-            i = i + 1
 
-        return {'result':'success', 'item count':len(result_list), 'items':result_list}
+        return {'items':result_list}
 
 class SettingClassEditResource(Resource) :
 
