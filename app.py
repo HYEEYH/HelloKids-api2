@@ -3,6 +3,8 @@ from flask_restful import Api
 from config import Config
 from flask_jwt_extended import JWTManager
 
+from resources.PhotoAlbum import PhotoAlbumAddResource, PhotoAlbumListResource
+
 from resources.dailynote import DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteViewResource
 from resources.login import LoginResource, LogoutResource
 from resources.menu import MenuAddResource
@@ -11,7 +13,7 @@ from resources.register1 import ParentRegisterpResource, ParentEditResource, Par
 from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
 
-from resources.schoolbus import LocationNow, SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusResource, SchoolBusEditResource, SchoolBusSearchResource, SchoolBusSearchListResource, SchoolBusTeacherAddResource, SchoolBusTeacherListResource
+from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusResource, SchoolBusEditResource, SchoolBusSearchResource, SchoolBusSearchListResource, SchoolBusTeacherAddResource, SchoolBusTeacherListResource
 from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusSearchResource, SchoolBusDeleteResource
 
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
@@ -32,7 +34,7 @@ api = Api(app)
 
 
 # 회원가입 - 선생님
-api.add_resource(TeacherRegisterResource,'/user/register/teacher') # post
+api.add_resource(TeacherRegisterResource,'/user/register/teacher')
 api.add_resource(TeacherEditResource,'/user/teacher/<int:id>') # update
 api.add_resource(TeacherViewResource,'/user/teacher/<int:id>') # read
 api.add_resource(TeacherDeleteResource,'/user/teacher/<int:id>') # delete
@@ -106,17 +108,18 @@ api.add_resource(SchoolBusDriveEditResource,'/schoolbus/drive/<int:id>') # 차�
 api.add_resource(SchoolBusDriveViewResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 보기 
 api.add_resource(SchoolBusDriveListResource,'/schoolbus/drive') # 차량 운행 기록 목록 조회
 
-# 실시간 위치 등록
+# 실시간 위치 
 api.add_resource(SchoolBusLocationAddResource,'/schoolbus/drive/<int:id>/location') # 인솔교사의 현재 위치 테이블에 저장
 api.add_resource(SchoolBusLocationViewResource,'/schoolbus/drive/<int:id>/location') # 가장 최근 위치 가져오기
+
 # 실시간 위치 가져오기(구글 API이용)(안쓸꺼지만 아까워서 남겨놓았다!)
 # api.add_resource(LocationNow,'/schoolbus/drive/now')
 
 
 # 사진첩 
-# api.add_resource(PhotoAlbumAddResource,'/photoAlbum/add') # 사진첩 생성
+api.add_resource(PhotoAlbumAddResource,'/photoAlbum/add/<int:nurseryId>/<int:classId>') # 사진첩 생성
 # api.add_resource(PhotoAlbumAddResource,'/photoAlbum/autoAdd') # 사진첩 자동 생성
-# api.add_resource(PhotoAlbumListResource,'/photoAlbum/list') # 사진첩 목록 보기
+api.add_resource(PhotoAlbumListResource,'/photoAlbum/list/<int:nurseryId>/<int:classId>') # 사진첩 목록 보기
 # api.add_resource(PhotoAlbumListResource,'/photoAlbum/<int:childId>/list') # 사진첩 원아별 목록 보기
 # api.add_resource(PhotoAlbumViewResource,'/photoAlbum/<int:id>') # 사진첩 상세 보기
 # api.add_resource(PhotoAlbumEditResource,'/photoAlbum/<int:id>') # 사진첩 수정
