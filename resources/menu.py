@@ -1,3 +1,4 @@
+import json
 from flask_restful import Resource
 from flask import request
 import mysql.connector
@@ -50,51 +51,47 @@ class MenuAddResource(Resource) :
     @jwt_required()
     def post(self):
 
-        teacherId = get_jwt_identity()
-        data = request.get_json()
-        file = data['mealPhotoUrl']
-
-        print(teacherId)
-        print(data)
+        file = request.files['mealPhotoUrl']
         print(file)
+        # files = os.path.abspath(file.filename) 
 
-        
+        data = json.loads(request.form['mealJson'])
+
+        teacherId = get_jwt_identity()
+        print(data)
+
+       
         try:
             # 3-1. 데이터베이스를 연결한다.
             connection = get_connection()
-
-            print(teacherId)
-
             query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
             record = (teacherId, )
             cursor = connection.cursor()
             cursor.execute(query,record)
             teacher_result_list = cursor.fetchall()
 
-            if data['mealPhotoUrl'] == '':
-                file = 'https://s3.console.aws.amazon.com/s3/object/hayeonkim-img-test?region=us-east-1&prefix=20230830T16180_%EA%B9%80%EB%AF%BC%EC%9E%AC.jpg'
+            if 'mealPhotoUrl' not in request.files:
+                file_url = 'https://hellokids.s3.ap-northeast-2.amazonaws.com/img_setting/meal_image.png'
             
-            teacher_result_list_str = str(teacher_result_list[0][1]) + '_' + teacher_result_list[0][2]
-            print(teacher_result_list_str)
+            else : 
+                teacher_result_list_str = str(teacher_result_list[0][1]) + '_' + teacher_result_list[0][2]
+                current_time = datetime.now()
+                new_filename = teacher_result_list_str + '/menu/' + current_time.isoformat().replace(':','_').replace('.','_')+'.jpg'
+                print(new_filename)
+                try:
+                    s3 = boto3.client('s3',
+                            aws_access_key_id = Config.AWS_ACCESS_KEY_ID,
+                            aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY) 
+                    s3.upload_fileobj(file,
+                                    Config.S3_BUCKET,
+                                    new_filename,
+                                    ExtraArgs = {'ACL':'public-read', 'ContentType':'image/jpeg'}) 
+                    
+                    file_url = Config.S3_BASE_URL + new_filename 
 
-            current_time = datetime.now()
-            new_filename = teacher_result_list_str + '/menu/' + current_time.isoformat().replace(':','_').replace('.','_')+'.jpg'
-            print(new_filename)
-
-            try:
-                s3 = boto3.client('s3',
-                        aws_access_key_id = Config.AWS_ACCESS_KEY_ID,
-                        aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY) 
-                s3.upload_fileobj(file,
-                                Config.S3_BUCKET,
-                                new_filename,
-                                ExtraArgs = {'ACL':'public-read', 'ContentType':'image/jpeg'}) 
-
-            except Exception as e:
-                print(str(e))
-                return{'result':'fail.','error':str(e)},500
-            
-            file_url = Config.S3_BASE_URL + new_filename 
+                except Exception as e:
+                    print(e)
+                    return {'result':'fail','error': str(e)}, 500                                  
 
             try:
                 connection = get_connection()
@@ -110,7 +107,7 @@ class MenuAddResource(Resource) :
                 #     "mealDate":"2023-08-30",
                 #     "mealContent":"사과와 어묵",
                 #     "mealType":"오전 간식",
-                #     "mealPhotoUrl":"C:/Users/405/Desktop/간식사진.png"
+                #     "mealPhotoUrl":""
                 # }
                 cursor = connection.cursor(prepared=True)
                 cursor.execute(query,record)
