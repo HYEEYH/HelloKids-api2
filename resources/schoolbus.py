@@ -7,9 +7,9 @@ from utils import check_password, hash_password
 from email_validator import validate_email,EmailNotValidError 
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 
-import requests
-import googlemaps
-import json
+# import requests
+# import googlemaps
+# import json
 
 
 
