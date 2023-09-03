@@ -252,7 +252,7 @@ class MenuListDayResource(Resource):
             print(e)
             return{'result':'fail', 'error':str(e)}, 400
 
-        return {'result':'success', 'items':result_list}
+        return {'result':'success', 'count': len(result_list), 'items':result_list}
 
 # 메뉴 상세보기    
 class MenuViewResource(Resource):
@@ -274,4 +274,4 @@ class MenuViewResource(Resource):
             print(e)
             return{'result':'fail', 'error':str(e)}, 400
 
-        return {'result':'success', 'items':result_list}
+        return {'result':'success',  'items':result_list}
