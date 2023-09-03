@@ -142,19 +142,31 @@ class ScheduleClassListResource(Resource) :
 class ScheduleAllListResource(Resource) :
 
     @jwt_required()
-    def get(self, nurseryId):
+    def get(self):
+
+        teacherId = get_jwt_identity()
 
         try:
             connection = get_connection()
-            query = '''select * from schedule s
-                    left join class c 
-                    on c.id = s.classId 
-                    where nurseryId = %s;'''
-            record = (nurseryId, )
+            query = '''select nurseryId from teacher
+                    where id = %s'''
+            record = (teacherId, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
-            result_list = cursor.fetchall()
+            result_one = cursor.fetchone()
+            print(result_one)
+            nurseryId = result_one['nurseryId']
+
+            query1 = '''select * from schedule s
+                        left join class c
+                        on s.classId = c.id 
+                        where nurseryId = %s;'''
+            record1 = (nurseryId, )
+            cursor1 = connection.cursor(dictionary=True)
+            cursor1.execute(query1, record1)
+            result_list = cursor1.fetchall()
             cursor.close()
+            cursor1.close()
             connection.close()
 
         except Error as e:

@@ -144,7 +144,7 @@ api.add_resource(ScheduleEditResource,'/schedule/<int:id>')
 api.add_resource(ScheduleDeleteResource,'/schedule/<int:id>')
 api.add_resource(ScheduleChildListResource,'/schedule/<int:id>/list')
 api.add_resource(ScheduleClassListResource,'/schedule/<int:classId>/class')
-api.add_resource(ScheduleAllListResource,'/schedule/<int:nurseryId>/all')
+api.add_resource(ScheduleAllListResource,'/schedule/all') # 선생님이 속한 어린이집 전체 일정 리스트
 
 # mealMenu
 api.add_resource(MenuAddResource,'/menu/add') # 개별 메뉴 입력 
