@@ -280,7 +280,3 @@ class MenuViewResource(Resource):
             return{'result':'fail', 'error':str(e)}, 400
 
         return {'result':'success', 'items':result_list}
-
-
-
-
