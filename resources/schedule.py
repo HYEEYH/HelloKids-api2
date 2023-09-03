@@ -157,7 +157,7 @@ class ScheduleAllListResource(Resource) :
             print(result_one)
             nurseryId = result_one['nurseryId']
 
-            query1 = '''select * from schedule s
+            query1 = '''select classId,title,contents,date from schedule s
                         left join class c
                         on s.classId = c.id 
                         where nurseryId = %s;'''
@@ -178,8 +178,6 @@ class ScheduleAllListResource(Resource) :
         i = 0
         for row in result_list :
             result_list[i]['date']= row['date'].isoformat()
-            result_list[i]['createdAt']= row['createdAt'].isoformat()
-            result_list[i]['updatedAt']= row['updatedAt'].isoformat()
             i = i + 1
 
         return {'result':'success', 'count':len(result_list), 'items':result_list}
@@ -190,12 +188,15 @@ class ScheduleEditResource(Resource) :
     def put(self, id):
 
         data = request.get_json()
+        teacherId = get_jwt_identity()
 
         try :
             connection = get_connection()
 
-            query = '''update schedule set classId = %s, teacherId = %s, title = %s, contents = %s,date = %s where id = %s;'''
-            record = (data['classId'],data['teacherId'],data['title'],data['contents'],data['date'],id)
+            query = '''update schedule
+                    set classId = %s, title = %s, contents = %s, date = %s 
+                    where id = %s and teacherId = %s'''
+            record = (data['classId'],data['title'],data['contents'],data['date'],id,teacherId)
             
             cursor = connection.cursor()
             cursor.execute(query, record)
