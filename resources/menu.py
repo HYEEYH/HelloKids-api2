@@ -143,12 +143,7 @@ class MenuEditResource(Resource):
                     query = '''update mealMenu set mealDate = %s, mealContent = %s, mealType = %s where id = %s;'''
                     record = (data['mealDate'], data['mealContent'], data['mealType'],id)
                     print(record)
-                    # {
-                    #     "mealDate":"2023-08-30",
-                    #     "mealContent":"사과와 어묵",
-                    #     "mealType":"오전 간식",
-                    #     "mealPhotoUrl":""
-                    # }
+
                     cursor = connection.cursor(prepared=True)
                     cursor.execute(query,record)
                     connection.commit()

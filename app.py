@@ -19,7 +19,7 @@ from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, School
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
 from resources.setting import SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource
 from resources.setting import SettingNurseryResource, SettingNurseryViewResource, SettingNurseryEditResource, SettingNurseryDeleteResource
-from resources.setting import SettingClassResource, SettingClassViewResource, SettingClassListResource, SettingClassEditResource, SettingClassDeleteResource, SettingApproveResource
+from resources.setting import SettingClassResource, SettingClassViewResource, SettingClassListResource, SettingClassEditResource, SettingClassDeleteResource, SettingApproveResource, SettingApproveList
 
 
 app = Flask(__name__)
@@ -71,8 +71,9 @@ api.add_resource(SettingClassDeleteResource,'/setting/class/<int:id>') # 반 정
 
 
 # 학부모 승인
-api.add_resource(SettingApproveResource,'/setting/approve') # 학부모 테이블에서 childId가 없는 사람들은 미승인, 넣을 때 승인  
-# api.add_resource(ApproveDeleteResource,'/setting/approve') # 미승인 항목 삭제 ::::: 
+api.add_resource(SettingApproveList,'/setting/approve') # 학부모 테이블에서 childId가 없는 사람들의 목록 원 별로 불러오기 # get
+api.add_resource(SettingApproveResource,'/setting/approve') # 학부모 테이블에서 childId가 없는 사람들은 미승인, 넣을 때 승인 # update
+# api.add_resource(ApproveDeleteResource,'/setting/approve') # 미승인 항목 삭제 # 이 부분은 parents 가 회원탈퇴하면서 자동 삭제됨  
 
 
 # 로그인,로그아웃

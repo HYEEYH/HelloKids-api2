@@ -110,6 +110,7 @@ class ParentRegisterpResource(Resource) :
         # {
             # "phone":"01012345678", 
             # "email":"aaa@naver.com", 
+            # "nurseryName":"햇님어린이집", 
             # "parentsName":"가부모", 
             # "userId":"닉네임", 
             # "password":"1234",
@@ -164,9 +165,9 @@ class ParentRegisterpResource(Resource) :
 
             # 회원이 아니라면 회원가입 시키기
             query = '''insert into parents
-                        (phone, email, parentsName, userId, password,childNameP,birthP)
+                        (phone, email, nurseryName, parentsName, userId, password,childNameP,birthP)
                         values
-                        (%s, %s, %s, %s, %s,%s,%s);'''
+                        (%s, %s, %s, %s, %s, %s,%s,%s);'''
             # %s에 들어갈 내용이 record
             record = ( data['phone'], data['email'], 
                       data['parentsName'], data['userId'], hashed_password,data['childNameP'],data['birthP'] )

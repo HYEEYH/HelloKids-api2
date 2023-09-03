@@ -12,12 +12,54 @@ from config import Config
 import json
 
 
-# 권한 설정 
+# 권한 설정 목록
+class SettingApproveList(Resource) :
+    
+    @jwt_required()
+    def get(self):
+        teacherId = get_jwt_identity()
 
+        try:
+            connection = get_connection()
+            query = '''select nurseryId, nurseryName, nurseryAddress from nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
+            record = (teacherId, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query,record)
+            teachers_nursery = cursor.fetchall()
+            nursery_id = teachers_nursery[0]["nurseryId"]
+            nursery_name = teachers_nursery[0]["nurseryName"]
+            nursery_address = teachers_nursery[0]["nurseryAddress"]
+            print(nursery_id, nursery_name, nursery_address)
+
+
+            query = '''select parentsName, email, phone, childNameP, birthP, childId from parents where nurseryName = %s and childId is null;'''
+            record = (nursery_name, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query,record)
+
+            result_list = cursor.fetchall()
+            print(result_list)
+
+            if len(result_list) == 0:
+                return {'result':'fail','error':'미승인된 학부모님이 없습니다'}, 400
+
+
+            connection.commit()
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result':'fail','error':'선생님의 원 정보가 등록되지 않았습니다.'}, 500
+        return {'result' :'success', 'items':result_list}
+
+
+
+# 권한 설정 
 class SettingApproveResource(Resource) :
     
     @jwt_required()
-    def post(self):
+    def put(self):
 
         # {
         #  "parentId":1   
@@ -38,18 +80,16 @@ class SettingApproveResource(Resource) :
             cursor.execute(query,record)
 
             result_list = cursor.fetchall()
-            child_id = result_list[0]
+            child_id = result_list[0]["id"]
 
-            print(result_list)
 
             if len(result_list) == 0:
                 return {'result':'fail','error':'매칭되는 원아가 없습니다'}, 400
 
-            # 매칭되는 원아가 있으므로 앱 사용권한 설정 코드 작성
-            # DB에 저장
-            query =  '''insert into approve (childId, teacherId) 
-                        values (%s, %s);'''
-            record = (child_id['id'], teacherId)
+            # 매칭되는 원아가 있으므로 앱 사용권한 설정 코드 작성 
+            # parents table의 childId 값이 null인지 아닌지 확인하여 사용 권한을 부여한다. 
+            query =  '''update parents set childId = %s where id = %s;'''  
+            record = (child_id, data["parentId"])
             cursor = connection.cursor()
             cursor.execute(query,record)
 
@@ -62,7 +102,7 @@ class SettingApproveResource(Resource) :
         except Error as e:
             print(e)
             return {'result':'fail','error': str(e)}, 500
-        return {'result' :'success'}
+        return {'result' :'success', 'msg':"학부모와 원아가 매칭되었습니다."}
 
 
 # 반 생성
