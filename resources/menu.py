@@ -63,7 +63,7 @@ class MenuAddResource(Resource) :
             cursor.execute(query,record)
             teacher_result_list = cursor.fetchall()
 
-            if 'mealPhotoUrl' not in request.files:
+            if 'mealPhotoUrl' not in request.files or 'mealPhotoUrl' == None:
                 file_url = 'https://hellokids.s3.ap-northeast-2.amazonaws.com/img_setting/meal_image.png'
             
             else : 
@@ -131,20 +131,42 @@ class MenuEditResource(Resource):
 
         teacherId = get_jwt_identity()
         print(data)
-        
+       
         try:
             # 3-1. 데이터베이스를 연결한다.
             connection = get_connection()
-            query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
-            record = (teacherId, )
-            cursor = connection.cursor()
-            cursor.execute(query,record)
-            teacher_result_list = cursor.fetchall()
 
-            if 'mealPhotoUrl' not in request.files:
-                file_url = 'https://hellokids.s3.ap-northeast-2.amazonaws.com/img_setting/meal_image.png'
-            
-            else : 
+            if 'mealPhotoUrl' not in request.files or 'mealPhotoUrl' == None:
+                try:
+                    connection = get_connection()
+
+                    query = '''update mealMenu set mealDate = %s, mealContent = %s, mealType = %s where id = %s;'''
+                    record = (data['mealDate'], data['mealContent'], data['mealType'],id)
+                    print(record)
+                    # {
+                    #     "mealDate":"2023-08-30",
+                    #     "mealContent":"사과와 어묵",
+                    #     "mealType":"오전 간식",
+                    #     "mealPhotoUrl":""
+                    # }
+                    cursor = connection.cursor(prepared=True)
+                    cursor.execute(query,record)
+                    connection.commit()
+
+                    cursor.close()
+                    connection.close()
+
+                except Error as e :
+                    print(e)
+                    return {'result':'fail','error': str(e)}, 500
+
+            else:
+                query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
+                record = (teacherId, )
+                cursor = connection.cursor()
+                cursor.execute(query,record)
+                teacher_result_list = cursor.fetchall()
+    
                 teacher_result_list_str = str(teacher_result_list[0][1]) + '_' + teacher_result_list[0][2]
                 current_time = datetime.now()
                 new_filename = teacher_result_list_str + '/menu/' + current_time.isoformat().replace(':','_').replace('.','_')+'.jpg'
@@ -164,32 +186,28 @@ class MenuEditResource(Resource):
                     print(e)
                     return {'result':'fail','error': str(e)}, 500                                  
 
-            try:
-                connection = get_connection()
+                try:
+                    connection = get_connection()
 
-                query = '''insert into mealMenu
-                        (nurseryId,classId,mealDate,mealPhotoUrl,mealContent,mealType)
-                        values
-                        (%s,%s,%s,%s,%s,%s);'''
+                    query = '''update mealMenu set mealDate = %s, mealPhotoUrl = %s, mealContent = %s, mealType = %s where id = %s;'''
+                    record = (data['mealDate'], file_url, data['mealContent'], data['mealType'],id)
+                    print(record)
+                    # {
+                    #     "mealDate":"2023-08-30",
+                    #     "mealContent":"사과와 어묵",
+                    #     "mealType":"오전 간식",
+                    #     "mealPhotoUrl":""
+                    # }
+                    cursor = connection.cursor(prepared=True)
+                    cursor.execute(query,record)
+                    connection.commit()
 
-                record = (teacher_result_list[0][1],teacher_result_list[0][0], data['mealDate'], file_url, data['mealContent'], data['mealType'])
-                print(record)
-                # {
-                #     "mealDate":"2023-08-30",
-                #     "mealContent":"사과와 어묵",
-                #     "mealType":"오전 간식",
-                #     "mealPhotoUrl":""
-                # }
-                cursor = connection.cursor(prepared=True)
-                cursor.execute(query,record)
-                connection.commit()
+                    cursor.close()
+                    connection.close()
 
-                cursor.close()
-                connection.close()
-
-            except Error as e :
-                print(e)
-                return {'result':'fail','error': str(e)}, 500
+                except Error as e :
+                    print(e)
+                    return {'result':'fail','error': str(e)}, 500
             
         except Error as e :
             print(e)
@@ -248,7 +266,7 @@ class MenuViewResource(Resource):
 
         try:
             connection = get_connection()
-            query = '''select nurseryId, mealPhotoUrl, mealContent, mealType from mealMenu
+            query = '''select nurseryId, mealPhotoUrl, mealContent, mealType from mealMenu 
                     where id = %s;'''
             record = (id, )
             cursor = connection.cursor(dictionary=True)
