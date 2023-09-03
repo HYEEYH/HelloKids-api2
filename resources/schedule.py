@@ -19,13 +19,14 @@ class ScheduleAddResource(Resource) :
     def post(self):
 
         data = request.get_json()
+        teacherId = get_jwt_identity()
         print(data)
 
         try:
             connection = get_connection()
 
             query = '''insert into schedule (classId,teacherId,title,contents,date) values (%s,%s,%s,%s,%s);'''
-            record = (data["classId"], data["teacherId"], data["title"], data["contents"], data["date"])
+            record = (data["classId"], teacherId, data["title"], data["contents"], data["date"])
             cursor = connection.cursor()
             cursor.execute(query,record)
             connection.commit()
