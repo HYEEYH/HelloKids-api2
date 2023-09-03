@@ -182,7 +182,7 @@ class ScheduleAllListResource(Resource) :
             result_list[i]['updatedAt']= row['updatedAt'].isoformat()
             i = i + 1
 
-        return {'result':'success', 'item count':len(result_list), 'items':result_list}
+        return {'result':'success', 'count':len(result_list), 'items':result_list}
 
 class ScheduleEditResource(Resource) :
 
