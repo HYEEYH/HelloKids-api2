@@ -149,7 +149,7 @@ api.add_resource(ScheduleAllListResource,'/schedule/<int:nurseryId>/all')
 # mealMenu
 api.add_resource(MenuAddResource,'/menu/add') # 개별 메뉴 입력 
 api.add_resource(MenuListResource,'/menu/<int:nurseryId>/list') # 원 별 메뉴 목록 
-api.add_resource(MenuListDayResource,'/menu/<int:nurseryId>/<str:mealDate>') # 하루 메뉴 목록 /menu/1/2023-09-01
+#api.add_resource(MenuListDayResource,'/menu/<int:nurseryId>/<str:mealDate>') # 하루 메뉴 목록 /menu/1/2023-09-01
 api.add_resource(MenuViewResource,'/menu/<int:id>') # 개별 메뉴 정보 보기
 api.add_resource(MenuEditResource,'/menu/<int:id>') # 개별 메뉴 정보 수정
 api.add_resource(MenuDeleteResource,'/menu/<int:id>') # 개별 메뉴 삭제 
