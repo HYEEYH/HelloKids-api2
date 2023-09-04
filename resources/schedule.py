@@ -115,7 +115,7 @@ class ScheduleClassListResource(Resource) :
 
         try:
             connection = get_connection()
-            query = '''select * from schedule
+            query = '''select id,classId,title,contents,date,selectIcon from schedule
                         where classId= %s;'''
             record = (classId, )
             cursor = connection.cursor(dictionary=True)
@@ -133,8 +133,6 @@ class ScheduleClassListResource(Resource) :
         i = 0
         for row in result_list :
             result_list[i]['date']= row['date'].isoformat()
-            result_list[i]['createdAt']= row['createdAt'].isoformat()
-            result_list[i]['updatedAt']= row['updatedAt'].isoformat()
             i = i + 1
 
         return {'result':'success', 'item count':len(result_list), 'items':result_list}
