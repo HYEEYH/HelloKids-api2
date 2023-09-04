@@ -25,8 +25,8 @@ class ScheduleAddResource(Resource) :
         try:
             connection = get_connection()
 
-            query = '''insert into schedule (classId,teacherId,title,contents,date) values (%s,%s,%s,%s,%s);'''
-            record = (data["classId"], teacherId, data["title"], data["contents"], data["date"])
+            query = '''insert into schedule (classId,teacherId,title,contents,date,selectIcon) values (%s,%s,%s,%s,%s,%s);'''
+            record = (data["classId"], teacherId, data["title"], data["contents"], data["date"], data["selectIcon"])
             cursor = connection.cursor()
             cursor.execute(query,record)
             connection.commit()
@@ -157,7 +157,7 @@ class ScheduleAllListResource(Resource) :
             print(result_one)
             nurseryId = result_one['nurseryId']
 
-            query1 = '''select classId,title,contents,date from schedule s
+            query1 = '''select s.id,classId,title,contents,date,selectIcon from schedule s
                         left join class c
                         on s.classId = c.id 
                         where nurseryId = %s;'''
@@ -194,9 +194,9 @@ class ScheduleEditResource(Resource) :
             connection = get_connection()
 
             query = '''update schedule
-                    set classId = %s, title = %s, contents = %s, date = %s 
+                    set classId = %s, title = %s, contents = %s, date = %s, selectIcon = %s 
                     where id = %s and teacherId = %s'''
-            record = (data['classId'],data['title'],data['contents'],data['date'],id,teacherId)
+            record = (data['classId'],data['title'],data['contents'],data['date'],data['selectIcon'],id,teacherId)
             
             cursor = connection.cursor()
             cursor.execute(query, record)
@@ -216,11 +216,13 @@ class ScheduleDeleteResource(Resource) :
     @jwt_required()
     def delete(self, id):
 
+        teacherId = get_jwt_identity()
+
         try : 
             connection = get_connection()
             query = '''delete from schedule
-                        where id = %s;'''
-            record = (id, )
+                        where id = %s and teacherId = %s;'''
+            record = (id,teacherId)
             cursor = connection.cursor()
             cursor.execute(query, record)
             connection.commit()
