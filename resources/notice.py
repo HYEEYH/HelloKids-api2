@@ -90,7 +90,6 @@ class NoticeAddResource(Resource):
 
         teacherId = get_jwt_identity()
         data = request.get_json()
-        print('확인', teacherId)
         noticePhotoUrlList = []
 
 
@@ -111,6 +110,7 @@ class NoticeAddResource(Resource):
             noticePhotoList = data["noticePhotoUrl"]
             for noticePhoto in noticePhotoList: 
                 print(noticePhoto)
+                noticePhotoStr = str(noticePhoto)
 
                 # 사진 파일명 변경
                 current_time = datetime.now()
@@ -127,7 +127,7 @@ class NoticeAddResource(Resource):
                                     aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
                     
                     # 파일 업로드하기
-                    s3.upload_file(noticePhoto,  
+                    s3.upload_file(noticePhotoStr,  
                                     Config.S3_BUCKET,  
                                     new_filename, 
                                     ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
