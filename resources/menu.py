@@ -254,7 +254,7 @@ class MenuListResource(Resource):
             print(e)
             return{'result':'fail', 'error':str(e)}, 400
 
-        return {'result':'success', 'count': len(result_list), 'item_class':class_list, 'items':result_list}
+        return {'result':'success', 'count': len(result_list), 'items':result_list}
 
 
 # 하루 메뉴 목록
