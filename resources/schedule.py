@@ -75,19 +75,31 @@ class ScheduleViewResource(Resource) :
 class ScheduleChildListResource(Resource) :
 
     @jwt_required()
-    def get(self, id):
+    def get(self):
+
+        parentsId = get_jwt_identity()
 
         try:
             connection = get_connection()
-            query = '''select * from children
-                    right join schedule
-                    on children.classId = schedule.classId
-                    where children.id = %s;'''
-            record = (id, )
+            query = '''select childId from parents
+                    where id = %s'''
+            record = (parentsId, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
-            result_list = cursor.fetchall()
+            result_one = cursor.fetchone()
+            print(result_one)
+            childId = result_one['childId']
+
+            query1 = '''select s.id,s.classId,title,contents,date,selectIcon from children c
+                    right join schedule s
+                    on c.classId = s.classId
+                    where c.id = %s;'''
+            record1 = (childId, )
+            cursor1 = connection.cursor(dictionary=True)
+            cursor1.execute(query1, record1)
+            result_list = cursor1.fetchall()
             cursor.close()
+            cursor1.close()
             connection.close()
 
         except Error as e:
@@ -99,13 +111,10 @@ class ScheduleChildListResource(Resource) :
         
         i = 0
         for row in result_list :
-            result_list[i]['birth']= row['birth'].isoformat()
             result_list[i]['date']= row['date'].isoformat()
-            result_list[i]['createdAt']= row['createdAt'].isoformat()
-            result_list[i]['updatedAt']= row['updatedAt'].isoformat()
             i = i + 1
 
-        return {'result':'success', 'item count':len(result_list), 'items':result_list}
+        return {'result':'success', 'count':len(result_list), 'items':result_list}
 
 
 class ScheduleClassListResource(Resource) :
