@@ -15,6 +15,7 @@ from email_validator import validate_email,EmailNotValidError
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 import boto3
 from datetime import datetime
+import os
 # ----------------------------------------------------------------------------
 
 
@@ -110,7 +111,9 @@ class NoticeAddResource(Resource):
             noticePhotoList = data["noticePhotoUrl"]
             for noticePhoto in noticePhotoList: 
                 print(noticePhoto)
-                noticePhotoStr = str(noticePhoto).replace("\'","").replace('\"','')
+                scriptpath = os.path.dirname(__file__)
+                filename = os.path.join(scriptpath, noticePhoto)
+                noticePhotoStr = str(filename).replace("\'","").replace('\"','')
 
                 # 사진 파일명 변경
                 current_time = datetime.now()
