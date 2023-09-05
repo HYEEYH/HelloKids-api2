@@ -157,12 +157,12 @@ class NoticeAddResource(Resource):
             cursor.close()
             connection.close()
 
-        except Error as e :   # try 안에서 에러나면 이렇게 처리해
+        except Error as e : 
             print(e)
             return { 'result' : 'fail', 'error' : str(e) }, 500
             # 500 은 http 상태코드 - 내가 찾아서 넣은 에러 코드
 
-        return {'result' : '공지사항이 임시저장 되었습니다', 'noticePhotoUrl':noticePhotoUrlList}
+        return {'result' : 'success'}
     
 
 
