@@ -132,7 +132,7 @@ api.add_resource(PhotoAlbumListResource,'/photoAlbum/list/<int:nurseryId>/<int:c
 
 
 # 알림장
-api.add_resource(DailyNoteAddResource,'/dailynote/write/<int:childId>') # 알림장 등록
+api.add_resource(DailyNoteAddResource,'/dailynote/write/<int:childId>') # 알림장 등록 <완료>
 api.add_resource(DailyNoteViewResource,'/dailynote/<int:id>') # 알림장 상세보기
 api.add_resource(DailyNoteListResource,'/dailynote/list/<int:childId>') # 알림장 목록(원아별) 
 api.add_resource(DailyNoteEditResource,'/dailynote/<int:id>') # 알림장 수정
