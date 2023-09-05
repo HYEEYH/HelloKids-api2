@@ -115,9 +115,8 @@ class NoticeAddResource(Resource):
                 # 사진 파일명 변경
                 current_time = datetime.now()
                 current_time.isoformat()
-                url = parse.urlparse(noticePhotoStr) 
-                name, ext = os.path.splitext(url.path)
-                new_filename = urlNurseryId +'_'+ urlNurseryName + '/notice/' + current_time.isoformat().replace(':', '').replace('.', '')+ext
+
+                new_filename = urlNurseryId +'_'+ urlNurseryName + '/notice/' + current_time.isoformat().replace(':', '').replace('.', '')+'.jpg'
                 print('new_filename', new_filename)
 
                 # 새로운 파일명으로 s3에 파일 업로드
