@@ -191,7 +191,7 @@ class DailyNoteListResource(Resource):
 
         try:
             connection = get_connection()
-            query = '''select createdAt,title,contents
+            query = '''select id,createdAt,title,contents,dailyTemperCheck,dailyMealCheck,dailyNapCheck,dailyPooCheck
                     from dailyNote
                     where childId = %s;'''
             record = (childId, )
