@@ -200,7 +200,7 @@ class SettingClassListResource(Resource) :
 
         try:
             connection = get_connection()
-            query = '''select className
+            query = '''select c.id,className
                     from class c
                     left join teacher t
                     on t.nurseryId = c.nurseryId

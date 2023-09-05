@@ -118,7 +118,7 @@ api.add_resource(SchoolBusLocationViewResource,'/schoolbus/drive/<int:id>/locati
 
 
 # 사진첩 
-api.add_resource(PhotoAlbumAddResource,'/photoAlbum/add/<int:nurseryId>/<int:classId>') # 사진첩 생성
+api.add_resource(PhotoAlbumAddResource,'/photoAlbum/add/<int:nurseryId>') # 사진첩 생성
 # api.add_resource(PhotoAlbumAddResource,'/photoAlbum/autoAdd') # 사진첩 자동 생성
 api.add_resource(PhotoAlbumListResource,'/photoAlbum/list/<int:nurseryId>/<int:classId>') # 사진첩 목록 보기
 # api.add_resource(PhotoAlbumListResource,'/photoAlbum/<int:childId>/list') # 사진첩 원아별 목록 보기
