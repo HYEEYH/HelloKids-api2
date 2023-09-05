@@ -52,52 +52,143 @@ class PhotoAlbumListResource(Resource):
 
 
 
+
 ### 사진첩 생성
 # 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까?
 # 사진 여러장 받아서 AWS 올리고 그 내용 다운받아서 어레이로 데이터베이스에 저장
+
 class PhotoAlbumAddResource(Resource):
 
     @jwt_required()
-    def post(self, nurseryId, classId):
+    def post(self):
 
         # 1. 데이터 받아오기(유저 정보)
         teacherId = get_jwt_identity()
-
-        # 사진 잘 올렸니?
-        if 'photo' not in request.files or 'content' not in request.form :
-            return { 'result' : 'fail', 'error' : '필수항목을 확인하세요'}, 400
         
-        # 2. 데이터 가져오기
-        date = request.files['date'].isoformat().replace('T', ' ')[0:10]
+        date = request.form['date'].replace('T', ' ')[0:10]
+        print("date : ", date )
         title = request.form['title']
+        print("title : ", title )
         contents = request.form['contents']
-        photoUrl = request.form['photoUrl']
-
-        # 데이터베이스에서 어린이집 아이디와 반 아이디를 가져오기(파일 정리할때 이름으로 정리되어 들어가도록)
-        query = '''SELECT classId, nurseryId, nurseryName 
-                    FROM nursery n 
-                    left join teacher t on n.id = t.nurseryId 
-                    where t.id = %s;'''
-        record = (teacherId, )
-        cursor = connection.cursor()
-        cursor.execute(query, record)
-        teacher_result_list = cursor.fetchall()
-
-        teacher_result_list_str = str(teacher_result_list[0][1]) + '_' + teacher_result_list[0][2]
-        print(teacher_result_list_str)
-
-        # 사진부터 S3에 저장
-        current_time = datetime.now()
-        new_filename = teacher_result_list_str + '/menu/' + current_time.isoformat().replace(':','_').replace('.','_')+'.jpg' # 사람이보는형식
-        print(new_filename)
+        print("contents : ", contents )
+        classId = request.form['classId']
+        print("classId : ", classId )
+        photoUrl = request.files['photoUrl']
+        print("photoUrl : ", photoUrl )
 
 
-        # 반복문을 통해 여러 파일을 s3에 저장 -> 만들어야 함.
-        for i in range (1, len(request.FILES)+1):
-            file = request.FILES[f'filename{i}']
+        try : 
+
+            #teacher_result_list = []
+
+            # 데이터 가져오기
+            connection = get_connection()
+
+            query = '''SELECT classId, nurseryId, nurseryName 
+                        FROM nursery n 
+                        left join teacher t on n.id = t.nurseryId 
+                        where t.id = %s;'''
+            
+            record = (teacherId, )
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+
+            teacher_result_list = cursor.fetchall()
+            print("teacher_result_list : ", teacher_result_list)
+
+            # 사진 잘 올렸니?
+            if 'photoUrl' not in request.files or 'contents' not in request.form :
+                return { 'result' : 'fail', 'error' : '필수항목을 확인하세요'}, 400
+            
+            else :
+                # 데이터베이스에서 어린이집 아이디와 반 아이디를 가져오기(파일 정리할때 이름으로 정리되어 들어가도록)
+
+                teacher_result_list_str = str(teacher_result_list[0][1]) + '_' + teacher_result_list[0][2]
+                print(teacher_result_list_str)
+
+                current_time = datetime.datetime.now()
+                print("current_time : ", current_time)
+
+                new_filename = teacher_result_list_str + '/photo_album/' + classId + '/' + title + '/' + current_time.isoformat().replace(':','_').replace('.','_')+'.jpg' # 사람이보는형식
+                print(new_filename)
+
+                try: 
+                    # 사진부터 S3에 저장
+                    s3 = boto3.client('s3',
+                            aws_access_key_id = Config.AWS_ACCESS_KEY_ID,
+                            aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY) 
+                    s3.upload_fileobj(photoUrl,
+                                    Config.S3_BUCKET,
+                                    new_filename,
+                                    ExtraArgs = {'ACL':'public-read', 'ContentType':'image/jpeg'}) 
+                    
+                    file_url = Config.S3_BASE_URL + new_filename 
+
+                except Exception as e:
+                    print(e)
+                    return {'result1':'fail','error1': str(e)}, 500 
+
+
+                # # 반복문을 통해 여러 파일을 s3에 저장 ----> 이런식으로 만들어야 함.
+                # for i in range (1, len(request.FILES)+1):
+                #     file = request.FILES[f'filename{i}']
 
 
 
+                # s3에 올린 사진 파일 데이터베이스에 저장하기
+            try:
+                connection = get_connection()
+
+                # - 원 아이디를 가져오기 위한 쿼리
+                query1 = '''SELECT nurseryId, nurseryName, classId
+                            FROM nursery n 
+                            left join teacher t on n.id = t.nurseryId 
+                            where t.id = %s;'''
+            
+                record1 = (teacherId, )
+                cursor = connection.cursor()
+                cursor.execute(query1, record1)
+
+                nursery_id_result = cursor.fetchall()
+                print("nursery_id_result : ", nursery_id_result)
+
+                nursery_id_result_str = str(nursery_id_result[0][0])
+                print("nursery_id_result_str : ", nursery_id_result_str)
 
 
-        return
+                # - 원 아이디를 포함해서 데이터베이스에 입력하기 위한 쿼리
+                query2 = '''insert into totalAlbum
+                        (nurseryId, classId, teacherId, date, title, contents, photoUrl)
+                        values
+                        (%s,%s,%s,%s,%s,%s,%s);'''
+
+                record2 = ( nursery_id_result_str, classId, teacherId, date, title, contents, file_url)
+                print(record)
+
+                cursor = connection.cursor(prepared=True)
+                cursor.execute(query2, record2)
+                connection.commit()
+
+                cursor.close()
+                connection.close()
+
+            except Error as e :
+                print(e)
+                return {'result2':'fail','error2': str(e)}, 500
+
+
+        except Exception as e:
+            print(e)
+            return {'result3':'fail','error3': str(e)}, 500     
+
+
+
+        return { 'result4' : 'success',
+                'nurseryId' : nursery_id_result_str,
+                'classId' : classId,
+                'teacherId' : teacherId,
+                'date': date,
+                'title' : title,
+                'contents' : contents,
+                'classId' : classId,
+                'photoUrl' : file_url }
