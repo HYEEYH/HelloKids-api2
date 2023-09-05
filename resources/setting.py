@@ -200,7 +200,7 @@ class SettingClassListResource(Resource) :
 
         try:
             connection = get_connection()
-            query = '''select className
+            query = '''select c.id,className
                     from class c
                     left join teacher t
                     on t.nurseryId = c.nurseryId
@@ -542,7 +542,7 @@ class SettingChildEditResource(Resource) :
         file = request.files['profileUrl']
         data = json.loads(request.form['childData'])
         teacherId = get_jwt_identity()
-        print(data['childName'])
+
         try:
             # 3-1. 데이터베이스를 연결한다.
             connection = get_connection()
@@ -554,53 +554,9 @@ class SettingChildEditResource(Resource) :
             cursor = connection.cursor()
             cursor.execute(query,record)
             teacher_result_list = cursor.fetchall()
-                    
-        # {
-        #     "childName": "김철수",
-        #     "birth": "2010-07-14",
-        #     "sex": 1
-        # }
-       
-            try:
-                current_time = datetime.now().isoformat().replace(':','').replace('.','').replace('-','')[:7]
-                new_filename = urlNurseryId +'_'+ urlNurseryName + '/profile/' + data['birth'] + '_' + data['childName'] + '_' + current_time + '.jpg'
-
-                s3 = boto3.client('s3',
-                        aws_access_key_id =  Config.AWS_ACCESS_KEY_ID,
-                        aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)  
-                s3.upload_fileobj(file,
-                                Config.S3_BUCKET,
-                                new_filename,
-                                ExtraArgs = {'ACL':'public-read', 'ContentType':'image/jpeg'})
-            except Exception as e:
-                print(str(e))
-                return{'result':'fail','error':str(e)},500
             urlNurseryId = str(teacher_result_list[0][1])
             urlNurseryName = teacher_result_list[0][2]
-            file_url = Config.S3_BASE_URL+urlNurseryId+urlNurseryName+'/profile/'+new_filename # 이미지 url 부분은 회사마다 다르다
-            print(file_url)
-
-            query = '''insert into children
-                    (classId, nurseryId, childName, birth, sex, profileUrl)
-                    values
-                    (%s, %s, %s, %s, %s, %s);'''
-            record = (teacher_result_list[0][0], teacher_result_list[0][1], data['childName'], data['birth'], data['sex'], file_url)
-            print(record)
-            cursor = connection.cursor()
-            cursor.execute(query,record)
-            connection.commit()
-            cursor.close()
-            connection.close()
-
-        except Error as e :
-            print(e)
-            return {'result':'fail','error': str(e)}, 500
-
-        #################################################
-
-        try:
-            # 3-1. 데이터베이스를 연결한다.
-            connection = get_connection()
+            print(urlNurseryId, urlNurseryName, teacher_result_list)
 
             # 3-2. 쿼리문 만든다
             query = '''select * from children
@@ -633,15 +589,13 @@ class SettingChildEditResource(Resource) :
                 except Exception as e:
                     print(str(e))
                     return{'result':'fail','error':str(e)},500
-                urlNurseryId = str(teacher_result_list[0][1])
-                file_url = Config.S3_BASE_URL+urlNurseryId+'/profile/'+new_filename # 이미지 url 부분은 회사마다 다르다
+                file_url = Config.S3_BASE_URL+urlNurseryId+'/profile/'+new_filename 
             
             else: 
                 file_url = result_list[0][6]
 
 
             # 3-2. 쿼리문 만든다
-            ###### 중요! 컬럼과 매칭되는 데이터만 %s로 바꿔준다.
             query = '''update children
                     set childName = %s, birth = %s, sex = %s, profileUrl = %s
                     where id = %s;'''
@@ -659,8 +613,6 @@ class SettingChildEditResource(Resource) :
         except Error as e :
             print(e)
             return {'result':'fail','error': str(e)}, 500
-
-
 
         return {'result':'success'}
 
@@ -692,6 +644,7 @@ class SettingChildrenResource(Resource) :
             #     "birth": "2010-07-14",
             #     "sex": 1
             # }
+            # + profileUrl
        
             try:
                 current_time = datetime.now().isoformat().replace(':','').replace('.','').replace('-','')[:7]

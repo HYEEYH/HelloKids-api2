@@ -218,7 +218,7 @@ class MenuListResource(Resource):
         try:
             connection = get_connection()
            
-            query = '''select nurseryId, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s;'''
+            query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s;'''
             record = (nurseryId, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
@@ -230,7 +230,32 @@ class MenuListResource(Resource):
             print(e)
             return{'result':'fail', 'error':str(e)}, 400
 
-        return {'result':'success', 'items':result_list}
+        return {'result':'success', 'count': len(result_list), 'items':result_list}
+
+
+# 메뉴 반별 목록
+class MenuListResource(Resource):
+    @jwt_required()
+    def get(self, nurseryId, classId):
+
+        try:
+            connection = get_connection()
+           
+            query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s and classId = %s;'''
+            record = (nurseryId, classId)
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_list = cursor.fetchall()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return{'result':'fail', 'error':str(e)}, 400
+
+        return {'result':'success', 'count': len(result_list), 'items':result_list}
+
 
 # 하루 메뉴 목록
 class MenuListDayResource(Resource):
@@ -240,7 +265,7 @@ class MenuListDayResource(Resource):
         try:
             connection = get_connection()
            
-            query = '''select nurseryId, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s and mealDate = %s;'''
+            query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s and mealDate = %s;'''
             record = (nurseryId, mealDate)
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
@@ -261,7 +286,7 @@ class MenuViewResource(Resource):
 
         try:
             connection = get_connection()
-            query = '''select nurseryId, mealPhotoUrl, mealContent, mealType from mealMenu 
+            query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu 
                     where id = %s;'''
             record = (id, )
             cursor = connection.cursor(dictionary=True)
