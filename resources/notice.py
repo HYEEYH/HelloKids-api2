@@ -111,10 +111,7 @@ class NoticeAddResource(Resource):
             noticePhotoList = data["noticePhotoUrl"]
             for noticePhoto in noticePhotoList: 
                 print(noticePhoto)
-                scriptpath = os.path.dirname(__file__)
-                filename = os.path.join(scriptpath, noticePhoto)
-                noticePhotoStr = str(filename).replace("\'","").replace('\"','')
-
+               
                 # 사진 파일명 변경
                 current_time = datetime.now()
                 current_time.isoformat()
@@ -130,7 +127,7 @@ class NoticeAddResource(Resource):
                                     aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
                     
                     # 파일 업로드하기
-                    s3.upload_file(noticePhotoStr,  
+                    s3.upload_file(noticePhoto,  
                                     Config.S3_BUCKET,  
                                     new_filename, 
                                     ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
