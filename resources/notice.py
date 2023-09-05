@@ -104,19 +104,20 @@ class NoticeAddResource(Resource):
             teacher_result_list = cursor.fetchall()
             urlNurseryId = str(teacher_result_list[0][1])         
             urlNurseryName = teacher_result_list[0][2]
-
             print(teacher_result_list[0][0], teacher_result_list[0][1], teacher_result_list[0][2])
+
             print(data["noticePhotoUrl"])
             noticePhotoList = data["noticePhotoUrl"]
             for noticePhoto in noticePhotoList: 
                 print(noticePhoto)
-                noticePhotoStr = str(noticePhoto)
+                noticePhotoStr = str(noticePhoto).replace("\'","").replace('\"','')
 
                 # 사진 파일명 변경
                 current_time = datetime.now()
                 current_time.isoformat()
-
-                new_filename = urlNurseryId +'_'+ urlNurseryName + '/notice/' + current_time.isoformat().replace(':', '').replace('.', '')+'.jpg'
+                url = parse.urlparse(noticePhotoStr) 
+                name, ext = os.path.splitext(url.path)
+                new_filename = urlNurseryId +'_'+ urlNurseryName + '/notice/' + current_time.isoformat().replace(':', '').replace('.', '')+ext
                 print('new_filename', new_filename)
 
                 # 새로운 파일명으로 s3에 파일 업로드
