@@ -644,6 +644,7 @@ class SettingChildrenResource(Resource) :
             #     "birth": "2010-07-14",
             #     "sex": 1
             # }
+            # + profileUrl
        
             try:
                 current_time = datetime.now().isoformat().replace(':','').replace('.','').replace('-','')[:7]
