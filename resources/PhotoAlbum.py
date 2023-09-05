@@ -54,7 +54,7 @@ class PhotoAlbumListResource(Resource):
 
 
 ### 사진첩 생성
-# 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까?
+# 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까? --> int 삭제함.
 # 사진 여러장 받아서 AWS 올리고 그 내용 다운받아서 어레이로 데이터베이스에 저장
 
 class PhotoAlbumAddResource(Resource):
