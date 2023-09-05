@@ -8,7 +8,7 @@ from resources.PhotoAlbum import PhotoAlbumAddResource, PhotoAlbumListResource
 from resources.dailynote import DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteViewResource
 from resources.login import LoginResource, LogoutResource
 from resources.menu import MenuAddResource, MenuDeleteResource, MenuEditResource, MenuListDayResource, MenuListResource, MenuViewResource
-from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticeResource, NoticeWillResource, NoticeViewResource, NoticeListResource
+from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticeResource, NoticeAddResource, NoticeViewResource, NoticeListResource
 from resources.register1 import ParentRegisterpResource, ParentEditResource, ParentViewResource, ParentDeleteResource
 from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
@@ -81,7 +81,7 @@ api.add_resource(LoginResource, '/user/login')
 api.add_resource(LogoutResource, '/user/logout')
 
 # 공지사항
-api.add_resource(NoticeWillResource,'/notice/<int:classId>/publish') # 공지사항-임시저장
+api.add_resource(NoticeAddResource,'/notice/publish') # 공지사항-임시저장 : <int:classId>/삭제
 api.add_resource(NoticeResource,'/notice/<int:id>/publish') # 공지사항 발행 #noticeId
 api.add_resource(NoticeEditResource,'/notice/<int:id>') # 공지사항 - 수정
 api.add_resource(NoticeDeleteResource,'/notice/<int:id>') # 공지사항 - 삭제
