@@ -143,7 +143,7 @@ api.add_resource(ScheduleAddResource,'/schedule/write') # 일정 등록 <완료>
 api.add_resource(ScheduleViewResource,'/schedule/<int:id>') # 일정 상세보기 - 안드로이드에서 구현할 때 이 API 없어도 구현이 가능했다 <완료>
 api.add_resource(ScheduleEditResource,'/schedule/<int:id>') # 일정 수정 <완료>
 api.add_resource(ScheduleDeleteResource,'/schedule/<int:id>') # 일정 삭제 <완료>
-api.add_resource(ScheduleChildListResource,'/schedule/<int:id>/list') 
+api.add_resource(ScheduleChildListResource,'/schedule/child/list') # 원아별 일정 리스트(학부모) <완료>
 api.add_resource(ScheduleClassListResource,'/schedule/<int:classId>/class')
 api.add_resource(ScheduleAllListResource,'/schedule/all') # 선생님이 속한 어린이집 전체 일정 리스트 <완료>
 
