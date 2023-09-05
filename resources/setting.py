@@ -482,6 +482,36 @@ class SettingChildrenListResource(Resource) :
             i = i + 1
 
         return {'result':'success', 'item count':len(result_list), 'items':result_list}
+    
+class SettingTeachersChildrenListResource(Resource):
+    @jwt_required()
+    def get(self):
+
+        teacherId = get_jwt_identity()
+
+        try:
+            connection = get_connection()
+            query = '''select c.id,childName
+                    from children c
+                    left join teacher t
+                    on t.classId = c.classId
+                    where t.id = %s;'''
+            record = (teacherId, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_list = cursor.fetchall()
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return{'result':'fail', 'error':str(e)}, 400
+        
+        print(result_list)
+         # 가공이 필요하면 가공한다. 
+
+        return {'items':result_list}
+
 
 class SettingAllChildrenListResource(Resource) :
 

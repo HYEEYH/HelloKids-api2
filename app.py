@@ -17,7 +17,7 @@ from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingD
 from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusSearchResource, SchoolBusDeleteResource
 
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
-from resources.setting import SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource
+from resources.setting import SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingTeachersChildrenListResource
 from resources.setting import SettingNurseryResource, SettingNurseryViewResource, SettingNurseryEditResource, SettingNurseryDeleteResource
 from resources.setting import SettingClassResource, SettingClassViewResource, SettingClassListResource, SettingClassEditResource, SettingClassDeleteResource, SettingApproveResource, SettingApproveList
 
@@ -48,8 +48,9 @@ api.add_resource(ParentDeleteResource,'/user/parent/<int:id>') # delete
 
 # setting
 api.add_resource(SettingChildrenResource,'/setting/child') # JSON 버전 아이 입력 
-api.add_resource(SettingAllChildrenListResource,'/setting/children/<int:nurseryId>/all') # read 
-api.add_resource(SettingChildrenListResource,'/setting/children/<int:classId>') # read 
+api.add_resource(SettingAllChildrenListResource,'/setting/children/<int:nurseryId>/all') # read # 어린이집 선택 시 해당 어린이집 원아 목록 조회
+api.add_resource(SettingChildrenListResource,'/setting/children/<int:classId>') # read  반 선택 시 해당 반 원아 목록 조회
+api.add_resource(SettingTeachersChildrenListResource,'/setting/children/list') # 원아 목록 조회 (선생님이 담당한 반의 원아들이 자동으로 설정되서 나오게 하는 API)
 api.add_resource(SettingChildViewResource,'/setting/child/<int:id>') # read
 api.add_resource(SettingChildEditResource,'/setting/child/<int:id>') # update
 api.add_resource(SettingChildDeleteResource,'/setting/child/<int:id>') # delete
@@ -65,7 +66,7 @@ api.add_resource(SettingNurseryDeleteResource,'/setting/nursery/<int:id>') # 원
 # 반 입력
 api.add_resource(SettingClassResource,'/setting/class') # 반 입력
 api.add_resource(SettingClassViewResource,'/setting/class/<int:id>/view') # 반 정보 보기
-api.add_resource(SettingClassListResource,'/setting/class/list') # 반 목록 보기 id: nurseryId
+api.add_resource(SettingClassListResource,'/setting/class/list') # 반 목록 보기 (선생님이 속한 어린이집의 반이 자동으로 설정되서 나오게 하는 API)
 api.add_resource(SettingClassEditResource,'/setting/class/<int:id>/edit') # 반 정보 수정
 api.add_resource(SettingClassDeleteResource,'/setting/class/<int:id>') # 반 정보 삭제
 
