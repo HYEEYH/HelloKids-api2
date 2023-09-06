@@ -113,7 +113,7 @@ class NoticeAddResource(Resource):
             noticePhotoList = data["noticePhotoUrl"]
             for noticePhoto in noticePhotoList: 
                 print(noticePhoto)
-                noticePhotoPath = '"'+ str(noticePhoto).replace('"', '').replace("'","").replace(",", "")+'"'
+                noticePhotoPath = str(noticePhoto).replace('"', '').replace("'","").replace(",", "")
 
                 noticePhotoImage = Image.open(noticePhotoPath)
 
