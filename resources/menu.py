@@ -44,14 +44,12 @@ class MenuAddResource(Resource) :
     @jwt_required()
     def post(self):
 
+        mealdate = request.form['mealDate'].replace('T', ' ')[0:10]
         file = request.files['mealPhotoUrl']
-        print(file)
-        # files = os.path.abspath(file.filename) 
-
-        data = json.loads(request.form['mealJson'])
+        mealcontents = request.form['mealContent']
+        mealtype = request.form['mealType']
 
         teacherId = get_jwt_identity()
-        print(data)
 
        
         try:
@@ -94,14 +92,9 @@ class MenuAddResource(Resource) :
                         values
                         (%s,%s,%s,%s,%s,%s);'''
 
-                record = (teacher_result_list[0][1],teacher_result_list[0][0], data['mealDate'], file_url, data['mealContent'], data['mealType'])
+                record = (teacher_result_list[0][1],teacher_result_list[0][0], mealdate, file_url, mealcontents, mealtype)
                 print(record)
-                # {
-                #     "mealDate":"2023-08-30",
-                #     "mealContent":"사과와 어묵",
-                #     "mealType":"오전 간식",
-                #     "mealPhotoUrl":""
-                # }
+
                 cursor = connection.cursor(prepared=True)
                 cursor.execute(query,record)
                 connection.commit()
@@ -123,11 +116,10 @@ class MenuEditResource(Resource):
     @jwt_required()
     def put(self, id):
 
+        mealdate = request.form['mealDate'].replace('T', ' ')[0:10]
         file = request.files['mealPhotoUrl']
-        print(file)
-        # files = os.path.abspath(file.filename) 
-
-        data = json.loads(request.form['mealJson'])
+        mealcontents = request.form['mealContent']
+        mealtype = request.form['mealType']
 
         teacherId = get_jwt_identity()
         print(data)
@@ -141,7 +133,7 @@ class MenuEditResource(Resource):
                     connection = get_connection()
 
                     query = '''update mealMenu set mealDate = %s, mealContent = %s, mealType = %s where id = %s;'''
-                    record = (data['mealDate'], data['mealContent'], data['mealType'],id)
+                    record = (mealdate, mealcontents, mealtype, id)
                     print(record)
 
                     cursor = connection.cursor(prepared=True)
@@ -185,7 +177,7 @@ class MenuEditResource(Resource):
                     connection = get_connection()
 
                     query = '''update mealMenu set mealDate = %s, mealPhotoUrl = %s, mealContent = %s, mealType = %s where id = %s;'''
-                    record = (data['mealDate'], file_url, data['mealContent'], data['mealType'],id)
+                    record = (mealdate, file_url, mealcontents, mealtype,id)
                     print(record)
                     # {
                     #     "mealDate":"2023-08-30",
