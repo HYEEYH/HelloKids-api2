@@ -21,7 +21,9 @@ import datetime
 
 
 ### 사진첩 목록 보기
-# 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까?
+
+# 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까? --> 수정해야함.
+
 class PhotoAlbumListResource(Resource):
 
     @jwt_required()
@@ -53,18 +55,25 @@ class PhotoAlbumListResource(Resource):
 
 
 
-### 사진첩 생성
+
+
+
+### 사진첩 생성 - 추가하기 버튼 눌렀을때
+
 # 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까? --> int 삭제함.
 # 사진 여러장 받아서 AWS 올리고 그 내용 다운받아서 어레이로 데이터베이스에 저장
 
 class PhotoAlbumAddResource(Resource):
 
     @jwt_required()
-    def post(self):
+    def post(self):  
+    
 
         # 1. 데이터 받아오기(유저 정보)
         teacherId = get_jwt_identity()
+
         
+        # 유저가 입력한 데이터
         date = request.form['date'].replace('T', ' ')[0:10]
         print("date : ", date )
         title = request.form['title']
@@ -73,7 +82,7 @@ class PhotoAlbumAddResource(Resource):
         print("contents : ", contents )
         classId = request.form['classId']
         print("classId : ", classId )
-        photoUrl = request.files['photoUrl']
+        photoUrl = request.form['photoUrl']
         print("photoUrl : ", photoUrl )
 
 
@@ -96,13 +105,17 @@ class PhotoAlbumAddResource(Resource):
             teacher_result_list = cursor.fetchall()
             print("teacher_result_list : ", teacher_result_list)
 
+            classIdList = teacher_result_list[0][0]
+            print("classIdList : ", classIdList)
+
+
             # 사진 잘 올렸니?
             if 'photoUrl' not in request.files or 'contents' not in request.form :
                 return { 'result' : 'fail', 'error' : '필수항목을 확인하세요'}, 400
             
             else :
-                # 데이터베이스에서 어린이집 아이디와 반 아이디를 가져오기(파일 정리할때 이름으로 정리되어 들어가도록)
 
+                # 데이터베이스에서 어린이집 아이디와 반 아이디를 가져오기(파일 정리할때 이름으로 정리되어 들어가도록)
                 teacher_result_list_str = str(teacher_result_list[0][1]) + '_' + teacher_result_list[0][2]
                 print(teacher_result_list_str)
 
@@ -179,16 +192,18 @@ class PhotoAlbumAddResource(Resource):
 
         except Exception as e:
             print(e)
-            return {'result3':'fail','error3': str(e)}, 500     
+            return {'result3':'fail','error3': str(e)}, 500  
 
 
 
-        return { 'result4' : 'success',
-                'nurseryId' : nursery_id_result_str,
-                'classId' : classId,
-                'teacherId' : teacherId,
-                'date': date,
-                'title' : title,
-                'contents' : contents,
-                'classId' : classId,
-                'photoUrl' : file_url }
+        return { 'result' : 'success' }   
+
+        # return { 'result4' : 'success',
+        #         'nurseryId' : nursery_id_result_str,
+        #         'classId' : classId,
+        #         'teacherId' : teacherId,
+        #         'date': date,
+        #         'title' : title,
+        #         'contents' : contents,
+        #         'classId' : classId,
+        #         'photoUrl' : file_url }
