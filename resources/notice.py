@@ -124,17 +124,15 @@ class NoticeAddResource(Resource):
                     s3 = boto3.client('s3', 
                                     aws_access_key_id = Config.AWS_ACCESS_KEY_ID, 
                                     aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
-                    s3.put_object(Bucket=Config.S3_BUCKET, Key=new_filename)
                     # 파일 업로드하기
                     s3.upload_file(noticePhoto,  
                                     Config.S3_BUCKET,  
                                     new_filename, 
                                     ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
                     
-
                 except Exception as e :
                     print('오류', str(e))
-                    return { 'result' : 'fail', 'error' : str(e) }, 500
+                    return { 'result' : 'fail_s3', 'error' : str(e) }, 500
                 
                 # 위에서 저장한 사진의 URL 주소를 DB에 저장해야한다
                 # URL 주소 = 버킷명.s3주소/우리가만든파일명
