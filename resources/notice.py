@@ -15,6 +15,8 @@ import boto3
 from datetime import datetime
 import os
 import passlib
+from PIL import Image
+
 # ----------------------------------------------------------------------------
 
 
@@ -111,17 +113,19 @@ class NoticeAddResource(Resource):
             noticePhotoList = data["noticePhotoUrl"]
             for noticePhoto in noticePhotoList: 
                 print(noticePhoto)
-                noticePhotoPath = str(noticePhoto).replace('"', '').replace("'","").replace(",", "")
+                noticePhotoPath = '"'+ str(noticePhoto).replace('"', '').replace("'","").replace(",", "")+'"'
 
-                print("noticePhotoPath os.path.isdir(noticePhotoPath) 해당 경로의 파일 있는지 확인 : ") 
-                print(os.path.isdir(noticePhotoPath))
-                print("noticePhotoPath os.path.exists(noticePhotoPath) 해당 경로의 파일 있는지 확인 : ") 
-                print(os.path.exists(noticePhotoPath))
-                print("noticePhotoPath Path(noticePhotoPath).resolve() 해당 경로의 파일 있는지 확인 : ") 
-                print(Path(noticePhotoPath).resolve())
-                noticePhotoPathData = open(noticePhotoPath, 'rb')
-                print("noticePhotoPathData = open(noticePhotoPath, 'rb') 해당 경로의 파일 객체 불러오기 : ") 
-                print(noticePhotoPathData )
+                noticePhotoImage = Image.open(noticePhotoPath)
+
+                # print("noticePhotoPath os.path.isdir(noticePhotoPath) 해당 경로의 파일 있는지 확인 : ") 
+                # print(os.path.isdir(noticePhotoPath))
+                # print("noticePhotoPath os.path.exists(noticePhotoPath) 해당 경로의 파일 있는지 확인 : ") 
+                # print(os.path.exists(noticePhotoPath))
+                # print("noticePhotoPath Path(noticePhotoPath).resolve() 해당 경로의 파일 있는지 확인 : ") 
+                # print(Path(noticePhotoPath).resolve())
+                # noticePhotoPathData = open(noticePhotoPath, 'rb')
+                # print("noticePhotoPathData = open(noticePhotoPath, 'rb') 해당 경로의 파일 객체 불러오기 : ") 
+                # print(noticePhotoPathData )
                 
 
 
@@ -137,7 +141,7 @@ class NoticeAddResource(Resource):
                     # 권한 설정
                     s3 = boto3.client('s3', aws_access_key_id = Config.AWS_ACCESS_KEY_ID, aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
                     # 파일 업로드하기
-                    s3.upload_file(noticePhotoPath, Config.S3_BUCKET, new_filename, ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
+                    s3.upload_file(noticePhotoImage, Config.S3_BUCKET, new_filename, ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
                     
                 except Exception as e :
                     print('오류', str(e))

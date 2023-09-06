@@ -9,3 +9,4 @@ psycopg-binary
 passlib
 googlemaps
 boto3
+Pillow
