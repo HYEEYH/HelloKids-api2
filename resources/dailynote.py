@@ -132,7 +132,7 @@ class DailyNoteParentsAddResource(Resource):
         try:
             connection = get_connection()
             query = '''select childId from parents
-                    where id = %s'''
+                    where id = %s;'''
             record = (parentsId, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)

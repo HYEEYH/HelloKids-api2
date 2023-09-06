@@ -13,8 +13,8 @@ from resources.register1 import ParentRegisterpResource, ParentEditResource, Par
 from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
 
-from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusResource, SchoolBusEditResource, SchoolBusSearchResource, SchoolBusSearchListResource, SchoolBusTeacherAddResource, SchoolBusTeacherListResource
-from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusSearchResource, SchoolBusDeleteResource
+from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusNurseryListResource, SchoolBusResource, SchoolBusEditResource, SchoolBusSearchListResource, SchoolBusTeacherAddResource, SchoolBusTeacherListResource
+from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusDeleteResource
 
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
 from resources.setting import SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingTeachersChildrenListResource
@@ -93,7 +93,7 @@ api.add_resource(NoticeListResource,'/notice/<int:nurseryId>/list') # 공지사�
 # 안심등하원
 api.add_resource(SchoolBusResource,'/schoolbus')  # 차량 추가 
 api.add_resource(SchoolBusEditResource,'/schoolbus/<int:id>') # 차량 수정
-api.add_resource(SchoolBusSearchResource,'/schoolbus/<int:nurseryId>')  # 차량 조회 
+api.add_resource(SchoolBusNurseryListResource,'/schoolbus/nursery')  # 어린이집별 차량 목록 조회 
 api.add_resource(SchoolBusSearchListResource,'/schoolbus') # 차량 목록 조회 
 api.add_resource(SchoolBusDeleteResource,'/schoolbus/<int:id>') # 차량 삭제
 
@@ -133,7 +133,7 @@ api.add_resource(PhotoAlbumListResource,'/photoAlbum/list/<int:nurseryId>/<int:c
 
 # 알림장
 api.add_resource(DailyNoteAddResource,'/dailynote/write/<int:childId>') # 알림장 등록(선생님) <완료>
-api.add_resource(DailyNoteParentsAddResource,'/dailynote/parents/write') # 알림장 등록 (학부모)
+api.add_resource(DailyNoteParentsAddResource,'/dailynote/parents/write') # 알림장 등록 (학부모) <완료>
 api.add_resource(DailyNoteViewResource,'/dailynote/<int:id>') # 알림장 상세보기 - 안드로이드에서 구현할 때 이 API 없어도 구현이 가능했다 <완료>
 api.add_resource(DailyNoteListResource,'/dailynote/list/<int:childId>') # 알림장 목록(원아별) <완료>
 api.add_resource(DailyNoteChildListResource,'/dailynote/child/list')  # 알림장 목록(학부모의 원아) <완료>
