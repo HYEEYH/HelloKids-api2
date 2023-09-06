@@ -92,7 +92,7 @@ class SchoolBusResource(Resource) :
 class SchoolBusEditResource(Resource):
 
     @jwt_required()
-    def put(self,shuttleId):
+    def put(self,id):
 
         #body에 있는 json 데이터를 받아온다.
         data = request.get_json()
@@ -103,7 +103,7 @@ class SchoolBusEditResource(Resource):
             query = '''update schoolBus
                     set shuttleName = %s, shuttleNum = %s, shuttleTime = %s, shuttleDriver = %s, shuttleDriverNum = %s
                     where id = %s;''' 
-            record = (data['shuttleName'],data['shuttleNum'], data['shuttleTime'],data['shuttleDriver'],data['shuttleDriverNum'],shuttleId) 
+            record = (data['shuttleName'],data['shuttleNum'], data['shuttleTime'],data['shuttleDriver'],data['shuttleDriverNum'],id) 
             cursor= connection.cursor()
             cursor.execute(query,record)
             connection.commit()
