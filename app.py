@@ -5,7 +5,7 @@ from flask_jwt_extended import JWTManager
 
 from resources.PhotoAlbum import PhotoAlbumAddResource, PhotoAlbumListResource
 
-from resources.dailynote import DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteViewResource
+from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteViewResource
 from resources.login import LoginResource, LogoutResource
 from resources.menu import MenuAddResource, MenuDeleteResource, MenuEditResource, MenuListDayResource, MenuListResource, MenuViewResource
 from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticeResource, NoticeAddResource, NoticeViewResource, NoticeListResource
@@ -133,10 +133,11 @@ api.add_resource(PhotoAlbumListResource,'/photoAlbum/list/<int:nurseryId>/<int:c
 
 # 알림장
 api.add_resource(DailyNoteAddResource,'/dailynote/write/<int:childId>') # 알림장 등록 <완료>
-api.add_resource(DailyNoteViewResource,'/dailynote/<int:id>') # 알림장 상세보기
-api.add_resource(DailyNoteListResource,'/dailynote/list/<int:childId>') # 알림장 목록(원아별) 
-api.add_resource(DailyNoteEditResource,'/dailynote/<int:id>') # 알림장 수정
-api.add_resource(DailyNoteDeleteResource,'/dailynote/<int:id>') # 알림장 삭제
+api.add_resource(DailyNoteViewResource,'/dailynote/<int:id>') # 알림장 상세보기 - 안드로이드에서 구현할 때 이 API 없어도 구현이 가능했다 <완료>
+api.add_resource(DailyNoteListResource,'/dailynote/list/<int:childId>') # 알림장 목록(원아별) <완료>
+api.add_resource(DailyNoteChildListResource,'/dailynote/child/list')  # 알림장 목록(학부모의 원아)
+api.add_resource(DailyNoteEditResource,'/dailynote/<int:id>') # 알림장 수정 <완료>
+api.add_resource(DailyNoteDeleteResource,'/dailynote/<int:id>') # 알림장 삭제 <완료>
 
 
 # # 일정표

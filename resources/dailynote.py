@@ -211,6 +211,46 @@ class DailyNoteListResource(Resource):
             i = i + 1
 
         return {'result':'success', 'items':result_list}
+    
+class DailyNoteChildListResource(Resource):
+    @jwt_required()
+    def get(self):
+
+        parentsId = get_jwt_identity()
+
+        try:
+            connection = get_connection()
+            query = '''select childId from parents
+                    where id = %s'''
+            record = (parentsId, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_one = cursor.fetchone()
+            print(result_one)
+            childId = result_one['childId']
+
+            query1 = '''select id,createdAt,title,contents,dailyTemperCheck,dailyMealCheck,dailyNapCheck,dailyPooCheck
+                    from dailyNote
+                    where childId = %s;'''
+            record1 = (childId, )
+            cursor1 = connection.cursor(dictionary=True)
+            cursor1.execute(query1, record1)
+            result_list = cursor1.fetchall()
+            cursor.close()
+            cursor1.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return{'result':'fail', 'error':str(e)}, 400
+        
+        i = 0
+        for row in result_list :
+            result_list[i]['createdAt']= row['createdAt'].isoformat()
+            i = i + 1
+
+        return {'result':'success', 'items':result_list}
+
 
 # 알림장 상세보기    
 class DailyNoteViewResource(Resource):
