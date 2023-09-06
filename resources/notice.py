@@ -3,7 +3,6 @@
 # 공지사항
 
 # 라이브러리 ------------------------------------------------------------------
-import json
 from flask_restful import Resource
 from flask import request
 import mysql.connector
@@ -96,7 +95,6 @@ class NoticeAddResource(Resource):
         # 데이터베이스 연결
         try :
             connection = get_connection()
-
             query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
             record = (teacherId, )
             cursor = connection.cursor()
@@ -105,13 +103,12 @@ class NoticeAddResource(Resource):
             urlNurseryId = str(teacher_result_list[0][1])         
             urlNurseryName = teacher_result_list[0][2]
             print(teacher_result_list[0][0], teacher_result_list[0][1], teacher_result_list[0][2])
-
             print(data["noticePhotoUrl"])
+
             noticePhotoList = data["noticePhotoUrl"]
             for noticePhoto in noticePhotoList: 
-                noticePhotoStr= str(noticePhoto)
                 print(noticePhoto)
-               
+                noticePhotoPath = str(noticePhoto).replace('"', '').replace("'","").replace(",", "")
                 # 사진 파일명 변경
                 current_time = datetime.now()
                 current_time.isoformat()
@@ -122,21 +119,14 @@ class NoticeAddResource(Resource):
                 # 새로운 파일명으로 s3에 파일 업로드
                 try :
                     # 권한 설정
-                    s3 = boto3.client('s3', 
-                                    aws_access_key_id = Config.AWS_ACCESS_KEY_ID, 
-                                    aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
+                    s3 = boto3.client('s3', aws_access_key_id = Config.AWS_ACCESS_KEY_ID, aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
                     # 파일 업로드하기
-                    s3.upload_file(noticePhotoStr,  
-                                Config.S3_BUCKET,  
-                                new_filename, 
-                                ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
+                    s3.upload_file(noticePhotoPath, Config.S3_BUCKET, new_filename, ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
                     
                 except Exception as e :
                     print('오류', str(e))
                     return { 'result' : 'fail_s3', 'error' : str(e) }, 500
                 
-                # 위에서 저장한 사진의 URL 주소를 DB에 저장해야한다
-                # URL 주소 = 버킷명.s3주소/우리가만든파일명
                 noticePhotoUrl = Config.S3_BASE_URL + new_filename
                 noticePhotoUrlList.append(str(noticePhotoUrl))
                 print(noticePhotoUrlList)
