@@ -105,10 +105,25 @@ class NoticeAddResource(Resource):
             print(teacher_result_list[0][0], teacher_result_list[0][1], teacher_result_list[0][2])
             print(data["noticePhotoUrl"])
 
+            
+
             noticePhotoList = data["noticePhotoUrl"]
             for noticePhoto in noticePhotoList: 
                 print(noticePhoto)
                 noticePhotoPath = str(noticePhoto).replace('"', '').replace("'","").replace(",", "")
+
+                print("noticePhotoPath os.path.isdir(noticePhotoPath) 해당 경로의 파일 있는지 확인 : ") 
+                print(os.path.isdir(noticePhotoPath))
+                print("noticePhotoPath os.path.exists(noticePhotoPath) 해당 경로의 파일 있는지 확인 : ") 
+                print(os.path.exists(noticePhotoPath))
+                print("noticePhotoPath Path(noticePhotoPath).resolve() 해당 경로의 파일 있는지 확인 : ") 
+                print(Path(noticePhotoPath).resolve())
+                noticePhotoPathData = open(noticePhotoPath, 'rb')
+                print("noticePhotoPathData = open(noticePhotoPath, 'rb') 해당 경로의 파일 객체 불러오기 : ") 
+                print(noticePhotoPathData )
+                
+
+
                 # 사진 파일명 변경
                 current_time = datetime.now()
                 current_time.isoformat()
