@@ -59,6 +59,7 @@ class PhotoAlbumListResource(Resource):
 
 
 ### 사진첩 글 아이디 생성 : 로컬 테스트 완료
+# - 선생님 아이디도 추가하도록 수정
 
 class PhotoAlbumAddIdResource(Resource):
 
@@ -74,20 +75,38 @@ class PhotoAlbumAddIdResource(Resource):
         #
         try :
             connection = get_connection()
-            # insert into totalAlbum
-            # (totalAlbumNum)
-            # values
-            # (0);
-            query = '''insert into totalAlbum
-                        (totalAlbumNum)
-                        values
-                        (%s);'''
-            
-            record = ( data['totalAlbumNum'], )
-            
-            # 쿼리 실행
+
+            # 선생님이 속한 원과 반 아이디 가져오기
+            query1 = '''SELECT classId, nurseryId, nurseryName 
+                        FROM nursery n 
+                        left join teacher t on n.id = t.nurseryId 
+                        where t.id = %s;'''
+        
+            record1 = (teacherId, )
+
             cursor = connection.cursor()
-            cursor.execute(query, record)
+            cursor.execute(query1, record1)
+
+            teacher_result_list = cursor.fetchone()
+            print("teacher_result_list : ", teacher_result_list)
+
+            getTeacherId = teacher_result_list[0]
+
+            # 글 아이디 생성하기
+                # insert into totalAlbum
+                # (totalAlbumNum)
+                # values
+                # (0);
+            query2 = '''insert into totalAlbum
+                        (teacherId, totalAlbumNum)
+                        values
+                        (%s, %s);'''
+            
+            record2 = ( getTeacherId, data['totalAlbumNum'] )
+            
+            cursor = connection.cursor()
+            cursor.execute(query2, record2)
+
             connection.commit()
 
             cursor.close()
@@ -217,7 +236,7 @@ class PhotoAlbumAddResource(Resource):
 
 
                 # - 원 아이디를 포함해서 데이터베이스에 입력하기 위한 쿼리
-                query2 = '''insert into totalAlbum
+                query2 = '''insert into totalPhoto
                         (nurseryId, classId, teacherId, date, title, contents, photoUrl)
                         values
                         (%s,%s,%s,%s,%s,%s,%s);'''
