@@ -115,7 +115,8 @@ class NoticeAddResource(Resource):
                 print("noticePhotoPath os.path.isdir(noticePhotoPath) 해당 경로의 파일 있는지 확인 : " + os.path.isdir(noticePhotoPath))
                 print("noticePhotoPath os.path.exists(noticePhotoPath) 해당 경로의 파일 있는지 확인 : " + os.path.exists(noticePhotoPath))
                 print("noticePhotoPath Path(noticePhotoPath).resolve() 해당 경로의 파일 있는지 확인 : " + Path(noticePhotoPath).resolve())
-
+                noticePhotoPathData = open(noticePhotoPath, 'rb')
+                print("noticePhotoPathData = open(noticePhotoPath, 'rb') 해당 경로의 파일 객체 불러오기 : " + noticePhotoPathData )
                 
 
 
