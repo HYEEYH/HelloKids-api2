@@ -58,7 +58,7 @@ class PhotoAlbumListResource(Resource):
 
 
 
-### 사진첩 글 아이디 생성
+### 사진첩 글 아이디 생성 : 로컬 테스트 완료
 
 class PhotoAlbumAddIdResource(Resource):
 
