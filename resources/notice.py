@@ -13,6 +13,7 @@ from utils import check_password, hash_password
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 import boto3
 from datetime import datetime
+import os
 # ----------------------------------------------------------------------------
 
 
