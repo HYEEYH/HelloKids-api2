@@ -22,7 +22,7 @@ import datetime
 
 ### 사진첩 목록 보기
 
-# 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까?
+# 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까? --> 수정해야함.
 
 class PhotoAlbumListResource(Resource):
 
