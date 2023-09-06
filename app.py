@@ -3,7 +3,7 @@ from flask_restful import Api
 from config import Config
 from flask_jwt_extended import JWTManager
 
-from resources.PhotoAlbum import PhotoAlbumAddResource, PhotoAlbumListResource
+from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource, PhotoAlbumListResource
 
 from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteParentsAddResource, DailyNoteViewResource
 from resources.login import LoginResource, LogoutResource
@@ -119,7 +119,8 @@ api.add_resource(SchoolBusLocationViewResource,'/schoolbus/drive/<int:id>/locati
 
 
 # 사진첩 
-api.add_resource(PhotoAlbumAddResource,'/photoAlbum/add') # 사진첩 생성하기
+api.add_resource(PhotoAlbumAddIdResource,'/photoAlbum/addId') # 사진첩 글 아이디 만들기
+api.add_resource(PhotoAlbumAddResource,'/photoAlbum/add') # 사진첩 사진 추가 하기
 # api.add_resource(PhotoAlbumAddResource,'/photoAlbum/autoAdd') # 사진첩 자동 생성
 api.add_resource(PhotoAlbumListResource,'/photoAlbum/list/<int:nurseryId>/<int:classId>') # 사진첩 목록 보기
 # api.add_resource(PhotoAlbumListResource,'/photoAlbum/<int:childId>/list') # 사진첩 원아별 목록 보기

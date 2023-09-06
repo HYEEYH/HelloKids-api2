@@ -58,7 +58,54 @@ class PhotoAlbumListResource(Resource):
 
 
 
-### 사진첩 생성 - 추가하기 버튼 눌렀을때
+### 사진첩 글 아이디 생성 : 로컬 테스트 완료
+
+class PhotoAlbumAddIdResource(Resource):
+
+    @jwt_required()
+    def post(self):
+
+        # 데이터 받아오기
+        # - 유저정보
+        teacherId = get_jwt_identity()
+        # - 바디
+        data = request.get_json()
+
+        #
+        try :
+            connection = get_connection()
+            # insert into totalAlbum
+            # (totalAlbumNum)
+            # values
+            # (0);
+            query = '''insert into totalAlbum
+                        (totalAlbumNum)
+                        values
+                        (%s);'''
+            
+            record = ( data['totalAlbumNum'], )
+            
+            # 쿼리 실행
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+            connection.commit()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print('오류1', e)
+            return {'result':'fail', 'error':str(e) }, 500
+
+        return { 'result': 'success'}
+
+
+
+
+
+
+
+### 사진첩 사진 추가
 
 # 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까? --> int 삭제함.
 # 사진 여러장 받아서 AWS 올리고 그 내용 다운받아서 어레이로 데이터베이스에 저장
