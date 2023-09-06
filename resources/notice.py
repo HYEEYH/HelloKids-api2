@@ -126,9 +126,9 @@ class NoticeAddResource(Resource):
                                     aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
                     # 파일 업로드하기
                     s3.upload_file(noticePhoto,  
-                                    Config.S3_BUCKET,  
-                                    new_filename, 
-                                    ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
+                                Config.S3_BUCKET,  
+                                new_filename, 
+                                ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
                     
                 except Exception as e :
                     print('오류', str(e))
