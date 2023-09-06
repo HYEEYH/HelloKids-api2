@@ -16,14 +16,13 @@ from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, j
 # 안심 등하원 - 차량 삭제
 class SchoolBusDeleteResource(Resource):
 
-    @jwt_required()
+    # @jwt_required()
     def delete(self, id):
 
         print(id)
 
         # 1. 헤더에 담긴 JWT 토큰을 받아온다.
-        teacherId = get_jwt_identity()
-        print('토큰확인', teacherId)
+
 
         # 2. DB에서 삭제한다
         try : 
