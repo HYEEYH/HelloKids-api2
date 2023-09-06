@@ -121,6 +121,50 @@ class DailyNoteAddResource(Resource) : #선생님이 알림장 등록
             # 상태코드 에러에 맞게 내가 설계한다
         return{'result': 'success'} 
 
+class DailyNoteParentsAddResource(Resource):
+    
+    @jwt_required()
+    def post(self):
+
+        parentsId = get_jwt_identity()
+        data = request.get_json()
+
+        try:
+            connection = get_connection()
+            query = '''select childId from parents
+                    where id = %s'''
+            record = (parentsId, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_one = cursor.fetchone()
+            print(result_one)
+            childId = result_one['childId']
+
+            # 2-2. 쿼리문 만든다
+            ###### 중요! 컬럼과 매칭되는 데이터만 %s로 바꿔준다.
+            query1 = '''insert into dailyNote
+                    (parentsId,childId,title,contents,dailyTemperCheck,dailyMealCheck,dailyNapCheck,dailyPooCheck)
+                    values
+                    (%s,%s,%s,%s,%s,%s,%s,%s);'''
+            #2-3. 쿼리에 매칭되는 변수 처리! 중요! 튜플로 처리해준다!(튜프은 데이터변경이 안되니까?)
+            # 위의 %s부분을 만들어주는거다
+            record1 = (parentsId,childId,data['title'],data['contents'],data['dailyTemperCheck'],data['dailyMealCheck'],data['dailyNapCheck'],data['dailyPooCheck'])
+            #2-4 커서를 가져온다
+            cursor1 = connection.cursor(prepared=True)
+            #2-5 쿼리문을,커서로 실행한다.
+            cursor1.execute(query1,record1)
+            #2-6 DB 반영 완료하라는, commit 해줘야한다.
+            connection.commit()
+            #2-7. 자원해제
+            cursor.close()
+            cursor1.close()
+            connection.close()
+
+        except Error as e :
+            print(e)
+            return {'result':'fail','error': str(e)}, 500
+            # 상태코드 에러에 맞게 내가 설계한다
+        return{'result': 'success'} 
 
 class DailyNoteEditResource(Resource):
 
@@ -211,7 +255,7 @@ class DailyNoteListResource(Resource):
             i = i + 1
 
         return {'result':'success', 'items':result_list}
-    
+# 학부모의 원아 알림장 목록   
 class DailyNoteChildListResource(Resource):
     @jwt_required()
     def get(self):
