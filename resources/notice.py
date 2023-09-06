@@ -10,7 +10,6 @@ from mysql.connector import Error
 from config import Config
 from mysql_connection import get_connection
 from utils import check_password, hash_password
-from email_validator import validate_email,EmailNotValidError 
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 import boto3
 from datetime import datetime
