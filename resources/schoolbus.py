@@ -56,6 +56,7 @@ class SchoolBusResource(Resource) :
     def post(self):
         # 포스트로 요청한 것을 처리하는 코드 작성을 우리가!
         # 1. 클라이언트가 보낸 데이터를 받아온다.
+        teacherId = get_jwt_identity()
         data = request.get_json()
         # 2. DB에 저장한다.
         try:
@@ -65,12 +66,12 @@ class SchoolBusResource(Resource) :
             # 2-2. 쿼리문 만든다
             ###### 중요! 컬럼과 매칭되는 데이터만 %s로 바꿔준다.
             query = '''insert into schoolBus
-                    (shuttleName,shuttleNum,shuttleTime,shuttleDriver,shuttleDriverNum)
+                    (teacherId,shuttleName,shuttleNum,shuttleTime,shuttleDriver,shuttleDriverNum)
                     values
-                    (%s,%s,%s,%s,%s);'''
+                    (%s,%s,%s,%s,%s,%s);'''
             #2-3. 쿼리에 매칭되는 변수 처리! 중요! 튜플로 처리해준다!(튜프은 데이터변경이 안되니까?)
             # 위의 %s부분을 만들어주는거다
-            record = (data['shuttleName'],data['shuttleNum'], data['shuttleTime'],data['shuttleDriver'],data['shuttleDriverNum'])
+            record = (teacherId,data['shuttleName'],data['shuttleNum'], data['shuttleTime'],data['shuttleDriver'],data['shuttleDriverNum'])
             #2-4 커서를 가져온다
             cursor = connection.cursor()
             #2-5 쿼리문을,커서로 실행한다.
@@ -179,47 +180,45 @@ class SchoolBusTeacherAddResource(Resource):
         
         return {'result': 'success'} 
     
-# 안심등하원 - 차량 조회
-class SchoolBusSearchResource(Resource):
+# 안심등하원 - 어린이집별 차량 조회
+class SchoolBusNurseryListResource(Resource):
 
     @jwt_required()
-    def get(self, nurseryId):
-
-        # 데이터베이스에 저장되어있는 차량운행정보 가져오기
-        # 자바 캘린더에서 요일을 숫자로 표현하는법 :
-        #    int dayOfWeekNumber = dayOfWeek.getValue();
-        #    DayOfWeek의 getValue() 메소드를 이용하면 요일을 숫자로 가져올 수 있습니다. 
-        #    일요일부터 토요일까지 1~7의 숫자로 표현됩니다. 
-        #    일요일 1, 월요일2,.... 토요일7
+    def get(self):
+        
+        id = get_jwt_identity()
+    
         try : 
             connection = get_connection()
+            query = '''select nurseryId from teacher
+                    where id = %s;'''
+            record = (id, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_one = cursor.fetchone()
+            print(result_one)
+            nurseryId = result_one['nurseryId']
 
-            query ='''select * 
-                    from schoolBus
-                    where nurseryId = %s;'''
+            query1 ='''select s.id, shuttleName,shuttleNum,shuttleTime,shuttleDriver,shuttleDriverNum from schoolBus s
+                    join teacher t
+                    on s.teacherId = t.id
+                    where t.nurseryId = %s;'''
             
-            record = (nurseryId, )
+            record1 = (nurseryId, )
 
         # 커서 가져온다
-            cursor = connection.cursor(dictionary= True)
+            cursor1 = connection.cursor(dictionary= True)
 
         # 쿼리문을 커서로 실행한다.
-            cursor.execute(query, record)
+            cursor1.execute(query1, record1)
 
         # 실행 결과를 가져온다.
-            result_list = cursor.fetchall()
+            result_list = cursor1.fetchall()
 
             print(result_list) 
-            # 프린트 해서 터미널에 나온 결과는 JSON이 아님. XML도 아님.
-            # 딕셔너리와 리스트의 조합처럼 생긴게 JSON인데 터미널에 뜬 내용은 전혀 형태 다름
-            # JSON의 형태로 변환해야함.
-            # cursor라이브러리로 변환할 수 있음
-            # cursor = connection.cursor() 의 괄호 안에
-            # cursor = connection.cursor(dictionary= True) 이렇게 써주면
-            # 가져올때 알아서 JSON 형태로 가져옴.
-            # 인터넷에 제이슨에디터 처서 변환하면 됨.
-
+          
             cursor.close()
+            cursor1.close()
             connection.close()
 
         except Error as e :
@@ -233,12 +232,11 @@ class SchoolBusSearchResource(Resource):
         # - JSON 으로 변환할때 daytime 형식때문에 자꾸 오류가 남.
         # - created_at, updated_at의 형식을 문자열 형식으로 바꿔줘야함.
 
-        # i = 0
-        # for row in result_list :
-        #     # print(row) # 서버 내렸다가 다시 돌리고 포스트맨에서 send눌러봄 -> row는 딕셔너리
-        #     result_list[i]['created_at'] = row['created_at'].isoformat()
-        #     result_list[i]['updated_at'] = row['updated_at'].isoformat()
-        #     i = i + 1
+        i = 0
+        for row in result_list :
+            # print(row) # 서버 내렸다가 다시 돌리고 포스트맨에서 send눌러봄 -> row는 딕셔너리
+            result_list[i]['shuttleTime'] = row['shuttleTime'].isoformat()
+            i = i + 1
 
 
         # # - 에러 안났을때 코드
