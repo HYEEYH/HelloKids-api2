@@ -15,7 +15,6 @@ from email_validator import validate_email,EmailNotValidError
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 import boto3
 from datetime import datetime
-import os
 # ----------------------------------------------------------------------------
 
 
@@ -125,7 +124,7 @@ class NoticeAddResource(Resource):
                     s3 = boto3.client('s3', 
                                     aws_access_key_id = Config.AWS_ACCESS_KEY_ID, 
                                     aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
-                    
+                    s3.put_object(Bucket=Config.S3_BUCKET, Key=new_filename)
                     # 파일 업로드하기
                     s3.upload_file(noticePhoto,  
                                     Config.S3_BUCKET,  
