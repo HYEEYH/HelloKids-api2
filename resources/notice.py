@@ -109,6 +109,7 @@ class NoticeAddResource(Resource):
             print(data["noticePhotoUrl"])
             noticePhotoList = data["noticePhotoUrl"]
             for noticePhoto in noticePhotoList: 
+                noticePhotoStr= str(noticePhoto)
                 print(noticePhoto)
                
                 # 사진 파일명 변경
@@ -125,7 +126,7 @@ class NoticeAddResource(Resource):
                                     aws_access_key_id = Config.AWS_ACCESS_KEY_ID, 
                                     aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
                     # 파일 업로드하기
-                    s3.upload_file(noticePhoto,  
+                    s3.upload_file(noticePhotoStr,  
                                 Config.S3_BUCKET,  
                                 new_filename, 
                                 ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
