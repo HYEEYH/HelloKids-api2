@@ -91,9 +91,9 @@ api.add_resource(NoticeListResource,'/notice/<int:nurseryId>/list') # 공지사�
 
 
 # 안심등하원
-api.add_resource(SchoolBusResource,'/schoolbus')  # 차량 추가 
+api.add_resource(SchoolBusResource,'/schoolbus')  # 차량 추가 <완료>
 api.add_resource(SchoolBusEditResource,'/schoolbus/<int:id>') # 차량 수정
-api.add_resource(SchoolBusNurseryListResource,'/schoolbus/nursery')  # 어린이집별 차량 목록 조회 
+api.add_resource(SchoolBusNurseryListResource,'/schoolbus/nursery')  # 어린이집별 차량 목록 조회 <완료>
 api.add_resource(SchoolBusSearchListResource,'/schoolbus') # 차량 목록 조회 
 api.add_resource(SchoolBusDeleteResource,'/schoolbus/<int:id>') # 차량 삭제
 
