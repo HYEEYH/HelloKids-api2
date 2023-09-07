@@ -98,7 +98,7 @@ api.add_resource(SchoolBusNurseryListResource,'/schoolbus/nursery')  # 어린이
 api.add_resource(SchoolBusViewResource,'/schoolbus/<int:id>') # 차량 정보 상세 보기
 api.add_resource(SchoolBusDeleteResource,'/schoolbus/<int:id>') # 차량 삭제  <완료>
 
-api.add_resource(SchoolBusTeacherListResource,'/schoolbus/teacher/<int:nurseryId>') # 인솔교사 리스트 
+api.add_resource(SchoolBusTeacherListResource,'/schoolbus/teacher') # 인솔교사 리스트 
 api.add_resource(SchoolBusTeacherAddResource,'/schoolbus/drive/<int:id>/teacher') # 인솔교사 등록 
 api.add_resource(SchoolBusBoardingListResource,'/schoolbus/drive/<int:id>/boarding') # 탑승자 리스트  
 api.add_resource(SchoolBusBoardingTimeResource,'/schoolbus/drive/<int:id>/boarding') # 승하차 시간 체크  

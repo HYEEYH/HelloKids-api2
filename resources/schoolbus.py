@@ -119,28 +119,41 @@ class SchoolBusEditResource(Resource):
 # 안심등하원 - 인솔교사 리스트(어린이집 별 선생님 목록)
 class SchoolBusTeacherListResource(Resource):
     @jwt_required()
-    def get(self,nurseryId):
+    def get(self):
+
+        id = get_jwt_identity()
 
         try : 
-                connection = get_connection()
 
-                query ='''select teacherName
-                        from teacher
-                        where nurseryId = %s;'''
-                
-                record = (nurseryId,)
+            connection = get_connection()
 
-            # 커서 가져온다
-                cursor = connection.cursor(dictionary= True)
+            query = '''select nurseryId from teacher
+                    where id = %s;'''
+            record = (id, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_one = cursor.fetchone()
+            print(result_one)
+            nurseryId = result_one['nurseryId']
 
-            # 쿼리문을 커서로 실행한다.
-                cursor.execute(query,record)
+            query1 ='''select id,teacherName
+                    from teacher
+                    where nurseryId = %s;'''
+            
+            record1 = (nurseryId,)
 
-            # 실행 결과를 가져온다.
-                result_list = cursor.fetchall()
+        # 커서 가져온다
+            cursor1 = connection.cursor(dictionary= True)
 
-                cursor.close()
-                connection.close()
+        # 쿼리문을 커서로 실행한다.
+            cursor1.execute(query1,record1)
+
+        # 실행 결과를 가져온다.
+            result_list = cursor1.fetchall()
+
+            cursor.close()
+            cursor1.close()
+            connection.close()
 
         except Error as e :
             print(e)
