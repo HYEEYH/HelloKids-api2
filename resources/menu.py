@@ -122,7 +122,6 @@ class MenuEditResource(Resource):
         mealtype = request.form['mealType']
 
         teacherId = get_jwt_identity()
-        print(data)
        
         try:
             # 3-1. 데이터베이스를 연결한다.
@@ -205,13 +204,22 @@ class MenuEditResource(Resource):
 # 메뉴 전체 목록
 class MenuListResource(Resource):
     @jwt_required()
-    def get(self, nurseryId):
+    def get(self):
+
+        id = get_jwt_identity()
 
         try:
             connection = get_connection()
-           
+            query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
+            record = (id, )
+            cursor = connection.cursor()
+            cursor.execute(query,record)
+            teacher_result_list = cursor.fetchall()
+            urlNurseryId = str(teacher_result_list[0][1])         
+            urlNurseryName = teacher_result_list[0][2]
+            
             query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s;'''
-            record = (nurseryId, )
+            record = (teacher_result_list[0][1], )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
             result_list = cursor.fetchall()
