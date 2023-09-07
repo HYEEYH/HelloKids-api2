@@ -122,7 +122,6 @@ class MenuEditResource(Resource):
         mealtype = request.form['mealType']
 
         teacherId = get_jwt_identity()
-        print(data)
        
         try:
             # 3-1. 데이터베이스를 연결한다.

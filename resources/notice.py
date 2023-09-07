@@ -114,7 +114,7 @@ class NoticeAddResource(Resource):
                 print(noticePhoto)
                 noticePhotoPath = str(noticePhoto).replace('"', '').replace("'","").replace(",", "")
 
-                noticePhotoImage = Image.open(noticePhotoPath)
+                # noticePhotoImage = Image.open(noticePhotoPath)
 
                 # print("noticePhotoPath os.path.isdir(noticePhotoPath) 해당 경로의 파일 있는지 확인 : ") 
                 # print(os.path.isdir(noticePhotoPath))
