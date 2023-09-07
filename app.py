@@ -13,13 +13,14 @@ from resources.register1 import ParentRegisterpResource, ParentEditResource, Par
 from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
 
-from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusNurseryListResource, SchoolBusResource, SchoolBusEditResource, SchoolBusSearchListResource, SchoolBusTeacherAddResource, SchoolBusTeacherListResource
+from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusNurseryListResource, SchoolBusResource, SchoolBusEditResource,SchoolBusTeacherAddResource, SchoolBusTeacherListResource, SchoolBusViewResource
 from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusDeleteResource
 
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
 from resources.setting import SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingTeachersChildrenListResource
 from resources.setting import SettingNurseryResource, SettingNurseryViewResource, SettingNurseryEditResource, SettingNurseryDeleteResource
 from resources.setting import SettingClassResource, SettingClassViewResource, SettingClassListResource, SettingClassEditResource, SettingClassDeleteResource, SettingApproveResource, SettingApproveList
+from resources.translate import TranslateResource
 
 
 app = Flask(__name__)
@@ -94,8 +95,8 @@ api.add_resource(NoticeListResource,'/notice/<int:nurseryId>/list') # 공지사�
 api.add_resource(SchoolBusResource,'/schoolbus')  # 차량 추가 <완료>
 api.add_resource(SchoolBusEditResource,'/schoolbus/<int:id>') # 차량 수정 <완료>
 api.add_resource(SchoolBusNurseryListResource,'/schoolbus/nursery')  # 어린이집별 차량 목록 조회 <완료>
-api.add_resource(SchoolBusSearchListResource,'/schoolbus') # 차량 목록 조회 
-api.add_resource(SchoolBusDeleteResource,'/schoolbus/<int:id>') # 차량 삭제
+api.add_resource(SchoolBusViewResource,'/schoolbus/<int:id>') # 차량 정보 상세 보기
+api.add_resource(SchoolBusDeleteResource,'/schoolbus/<int:id>') # 차량 삭제  <완료>
 
 api.add_resource(SchoolBusTeacherListResource,'/schoolbus/teacher/<int:nurseryId>') # 인솔교사 리스트 
 api.add_resource(SchoolBusTeacherAddResource,'/schoolbus/drive/<int:id>/teacher') # 인솔교사 등록 
@@ -107,7 +108,7 @@ api.add_resource(SchoolBusBoardingDeleteResource,'/schoolbus/boarding/<int:id>')
 
 api.add_resource(SchoolBusDriveResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 생성 - 운행시작,운행종료 시간 입력 
 api.add_resource(SchoolBusDriveEditResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 수정 
-api.add_resource(SchoolBusDriveViewResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 보기 
+api.add_resource(SchoolBusDriveViewResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 상세 보기 
 api.add_resource(SchoolBusDriveListResource,'/schoolbus/drive') # 차량 운행 기록 목록 조회
 
 # 실시간 위치 
@@ -159,7 +160,8 @@ api.add_resource(MenuViewResource,'/menu/<int:id>') # 개별 메뉴 정보 보�
 api.add_resource(MenuEditResource,'/menu/<int:id>') # 개별 메뉴 정보 수정
 api.add_resource(MenuDeleteResource,'/menu/<int:id>') # 개별 메뉴 삭제 
 
-
+# 번역
+api.add_resource(TranslateResource, '/translate')
 
 if __name__ == '__main__':
     app.run()
