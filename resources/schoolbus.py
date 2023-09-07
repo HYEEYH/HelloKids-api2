@@ -126,6 +126,7 @@ class SchoolBusTeacherListResource(Resource):
         try : 
 
             connection = get_connection()
+
             query = '''select nurseryId from teacher
                     where id = %s;'''
             record = (id, )
@@ -135,7 +136,7 @@ class SchoolBusTeacherListResource(Resource):
             print(result_one)
             nurseryId = result_one['nurseryId']
 
-            query1 ='''select teacherName
+            query1 ='''select id,teacherName
                     from teacher
                     where nurseryId = %s;'''
             
