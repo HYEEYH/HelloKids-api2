@@ -69,8 +69,10 @@ class PhotoAlbumAddIdResource(Resource):
         # 데이터 받아오기
         # - 유저정보
         teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
         # - 바디
         data = request.get_json()
+        print("data : ", data)
 
         #
         try :
@@ -90,7 +92,8 @@ class PhotoAlbumAddIdResource(Resource):
             teacher_result_list = cursor.fetchone()
             print("teacher_result_list : ", teacher_result_list)
 
-            getTeacherId = teacher_result_list[0]
+            class_id = teacher_result_list[0]
+            print("class_id : ", class_id)
 
             # 글 아이디 생성하기
                 # insert into totalAlbum
@@ -102,7 +105,7 @@ class PhotoAlbumAddIdResource(Resource):
                         values
                         (%s, %s);'''
             
-            record2 = ( getTeacherId, data['totalAlbumNum'] )
+            record2 = ( teacherId, data['totalAlbumNum'] )
             
             cursor = connection.cursor()
             cursor.execute(query2, record2)
@@ -137,6 +140,7 @@ class PhotoAlbumAddResource(Resource):
 
         # 1. 데이터 받아오기(유저 정보)
         teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
 
         
         # 유저가 입력한 데이터
@@ -170,11 +174,15 @@ class PhotoAlbumAddResource(Resource):
 
             # - 선생님이 속한 어린이집 아이디와 클래스 아이디 가져오기
             teacher_result_list = cursor.fetchall()
-            print("teacher_result_list : ", teacher_result_list)
+            print("선생님 원 ID, 반ID teacher_result_list : ", teacher_result_list)
 
             # - 선생님이 속한 반 아이디 가져오기
-            classIdList = teacher_result_list[0][0]
-            print("classIdList : ", classIdList)
+            class_id = teacher_result_list[0][0]
+            print("선생님이 반 ID classIdList : ", class_id)
+
+            # - 원 아이디 가져오기
+            nursery_id = teacher_result_list[0][1]
+            print("선생님 원 ID nursery_id : ",  nursery_id)
 
 
             # 사진 잘 올렸니?
@@ -185,7 +193,7 @@ class PhotoAlbumAddResource(Resource):
 
                 # 데이터베이스에서 어린이집 아이디와 반 아이디를 가져오기(파일 정리할때 이름으로 정리되어 들어가도록)
                 teacher_result_list_str = str(teacher_result_list[0][1]) + '_' + teacher_result_list[0][2]
-                print("어린이집아이디+반아이디 : " ,teacher_result_list_str)
+                print("원ID+반ID teacher_result_list_str : " ,teacher_result_list_str)
 
                 # 이름 붙일때 유니크하게 붙이기 위해 시간 가져옴
                 current_time = datetime.datetime.now()
@@ -218,45 +226,31 @@ class PhotoAlbumAddResource(Resource):
 
 
 
-                # s3에 올린 사진 파일 데이터베이스에 저장하기
+            # s3에 올린 사진 파일 데이터베이스에 저장하기
             try:
-                connection = get_connection()
 
-
-                # - 원 아이디를 가져오기 위한 쿼리
-                query1 = '''SELECT nurseryId, nurseryName, classId
-                            FROM nursery n 
-                            left join teacher t on n.id = t.nurseryId 
-                            where t.id = %s;'''
-            
-                record1 = (teacherId, )
-                cursor1 = connection.cursor()
-                cursor1.execute(query1, record1)
-
-                nursery_id_result = cursor1.fetchall()
-                print("nursery_id_result : ", nursery_id_result)
-
-                nursery_id_result_str = str(nursery_id_result[0][0])
-                print("nursery_id_result_str : ", nursery_id_result_str)
-            
-        
-
+                # 위에서 받아온 아이디 정리
+                # - 원 아이디 : nursery_id
+                # - 반 아이디 : class_id
+                # - 선생님 아이디 : teacherId
+         
                 # - 글 아이디를 가져오기 위한 쿼리
-                query4 = '''SELECT *
+                query = '''SELECT *
                             FROM totalAlbum
                             where teacherId = %s
                             order by createdAt desc;'''
-        
-                record4 = (teacherId, )
 
-                cursor4 = connection.cursor()
-                cursor4.execute(query4, record4)
+                record = (teacherId, )
 
-                totalAlbumId_result = cursor4.fetchall()
+                cursor = connection.cursor()
+                cursor.execute(query, record)
+
+                totalAlbumId_result = cursor.fetchall()
                 print("totalAlbumId_result : ", totalAlbumId_result)
 
                 totalAlbumId = str(totalAlbumId_result[0][0])
                 print("totalAlbumId : ", totalAlbumId)
+
 
 
                 # - 원 아이디를 포함해서 데이터베이스에 입력하기 위한 쿼리
@@ -266,7 +260,7 @@ class PhotoAlbumAddResource(Resource):
                         values
                         (%s,%s,%s,%s,%s,%s,%s, %s);'''
 
-                record2 = ( nursery_id_result_str, classId, teacherId, totalAlbumId, date, title, contents, file_url)
+                record2 = ( nursery_id, class_id, teacherId, totalAlbumId, date, title, contents, file_url)
                 print("record2 : ", record2)
 
                 cursor = connection.cursor(prepared=True)
