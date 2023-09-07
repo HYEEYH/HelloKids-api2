@@ -20,23 +20,51 @@ import datetime
 # ----------------------------------------------------------------------------
 
 
-### 사진첩 목록 보기
+
+### 사진첩 목록 보기 : 전체. 글 아이디별로 구분 안하고 최신순으로 다 가져옴
 
 # 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까? --> 수정해야함.
-
-class PhotoAlbumListResource(Resource):
+# --> 0907 : 데이터 가져와서 목록 보는걸로 수정 중
+class PhotoAlbumListResource(Resource): 
 
     @jwt_required()
-    def get(self, nurseryId, classId):
+    def get(self):
 
+        # 유저 정보 가져오기
+        teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
+        
         try:
             connection = get_connection()
-            query = '''select nurseryId, classId, teacherId, date, title, contents, photoUrl from totalAlbum 
-                    where nurseryId = %s and classId = %s;'''
-            record = (nurseryId, classId)
+
+            # 선생님이 속한 원과 반 아이디 가져오기
+            query1 = '''SELECT classId, nurseryId, nurseryName 
+                        FROM nursery n 
+                        left join teacher t on n.id = t.nurseryId 
+                        where t.id = %s;'''
+            record1 = (teacherId, )
+
+            cursor = connection.cursor()
+            cursor.execute(query1, record1)
+
+            teacher_result_list = cursor.fetchone()
+            print("teacher_result_list : ", teacher_result_list)
+
+            # - 반 아이디
+            class_id = teacher_result_list[0]
+            print("class_id : ", class_id)
+
+
+            # 일단 사진첩 목록 가져오기
+            query = '''SELECT classId, teacherId, totalAlbumId, date, title, contents, photoUrl 
+                        FROM totalPhoto
+                        where classId = %s and teacherId = %s and totalAlbumId is not null
+                        order by totalAlbumId desc;'''
+            record = (class_id, teacherId)
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
-            result_list = cursor.fetchall()
+
+            totalAlbumList_result = cursor.fetchall()
             cursor.close()
             connection.close()
 
@@ -45,11 +73,83 @@ class PhotoAlbumListResource(Resource):
             return{'result':'fail', 'error':str(e)}, 400
         
         i = 0
-        for row in result_list :
-            result_list[i]['date']= row['date'].isoformat().replace('T', ' ')[0:10]
+        for row in totalAlbumList_result :
+            totalAlbumList_result[i]['date']= row['date'].isoformat().replace('T', ' ')[0:10]
             i = i + 1
 
-        return {'result':'success', 'items':result_list}
+        return {'result':'success', 'items':totalAlbumList_result}
+    
+
+
+
+
+
+### 사진첩 글 아이디별 사진 개수 가져오기
+# - api 경로 안 만들어 놨음.
+# - 포스트맨 API 안 만들어 놨음.
+# - 잠시 정지. 레코그니션 먼저 하러 감.
+class PhotoAlbumListCountResource(Resource):
+
+    @jwt_required()
+    def get(self):
+
+        # 데이터 받아오기
+        # - 유저정보
+        teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
+
+        #
+        try :
+            connection = get_connection()
+
+            # 선생님이 속한 원과 반 아이디 가져오기
+            query1 = '''SELECT classId, nurseryId, nurseryName 
+                        FROM nursery n 
+                        left join teacher t on n.id = t.nurseryId 
+                        where t.id = %s;'''
+            record1 = (teacherId, )
+
+            cursor = connection.cursor()
+            cursor.execute(query1, record1)
+
+            teacher_result_list = cursor.fetchone()
+            print("teacher_result_list : ", teacher_result_list)
+
+            nursery_id = teacher_result_list[1]
+            print("nursery_id : ", nursery_id)
+
+            class_id = teacher_result_list[0]
+            print("class_id : ", class_id)
+
+
+            # 글 아이디 별 사진 개수 가져오기
+            query2 = '''SELECT totalAlbumId, count(totalAlbumId) as count, photoUrl, teacherId, classId
+                        FROM totalPhoto
+                        where nurseryId = %s and classId = %s and teacherId = %s
+                        group by totalAlbumId
+                        order by createdAt desc;'''
+            
+            record2 = ( nursery_id, class_id, teacherId )
+            
+            cursor = connection.cursor()
+            cursor.execute(query2, record2)
+
+            photoCount_result = cursor.fetchall()
+            
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print('오류1', e)
+            return {'result':'fail', 'error':str(e) }, 500
+        
+        totalAlbum_photoCount_list = []
+        i = 0
+        for row in photoCount_result :
+            totalAlbum_photoCount_list.append(photoCount_result[i]['count'])
+            i = i + 1
+
+        return {'result':'success', 'item count':len(photoCount_result), 'items':photoCount_result}
 
 
 
@@ -293,3 +393,106 @@ class PhotoAlbumAddResource(Resource):
         #         'contents' : contents,
         #         'classId' : classId,
         #         'photoUrl' : file_url }
+
+
+
+
+
+
+### 사진첩 자동 분류
+# 순서 : 원아별 얼굴인식 -> 자동분류 -> 폴더생성 -> 사진이동
+
+# - 원아별 사진 자동분류
+class PhotoAlbumRekogResource(Resource):
+
+    @jwt_required()
+    def post(self):
+
+        # 1. 데이터 받아오기(유저 정보)
+        teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
+
+        # 2. 데이터베이스에 있는 원아 프로필 사진 불러오기
+        try : 
+            # 데이터베이스 연결
+            connection = get_connection()
+
+            # 선생님이 속한 원, 반의 아이디 가져오기
+            query = '''SELECT classId, nurseryId, nurseryName 
+                        FROM nursery n 
+                        left join teacher t on n.id = t.nurseryId 
+                        where t.id = %s;'''
+            record = (teacherId, )
+
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+
+            teacher_result_list = cursor.fetchall()
+            print("선생님 원 ID, 반ID teacher_result_list : ", teacher_result_list)
+
+            # - 선생님이 속한 반 아이디
+            class_id = teacher_result_list[0][0]
+            print("선생님이 반 ID classIdList : ", class_id)
+
+            # - 원 아이디
+            nursery_id = teacher_result_list[0][1]
+            print("선생님 원 ID nursery_id : ",  nursery_id)
+
+
+            # 반 아이들 프로필 주소 가져오기
+            query = '''SELECT nurseryId, classId, childName, birth, profileUrl
+                    FROM children
+                    where nurseryId = %s and classId = %s;'''
+            record = (nursery_id, class_id)
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+
+            # 프로필 주소만
+            profileUrl_result = cursor.fetchall()
+
+            profileUrl_result_list = []
+            i = 0
+            for row in profileUrl_result :
+                profileUrl_result_list.append(profileUrl_result[i]['profileUrl'])
+                i = i + 1
+            print("profileUrl_result_list : ", profileUrl_result_list)
+
+            cursor.close()
+            connection.close()
+
+        except Error as e :
+                print(e)
+                return {'result2':'fail','error2': str(e)}, 500
+
+
+
+
+        # 데이터베이스에 있는 사진첩의 사진 불러오기
+
+
+
+
+        # 얼굴비교 실행
+        # num_face_matches = compare_faces("소스파일(원본이미지)", "타켓파일(비교할이미지)")
+
+        # if num_face_matches > 0:
+        #     return { f'얼굴이 일치합니다. 일치한 얼굴 수: {num_face_matches}' }
+        # else:
+        #     return { '얼굴이 일치하지 않습니다.' }
+
+
+        return { 'result' : 'success',
+                'profileUrl_result_list Count' : len(profileUrl_result_list),
+                'profileUrl_result_list' : profileUrl_result_list
+                }
+
+
+
+
+# - 원아별 사진 폴더 생성
+class PhotoAlbumAutoAddResource(Resource):
+
+    def post(self):
+
+        return
+
