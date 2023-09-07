@@ -4,7 +4,7 @@ class Config:
 
     # S3 관련 변수
     S3_BUCKET = 'hellokids'
-    S3_BASE_URL = 'https://'+S3_BUCKET+'.ap-northeast-2.s3.amazonaws.com/'
+    S3_BASE_URL = 'https://'+S3_BUCKET+'.s3.ap-northeast-2.amazonaws.com/'
 
     # DB 관련 정보
     HOST = 'yhdb.cnwaypyqm4je.ap-northeast-2.rds.amazonaws.com'
