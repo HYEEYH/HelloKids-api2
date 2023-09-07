@@ -108,7 +108,7 @@ api.add_resource(SchoolBusBoardingDeleteResource,'/schoolbus/boarding/<int:id>')
 
 api.add_resource(SchoolBusDriveResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 생성 - 운행시작,운행종료 시간 입력 
 api.add_resource(SchoolBusDriveEditResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 수정 
-api.add_resource(SchoolBusDriveViewResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 보기 
+api.add_resource(SchoolBusDriveViewResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 상세 보기 
 api.add_resource(SchoolBusDriveListResource,'/schoolbus/drive') # 차량 운행 기록 목록 조회
 
 # 실시간 위치 
