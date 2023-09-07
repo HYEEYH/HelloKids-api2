@@ -20,6 +20,7 @@ from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
 from resources.setting import SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingTeachersChildrenListResource
 from resources.setting import SettingNurseryResource, SettingNurseryViewResource, SettingNurseryEditResource, SettingNurseryDeleteResource
 from resources.setting import SettingClassResource, SettingClassViewResource, SettingClassListResource, SettingClassEditResource, SettingClassDeleteResource, SettingApproveResource, SettingApproveList
+from resources.translate import TranslateResource
 
 
 app = Flask(__name__)
@@ -159,7 +160,8 @@ api.add_resource(MenuViewResource,'/menu/<int:id>') # 개별 메뉴 정보 보�
 api.add_resource(MenuEditResource,'/menu/<int:id>') # 개별 메뉴 정보 수정
 api.add_resource(MenuDeleteResource,'/menu/<int:id>') # 개별 메뉴 삭제 
 
-
+# 번역
+api.add_resource(TranslateResource, '/translate')
 
 if __name__ == '__main__':
     app.run()
