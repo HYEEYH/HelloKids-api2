@@ -215,8 +215,6 @@ class MenuListResource(Resource):
             cursor = connection.cursor()
             cursor.execute(query,record)
             teacher_result_list = cursor.fetchall()
-            urlNurseryId = str(teacher_result_list[0][1])         
-            urlNurseryName = teacher_result_list[0][2]
             
             query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s;'''
             record = (teacher_result_list[0][1], )
@@ -229,20 +227,32 @@ class MenuListResource(Resource):
         except Error as e:
             print(e)
             return{'result':'fail', 'error':str(e)}, 400
+        
+        
+        i = 0
+        for row in result_list :
+            result_list[i]['mealDate']= row['mealDate'].isoformat()
+            i = i + 1
 
         return {'result':'success', 'count': len(result_list), 'items':result_list}
 
 
 # 메뉴 반별 목록
-class MenuListResource(Resource):
+class MenuListClassResource(Resource):
     @jwt_required()
-    def get(self, nurseryId, classId):
+    def get(self, classId):
 
         try:
             connection = get_connection()
+            query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
+            record = (id, )
+            cursor = connection.cursor()
+            cursor.execute(query,record)
+            teacher_result_list = cursor.fetchall()
+            
            
             query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s and classId = %s;'''
-            record = (nurseryId, classId)
+            record = (teacher_result_list[0][1], classId)
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
             result_list = cursor.fetchall()
@@ -253,6 +263,12 @@ class MenuListResource(Resource):
         except Error as e:
             print(e)
             return{'result':'fail', 'error':str(e)}, 400
+        
+        i = 0
+        for row in result_list :
+            result_list[i]['mealDate']= row['mealDate'].isoformat()
+            i = i + 1
+
 
         return {'result':'success', 'count': len(result_list), 'items':result_list}
 
@@ -260,13 +276,18 @@ class MenuListResource(Resource):
 # 하루 메뉴 목록
 class MenuListDayResource(Resource):
     @jwt_required()
-    def get(self, nurseryId, mealDate):
+    def get(self, mealDate):
 
         try:
             connection = get_connection()
+            query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
+            record = (id, )
+            cursor = connection.cursor()
+            cursor.execute(query,record)
+            teacher_result_list = cursor.fetchall()
            
             query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s and mealDate = %s;'''
-            record = (nurseryId, mealDate)
+            record = (teacher_result_list[0][1], mealDate)
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
             result_list = cursor.fetchall()
@@ -276,6 +297,12 @@ class MenuListDayResource(Resource):
         except Error as e:
             print(e)
             return{'result':'fail', 'error':str(e)}, 400
+
+        i = 0
+        for row in result_list :
+            result_list[i]['mealDate']= row['mealDate'].isoformat()
+            i = i + 1
+
 
         return {'result':'success', 'count': len(result_list), 'items':result_list}
 
@@ -298,5 +325,10 @@ class MenuViewResource(Resource):
         except Error as e:
             print(e)
             return{'result':'fail', 'error':str(e)}, 400
+        
+        i = 0
+        for row in result_list :
+            result_list[i]['mealDate']= row['mealDate'].isoformat()
+            i = i + 1
 
         return {'result':'success',  'items':result_list}
