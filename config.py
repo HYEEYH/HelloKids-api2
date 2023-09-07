@@ -18,7 +18,8 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = False
     PROPAGATE_EXCEPTIONS = True
 
-    # # 네이버 파파고 관련 변수
-    # X_NAVER_CLIENT_ID='O4xLlxYeMqA_Nr42nl9E'
-    # X_NAVER_CLIENT_SECRET ='V2yXOePrt7'
+     # 네이버 파파고 관련 변수
+    X_NAVER_CLIENT_ID='hbsgahvmUQ0PxXoy89WT'
+    X_NAVER_CLIENT_SECRET ='hFXTGhxxVe'
+
 
