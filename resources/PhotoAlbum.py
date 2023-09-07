@@ -444,18 +444,22 @@ class PhotoAlbumRekogResource(Resource):
                     FROM children
                     where nurseryId = %s and classId = %s;'''
             record = (nursery_id, class_id)
-            cursor = connection.cursor()
+            cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
 
             # 프로필 주소만
             profileUrl_result = cursor.fetchall()
+            # print("profileUrl_result : ", profileUrl_result)
+            print("len(profileUrl_result) : ", len(profileUrl_result))
+            print("profileUrl_result[1]['profileUrl']", profileUrl_result[1]['profileUrl'] )
 
-            profileUrl_result_list = []
+            profileUrl_list = []
             i = 0
-            for row in profileUrl_result :
-                profileUrl_result_list.append(profileUrl_result[i]['profileUrl'])
+            for i in range( len(profileUrl_result) ) :
+                #profileUrl_list = profileUrl_result[i]['profileUrl']
+                profileUrl_list.append(profileUrl_result[i]['profileUrl'])
                 i = i + 1
-            print("profileUrl_result_list : ", profileUrl_result_list)
+            print("profileUrl_list : ", profileUrl_list)
 
             cursor.close()
             connection.close()
@@ -480,11 +484,11 @@ class PhotoAlbumRekogResource(Resource):
         # else:
         #     return { '얼굴이 일치하지 않습니다.' }
 
-
-        return { 'result' : 'success',
-                'profileUrl_result_list Count' : len(profileUrl_result_list),
-                'profileUrl_result_list' : profileUrl_result_list
-                }
+        return {'result' : 'success'}
+        # return { 'result' : 'success',
+        #         'profileUrl_result_list Count' : len(profileUrl_result_list),
+        #         'profileUrl_result_list' : profileUrl_result_list
+        #         }
 
 
 
