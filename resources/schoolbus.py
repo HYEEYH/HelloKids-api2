@@ -459,7 +459,7 @@ class SchoolBusDriveListResource(Resource):
         try : 
             connection = get_connection()
 
-            query ='''select sc.id,shuttleName,shuttleStart,shuttleStop
+            query ='''select sc.id,sc.shuttleTeacherId,sc.schoolbusId,shuttleName,shuttleStart,shuttleStop
                     from schoolBusDailyRecord sc
                     LEFT JOIN
                     schoolBus s

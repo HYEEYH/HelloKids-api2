@@ -95,22 +95,22 @@ api.add_resource(NoticeListResource,'/notice/<int:nurseryId>/list') # 공지사�
 api.add_resource(SchoolBusResource,'/schoolbus')  # 차량 추가 <완료>
 api.add_resource(SchoolBusEditResource,'/schoolbus/<int:id>') # 차량 수정 <완료>
 api.add_resource(SchoolBusNurseryListResource,'/schoolbus/nursery')  # 어린이집별 차량 목록 조회 <완료>
-api.add_resource(SchoolBusViewResource,'/schoolbus/<int:id>') # 차량 정보 상세 보기
+api.add_resource(SchoolBusViewResource,'/schoolbus/<int:id>') # 차량 정보 상세 보기 - 차량 운행 기록 테이블안에 있는 schoolbusId로 조회
 api.add_resource(SchoolBusDeleteResource,'/schoolbus/<int:id>') # 차량 삭제  <완료>
 
 api.add_resource(SchoolBusTeacherListResource,'/schoolbus/teacher') # 인솔교사 지정을 위한 교사 리스트 <완료>
-api.add_resource(SchoolBusTeacherAddResource,'/schoolbus/drive/<int:id>/teacher') # 인솔교사 등록 
-api.add_resource(SchoolBusBoardingListResource,'/schoolbus/drive/<int:id>/boarding') # 탑승자 리스트  
-api.add_resource(SchoolBusBoardingTimeResource,'/schoolbus/drive/<int:id>/boarding') # 승하차 시간 체크  
+api.add_resource(SchoolBusTeacherAddResource,'/schoolbus/drive/<int:id>/teacher') # 인솔교사 등록 - 차량 운행 기록 생성할 때 같이 등록된다 <완료>
+api.add_resource(SchoolBusBoardingListResource,'/schoolbus/drive/<int:id>/boarding') # 탑승자 리스트  3
+api.add_resource(SchoolBusBoardingTimeResource,'/schoolbus/drive/<int:id>/boarding') # 승하차 시간 체크  4
 
-api.add_resource(SchoolBusBoardingAddResource,'/schoolbus/drive/<int:id>/boarding') # 탑승신청 - 학부모화면  
-api.add_resource(SchoolBusBoardingDeleteResource,'/schoolbus/boarding/<int:id>') # 탑승취소 - 학부모화면 
+api.add_resource(SchoolBusBoardingAddResource,'/schoolbus/drive/<int:id>/boarding') # 탑승신청 - 학부모화면  1
+api.add_resource(SchoolBusBoardingDeleteResource,'/schoolbus/boarding/<int:id>') # 탑승취소 - 학부모화면  2
 
-api.add_resource(SchoolBusDriveAddResource,'/schoolbus/drive') # 차량 운행 기록 생성
+api.add_resource(SchoolBusDriveAddResource,'/schoolbus/drive') # 차량 운행 기록 생성 <완료>
 api.add_resource(SchoolBusDriveTimeResource,'/schoolbus/drive/<int:id>') # 운행시작,운행종료 시간 입력 
-api.add_resource(SchoolBusDriveEditResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 수정 
+api.add_resource(SchoolBusDriveEditResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 수정 <보류>
 api.add_resource(SchoolBusDriveViewResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 상세 보기 
-api.add_resource(SchoolBusDriveListResource,'/schoolbus/drive') # 차량 운행 기록 목록 조회
+api.add_resource(SchoolBusDriveListResource,'/schoolbus/drive') # 차량 운행 기록 목록 조회 <완료>
 
 # 실시간 위치 
 api.add_resource(SchoolBusLocationAddResource,'/schoolbus/drive/<int:id>/location') # 인솔교사의 현재 위치 테이블에 저장
