@@ -116,7 +116,7 @@ class SchoolBusEditResource(Resource):
         
         return {'result': 'success'} 
 
-# 안심등하원 - 인솔교사 리스트(어린이집 별 선생님 목록)
+# 안심등하원 - 인솔교사 지정을 위한 교사 리스트(어린이집 별 선생님 목록)
 class SchoolBusTeacherListResource(Resource):
     @jwt_required()
     def get(self):
@@ -296,7 +296,44 @@ class SchoolBusViewResource(Resource):
                  'items': result_list }, 200  # 200은 안써도 됨.
 
 # 차량 운행 기록 등록
-class SchoolBusDriveResource(Resource):
+class SchoolBusDriveAddResource(Resource):
+     @jwt_required()
+     def post(self):
+         # 포스트로 요청한 것을 처리하는 코드 작성을 우리가!
+        # 1. 클라이언트가 보낸 데이터를 받아온다.
+        data = request.get_json()
+        # 2. DB에 저장한다.
+        try:
+            # 2-1. 데이터베이스를 연결한다.
+            connection = get_connection()
+
+            # 2-2. 쿼리문 만든다
+            ###### 중요! 컬럼과 매칭되는 데이터만 %s로 바꿔준다.
+            query = '''insert into schoolBusDailyRecord
+                    (shuttleTeacherId,schoolbusId)
+                    values
+                    (%s,%s);'''
+            #2-3. 쿼리에 매칭되는 변수 처리! 중요! 튜플로 처리해준다!(튜프은 데이터변경이 안되니까?)
+            # 위의 %s부분을 만들어주는거다
+            record = (data['shuttleTeacherId'],data['schoolbusId'])
+            #2-4 커서를 가져온다
+            cursor = connection.cursor()
+            #2-5 쿼리문을,커서로 실행한다.
+            cursor.execute(query,record)
+            #2-6 DB 반영 완료하라는, commit 해줘야한다.
+            connection.commit()
+            #2-7. 자원해제
+            cursor.close()
+            connection.close()
+
+        except Error as e :
+            print(e)
+            return {'result':'fail','error': str(e)}, 500
+            # 상태코드 에러에 맞게 내가 설계한다
+        return{'result': 'success'} 
+
+# 운행시작,운행종료 시간 입력
+class SchoolBusDriveTimeResource(Resource):
      @jwt_required()
      def post(self,id):
          # 포스트로 요청한 것을 처리하는 코드 작성을 우리가!
@@ -309,13 +346,12 @@ class SchoolBusDriveResource(Resource):
 
             # 2-2. 쿼리문 만든다
             ###### 중요! 컬럼과 매칭되는 데이터만 %s로 바꿔준다.
-            query = '''insert into schoolBusDailyRecord
-                    (schoolbusId,shuttleStart,shuttleStop)
-                    values
-                    (%s,%s,%s);'''
+            query = '''update schoolBusDailyRecord
+                    set shuttleStart = %s, shuttleStop = %s
+                    where id = %s;'''
             #2-3. 쿼리에 매칭되는 변수 처리! 중요! 튜플로 처리해준다!(튜프은 데이터변경이 안되니까?)
             # 위의 %s부분을 만들어주는거다
-            record = (id,data['shuttleStart'],data['shuttleStop'])
+            record = (data['shuttleStart'],data['shuttleStop'],id)
             #2-4 커서를 가져온다
             cursor = connection.cursor()
             #2-5 쿼리문을,커서로 실행한다.
