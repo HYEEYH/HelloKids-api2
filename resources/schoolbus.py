@@ -242,42 +242,27 @@ class SchoolBusNurseryListResource(Resource):
         return { 'result' : 'success',
                 'count': len(result_list),
                  'items': result_list }, 200  # 200은 안써도 됨.
-# 안심등하원 - 차량 목록 조회
-class SchoolBusSearchListResource(Resource):
+# 안심등하원 - 차량 정보 상세 보기
+class SchoolBusViewResource(Resource):
+    @jwt_required()
+    def get(self, id):
 
-    # @jwt_required()
-    def get(self):
-
-        # 데이터베이스에 저장되어있는 차량운행정보 가져오기
-        # 자바 캘린더에서 요일을 숫자로 표현하는법 :
-        #    int dayOfWeekNumber = dayOfWeek.getValue();
-        #    DayOfWeek의 getValue() 메소드를 이용하면 요일을 숫자로 가져올 수 있습니다. 
-        #    일요일부터 토요일까지 1~7의 숫자로 표현됩니다. 
-        #    일요일 1, 월요일2,.... 토요일7
         try : 
             connection = get_connection()
 
-            query ='''select * 
-                    from schoolBus;'''
+            query ='''select shuttleName,shuttleNum,shuttleTime,shuttleDriver,shuttleDriverNum from schoolBus
+                    where id = %s;'''
+            
+            record = (id, )
 
         # 커서 가져온다
             cursor = connection.cursor(dictionary= True)
 
         # 쿼리문을 커서로 실행한다.
-            cursor.execute(query)
+            cursor.execute(query, record)
 
         # 실행 결과를 가져온다.
             result_list = cursor.fetchall()
-
-            print(result_list) 
-            # 프린트 해서 터미널에 나온 결과는 JSON이 아님. XML도 아님.
-            # 딕셔너리와 리스트의 조합처럼 생긴게 JSON인데 터미널에 뜬 내용은 전혀 형태 다름
-            # JSON의 형태로 변환해야함.
-            # cursor라이브러리로 변환할 수 있음
-            # cursor = connection.cursor() 의 괄호 안에
-            # cursor = connection.cursor(dictionary= True) 이렇게 써주면
-            # 가져올때 알아서 JSON 형태로 가져옴.
-            # 인터넷에 제이슨에디터 처서 변환하면 됨.
 
             cursor.close()
             connection.close()
@@ -285,23 +270,14 @@ class SchoolBusSearchListResource(Resource):
         except Error as e :
             print(e)
             return { 'result' : 'fail', 'error' : str(e)}, 500
+        
+        i = 0
+        for row in result_list :
+            # print(row) # 서버 내렸다가 다시 돌리고 포스트맨에서 send눌러봄 -> row는 딕셔너리
+            result_list[i]['shuttleTime'] = row['shuttleTime'].isoformat()
+            i = i + 1
 
 
-        ### 3. 데이터 가공이 필요하면 가공한 후 
-        ###     클라이이언트에 응답한다.
-        # - 데이터 가공하기 
-        # - JSON 으로 변환할때 daytime 형식때문에 자꾸 오류가 남.
-        # - created_at, updated_at의 형식을 문자열 형식으로 바꿔줘야함.
-
-        # i = 0
-        # for row in result_list :
-        #     # print(row) # 서버 내렸다가 다시 돌리고 포스트맨에서 send눌러봄 -> row는 딕셔너리
-        #     result_list[i]['created_at'] = row['created_at'].isoformat()
-        #     result_list[i]['updated_at'] = row['updated_at'].isoformat()
-        #     i = i + 1
-
-
-        # # - 에러 안났을때 코드
         return { 'result' : 'success',
                 'count': len(result_list),
                  'items': result_list }, 200  # 200은 안써도 됨.

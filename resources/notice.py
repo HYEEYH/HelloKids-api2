@@ -15,7 +15,6 @@ import boto3
 from datetime import datetime
 import os
 import passlib
-from PIL import Image
 
 # ----------------------------------------------------------------------------
 
