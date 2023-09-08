@@ -569,7 +569,7 @@ class SchoolBusBoardingListResource(Resource):
         try : 
             connection = get_connection()
 
-            query ='''select childName
+            query ='''select c.id,childName
                     from boardingRecord b
                     LEFT JOIN
                     children c
@@ -594,9 +594,7 @@ class SchoolBusBoardingListResource(Resource):
             print(e)
             return { 'result' : 'fail', 'error' : str(e)}, 500
         
-        return { 'result' : 'success',
-                'count': len(result_list),
-                 'items': result_list }, 200  # 200은 안써도 됨.
+        return {'items': result_list }, 200  # 200은 안써도 됨.
     
 # 탑승신청 - 학부모화면 
 class SchoolBusBoardingAddResource(Resource):
