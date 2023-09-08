@@ -3,7 +3,7 @@ from flask_restful import Api
 from config import Config
 from flask_jwt_extended import JWTManager
 
-from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource, PhotoAlbumAutoAddResource, PhotoAlbumListResource, PhotoAlbumRekogResource
+from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource, PhotoAlbumListResource, PhotoAlbumRekogResource
 
 from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteParentsAddResource, DailyNoteViewResource
 from resources.login import LoginResource, LogoutResource
@@ -125,8 +125,10 @@ api.add_resource(SchoolBusLocationViewResource,'/schoolbus/drive/<int:id>/locati
 # 사진첩 
 api.add_resource(PhotoAlbumAddIdResource,'/photoAlbum/addId') # 사진첩 글 아이디 만들기
 api.add_resource(PhotoAlbumAddResource,'/photoAlbum/add') # 사진첩 사진 추가 하기
-api.add_resource(PhotoAlbumRekogResource,'/photoAlbum/autoRekog') # 사진첩 원아 얼굴인식
-api.add_resource(PhotoAlbumAutoAddResource,'/photoAlbum/autoAdd') # 사진첩 원아별 폴더 생성 및 사진추가
+# api.add_resource(PhotoAlbumAddCollectionResource,'/photoAlbum/addCollection') # 사진첩 얼굴인식위한 컬렉션 만들기
+# api.add_resource(PhotoAlbumCollectionResource,'/photoAlbum/indexing') # 원아 얼굴 컬렉션에 인덱싱
+api.add_resource(PhotoAlbumRekogResource,'/photoAlbum/autoRekog') # 사진첩 원아 얼굴인식 및 자동분류
+# api.add_resource(PhotoAlbumAutoAddResource,'/photoAlbum/autoAdd') # 사진첩 원아별 폴더 생성 및 사진추가
 api.add_resource(PhotoAlbumListResource,'/photoAlbum/classlist') # 사진첩 목록 보기(/<int:nurseryId>/<int:classId> : 삭제)
 # api.add_resource(PhotoAlbumListResource,'/photoAlbum/<int:childId>/list') # 사진첩 원아별 목록 보기
 # api.add_resource(PhotoAlbumViewResource,'/photoAlbum/<int:id>') # 사진첩 상세 보기
