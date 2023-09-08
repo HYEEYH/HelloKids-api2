@@ -13,7 +13,7 @@ from resources.register1 import ParentRegisterpResource, ParentEditResource, Par
 from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
 
-from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveAddResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveTimeResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusNurseryListResource, SchoolBusResource, SchoolBusEditResource,SchoolBusTeacherAddResource, SchoolBusTeacherListResource, SchoolBusViewResource
+from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveAddResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveTimeResource, SchoolBusDriveTodayListResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusNurseryListResource, SchoolBusResource, SchoolBusEditResource,SchoolBusTeacherAddResource, SchoolBusTeacherListResource, SchoolBusViewResource
 from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusDeleteResource
 
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
@@ -96,6 +96,7 @@ api.add_resource(SchoolBusResource,'/schoolbus')  # 차량 추가 <완료>
 api.add_resource(SchoolBusEditResource,'/schoolbus/<int:id>') # 차량 수정 <완료>
 api.add_resource(SchoolBusNurseryListResource,'/schoolbus/nursery')  # 어린이집별 차량 목록 조회 <완료>
 api.add_resource(SchoolBusViewResource,'/schoolbus/<int:id>') # 차량 정보 상세 보기 - 차량 운행 기록 테이블안에 있는 schoolbusId로 조회
+api.add_resource(SchoolBusDriveTodayListResource,'/schoolbus/drive/<string:createdAt>') # 오늘 날짜에 해당하는 운행 기록이 있는 차량 정보 조회 (학부모)
 api.add_resource(SchoolBusDeleteResource,'/schoolbus/<int:id>') # 차량 삭제  <완료>
 
 api.add_resource(SchoolBusTeacherListResource,'/schoolbus/teacher') # 인솔교사 지정을 위한 교사 리스트 <완료>
@@ -111,6 +112,7 @@ api.add_resource(SchoolBusDriveTimeResource,'/schoolbus/drive/<int:id>') # 운�
 api.add_resource(SchoolBusDriveEditResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 수정 <보류>
 api.add_resource(SchoolBusDriveViewResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 상세 보기 
 api.add_resource(SchoolBusDriveListResource,'/schoolbus/drive') # 차량 운행 기록 목록 조회 <완료>
+
 
 # 실시간 위치 
 api.add_resource(SchoolBusLocationAddResource,'/schoolbus/drive/<int:id>/location') # 인솔교사의 현재 위치 테이블에 저장 <완료>

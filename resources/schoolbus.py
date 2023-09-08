@@ -496,6 +496,48 @@ class SchoolBusDriveListResource(Resource):
         return { 'result' : 'success',
                 'count': len(result_list),
                  'items': result_list }, 200  # 200은 안써도 됨.
+    
+class SchoolBusDriveTodayListResource(Resource):
+    @jwt_required()
+    def get(self, createdAt):
+
+        try : 
+            connection = get_connection()
+
+            query = '''select sc.id, shuttleName,shuttleNum,shuttleTime,shuttleDriver,shuttleDriverNum 
+                    from schoolBus s
+                    join schoolBusDailyRecord sc
+                    on sc.schoolbusId = s.id
+                    where LEFT(sc.createdAt, 10) = %s;'''
+            
+            record = (createdAt, )
+
+        # 커서 가져온다
+            cursor = connection.cursor(dictionary= True)
+
+        # 쿼리문을 커서로 실행한다.
+            cursor.execute(query, record)
+
+        # 실행 결과를 가져온다.
+            result_list = cursor.fetchall()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e :
+            print(e)
+            return { 'result' : 'fail', 'error' : str(e)}, 500
+        
+        i = 0
+        for row in result_list :
+            # print(row) # 서버 내렸다가 다시 돌리고 포스트맨에서 send눌러봄 -> row는 딕셔너리
+            result_list[i]['shuttleTime'] = row['shuttleTime'].isoformat()
+            i = i + 1
+
+        return { 'result' : 'success',
+                'count': len(result_list),
+                 'items': result_list }, 200  # 200은 안써도 됨.
+
 # 탑승자 리스트
 class SchoolBusBoardingListResource(Resource):
     @jwt_required()
