@@ -612,7 +612,7 @@ class SchoolBusBoardingAddResource(Resource):
             query = '''select childId from parents
                     where id = %s;'''
             record = (parentId, )
-            cursor = connection.cursor()
+            cursor = connection.cursor(dictionary=True)
             cursor.execute(query,record)
             result_one = cursor.fetchone()
             print(result_one)
