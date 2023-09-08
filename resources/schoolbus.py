@@ -302,28 +302,37 @@ class SchoolBusDriveAddResource(Resource):
          # 포스트로 요청한 것을 처리하는 코드 작성을 우리가!
         # 1. 클라이언트가 보낸 데이터를 받아온다.
         data = request.get_json()
+        teacherId = get_jwt_identity()
+
         # 2. DB에 저장한다.
         try:
             # 2-1. 데이터베이스를 연결한다.
             connection = get_connection()
+            query = '''select nurseryId from teacher
+                    where id = %s;'''
+            record = (teacherId, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_one = cursor.fetchone()
+            print(result_one)
+            nurseryId = result_one['nurseryId']
 
-            # 2-2. 쿼리문 만든다
-            ###### 중요! 컬럼과 매칭되는 데이터만 %s로 바꿔준다.
-            query = '''insert into schoolBusDailyRecord
-                    (shuttleTeacherId,schoolbusId)
+            query1 = '''insert into schoolBusDailyRecord
+                    (shuttleTeacherId,nurseryId,schoolbusId)
                     values
-                    (%s,%s);'''
+                    (%s,%s,%s);'''
             #2-3. 쿼리에 매칭되는 변수 처리! 중요! 튜플로 처리해준다!(튜프은 데이터변경이 안되니까?)
             # 위의 %s부분을 만들어주는거다
-            record = (data['shuttleTeacherId'],data['schoolbusId'])
+            record1 = (data['shuttleTeacherId'],nurseryId,data['schoolbusId'])
             #2-4 커서를 가져온다
-            cursor = connection.cursor()
+            cursor1 = connection.cursor()
             #2-5 쿼리문을,커서로 실행한다.
-            cursor.execute(query,record)
+            cursor1.execute(query1,record1)
             #2-6 DB 반영 완료하라는, commit 해줘야한다.
             connection.commit()
             #2-7. 자원해제
             cursor.close()
+            cursor1.close()
             connection.close()
 
         except Error as e :
@@ -496,32 +505,46 @@ class SchoolBusDriveListResource(Resource):
         return { 'result' : 'success',
                 'count': len(result_list),
                  'items': result_list }, 200  # 200은 안써도 됨.
-    
+# 오늘 운행 기록이 있는 차량 정보 조회   
 class SchoolBusDriveTodayListResource(Resource):
     @jwt_required()
     def get(self, createdAt):
 
+        parentsId = get_jwt_identity() 
+
         try : 
             connection = get_connection()
+            query = '''select n.id
+                    from nursery n
+                    join parents p
+                    on p.nurseryName = n.nurseryName
+                    where p.id = %s;'''
+            record = (parentsId, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_one = cursor.fetchone()
+            print(result_one)
+            nurseryId = result_one['id']
 
-            query = '''select sc.id, shuttleName,shuttleNum,shuttleTime,shuttleDriver,shuttleDriverNum 
+            query1 = '''select sc.id, shuttleName,shuttleNum,shuttleTime,shuttleDriver,shuttleDriverNum 
                     from schoolBus s
                     join schoolBusDailyRecord sc
                     on sc.schoolbusId = s.id
-                    where LEFT(sc.createdAt, 10) = %s;'''
+                    where LEFT(sc.createdAt, 10) = %s and nurseryId = %s;'''
             
-            record = (createdAt, )
+            record1 = (createdAt,nurseryId)
 
         # 커서 가져온다
-            cursor = connection.cursor(dictionary= True)
+            cursor1 = connection.cursor(dictionary= True)
 
         # 쿼리문을 커서로 실행한다.
-            cursor.execute(query, record)
+            cursor1.execute(query1, record1)
 
         # 실행 결과를 가져온다.
-            result_list = cursor.fetchall()
+            result_list = cursor1.fetchall()
 
             cursor.close()
+            cursor1.close()
             connection.close()
 
         except Error as e :

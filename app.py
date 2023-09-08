@@ -95,7 +95,7 @@ api.add_resource(NoticeListResource,'/notice/<int:nurseryId>/list') # 공지사�
 api.add_resource(SchoolBusResource,'/schoolbus')  # 차량 추가 <완료>
 api.add_resource(SchoolBusEditResource,'/schoolbus/<int:id>') # 차량 수정 <완료>
 api.add_resource(SchoolBusNurseryListResource,'/schoolbus/nursery')  # 어린이집별 차량 목록 조회 <완료>
-api.add_resource(SchoolBusViewResource,'/schoolbus/<int:id>') # 차량 정보 상세 보기 - 차량 운행 기록 테이블안에 있는 schoolbusId로 조회
+api.add_resource(SchoolBusViewResource,'/schoolbus/<int:id>') # 차량 정보 상세 보기 - 차량 운행 기록 테이블안에 있는 schoolbusId로 조회 <완료>
 api.add_resource(SchoolBusDriveTodayListResource,'/schoolbus/drive/<string:createdAt>') # 오늘 날짜에 해당하는 운행 기록이 있는 차량 정보 조회 (학부모)
 api.add_resource(SchoolBusDeleteResource,'/schoolbus/<int:id>') # 차량 삭제  <완료>
 
@@ -108,7 +108,7 @@ api.add_resource(SchoolBusBoardingAddResource,'/schoolbus/drive/<int:id>/boardin
 api.add_resource(SchoolBusBoardingDeleteResource,'/schoolbus/boarding/<int:id>') # 탑승취소 - 학부모화면  2
 
 api.add_resource(SchoolBusDriveAddResource,'/schoolbus/drive') # 차량 운행 기록 생성 <완료>
-api.add_resource(SchoolBusDriveTimeResource,'/schoolbus/drive/<int:id>') # 운행시작,운행종료 시간 입력 
+api.add_resource(SchoolBusDriveTimeResource,'/schoolbus/drive/<int:id>') # 운행시작,운행종료 시간 입력 <완료>
 api.add_resource(SchoolBusDriveEditResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 수정 <보류>
 api.add_resource(SchoolBusDriveViewResource,'/schoolbus/drive/<int:id>') # 차량 운행 기록 상세 보기 
 api.add_resource(SchoolBusDriveListResource,'/schoolbus/drive') # 차량 운행 기록 목록 조회 <완료>
