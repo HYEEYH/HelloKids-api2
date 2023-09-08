@@ -24,7 +24,7 @@ import datetime
 ### 사진첩 목록 보기 
 # 전체. 글 아이디별로 구분 안하고 최신순으로 다 가져옴
 # 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까? --> 수정중.
-# --> 0907 : 데이터 가져와서 목록 보는걸로 수정 중
+# --> 0907 : 데이터 가져와서 목록 보는걸로 수정 중.
 class PhotoAlbumListResource(Resource): 
 
     @jwt_required()
