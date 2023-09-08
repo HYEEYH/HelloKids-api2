@@ -656,7 +656,7 @@ class SchoolBusBoardingDeleteResource(Resource):
         try : 
             connection = get_connection()
             query = '''delete from boardingRecord
-                        where id = %s;'''
+                        where dailyRecordId = %s;'''
             record = (id, )
             cursor = connection.cursor()
             cursor.execute(query, record)
