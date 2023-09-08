@@ -104,8 +104,8 @@ api.add_resource(SchoolBusTeacherAddResource,'/schoolbus/drive/<int:id>/teacher'
 api.add_resource(SchoolBusBoardingListResource,'/schoolbus/drive/<int:id>/boarding') # 탑승자 리스트  3
 api.add_resource(SchoolBusBoardingTimeResource,'/schoolbus/drive/<int:id>/boarding') # 승하차 시간 체크  4
 
-api.add_resource(SchoolBusBoardingAddResource,'/schoolbus/drive/<int:id>/boarding') # 탑승신청 - 학부모화면  1
-api.add_resource(SchoolBusBoardingDeleteResource,'/schoolbus/boarding/<int:id>') # 탑승취소 - 학부모화면  2
+api.add_resource(SchoolBusBoardingAddResource,'/schoolbus/drive/<int:id>/boarding') # 탑승신청 - 학부모화면  1 <완료>
+api.add_resource(SchoolBusBoardingDeleteResource,'/schoolbus/boarding/<int:id>') # 탑승취소 - 학부모화면  2 <완료>
 
 api.add_resource(SchoolBusDriveAddResource,'/schoolbus/drive') # 차량 운행 기록 생성 <완료>
 api.add_resource(SchoolBusDriveTimeResource,'/schoolbus/drive/<int:id>') # 운행시작,운행종료 시간 입력 <완료>
