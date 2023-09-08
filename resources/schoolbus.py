@@ -622,11 +622,11 @@ class SchoolBusBoardingAddResource(Resource):
             # 2-2. 쿼리문 만든다
             ###### 중요! 컬럼과 매칭되는 데이터만 %s로 바꿔준다.
             query = '''insert into boardingRecord
-                    (dailyRecordId,childId,shuttleInOk)
-                    values (%s, %s, %s);'''
+                    (dailyRecordId,childId)
+                    values (%s, %s);'''
             #2-3. 쿼리에 매칭되는 변수 처리! 중요! 튜플로 처리해준다!(튜프은 데이터변경이 안되니까?)
             # 위의 %s부분을 만들어주는거다
-            record = (id,result_list[0],data['shuttleInOk'])
+            record = (id,result_list[0])
             # {
             #     'shuttleInOk':1;
             # }
