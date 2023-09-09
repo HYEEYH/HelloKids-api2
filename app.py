@@ -4,6 +4,7 @@ from config import Config
 from flask_jwt_extended import JWTManager
 
 from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource, PhotoAlbumListResource, PhotoAlbumRekogResource
+from resources.attendance import AttendanceChildrenListResource
 
 from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteParentsAddResource, DailyNoteViewResource
 from resources.login import LoginResource, LogoutResource
@@ -165,6 +166,9 @@ api.add_resource(MenuListDayResource,'/menu/<string:mealDate>') # 하루 메뉴 
 api.add_resource(MenuViewResource,'/menu/<int:id>') # 개별 메뉴 정보 보기
 api.add_resource(MenuEditResource,'/menu/<int:id>') # 개별 메뉴 정보 수정
 api.add_resource(MenuDeleteResource,'/menu/<int:id>') # 개별 메뉴 삭제 
+
+# 출석부 
+api.add_resource(AttendanceChildrenListResource,'/attendance/class/children') # 선생님이 속한 반의 아이들 목록 조회
 
 # 번역
 api.add_resource(TranslateResource, '/translate')

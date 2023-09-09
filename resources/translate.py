@@ -4,7 +4,7 @@ from flask_restful import Resource
 from flask import request
 
 ## restful api 를 코드에서 사용할때 필요한 라이브러리 ##
-import requests
+# import requests
 
 from config import Config
 # ---------------------------------------------------------------
