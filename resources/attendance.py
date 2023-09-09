@@ -40,4 +40,4 @@ class AttendanceChildrenListResource(Resource) :
         print(result_list)
         
 
-        return {'result':'success', 'item count':len(result_list), 'items':result_list}
+        return {'result':'success', 'count':len(result_list), 'items':result_list}
