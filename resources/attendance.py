@@ -41,3 +41,61 @@ class AttendanceChildrenListResource(Resource) :
         
 
         return {'result':'success', 'count':len(result_list), 'items':result_list}
+    
+class AttendanceAddResource(Resource):
+    @jwt_required()
+    def post(self,childId):
+
+        data = request.get_json()
+    
+        print(data)
+
+        try:
+            connection = get_connection()
+
+            query = '''insert into attendanceCheck (childId,classId,date,status,memo) values (%s,%s,%s,%s,%s);'''
+            record = (childId,data["classId"],data["date"], data["status"], data["memo"])
+            cursor = connection.cursor()
+            cursor.execute(query,record)
+            connection.commit()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result':'fail','error': str(e)}, 500
+
+        return {'result' :'success'}
+    
+class AttendanceClassListResource(Resource):
+
+    @jwt_required()
+    def get(self,id):
+
+
+        try:
+            connection = get_connection()
+            query = '''select a.id,childName,date,status,memo from attendanceCheck a
+                    join children c
+                    on c.id = a.childId
+                    where a.classId = %s;'''
+            record = (id, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_list = cursor.fetchall()
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return{'result':'fail', 'error':str(e)}, 400
+        
+
+        i = 0
+        for row in result_list :
+            result_list[i]['date']= row['date'].isoformat()
+            i = i + 1
+        
+
+        return {'items':result_list}
