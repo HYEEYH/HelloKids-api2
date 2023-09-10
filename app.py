@@ -44,7 +44,7 @@ api.add_resource(TeacherDeleteResource,'/user/teacher/<int:id>') # delete
 # 회원가입 - 학부모
 api.add_resource(ParentRegisterpResource,'/user/register/parent') # 회원가입-학부모-학부모정보
 api.add_resource(ParentEditResource,'/user/parent/<int:id>') # update
-api.add_resource(ParentViewResource,'/user/parent/<int:id>') # read
+api.add_resource(ParentViewResource,'/user/parent') # read 학부모가 로그인하면 자신의 정보 볼 수 있게 함
 api.add_resource(ParentDeleteResource,'/user/parent/<int:id>') # delete
 
 
@@ -172,7 +172,7 @@ api.add_resource(AttendanceChildrenListResource,'/attendance/class/children') # 
 api.add_resource(AttendanceAddResource,'/attendance/add/<int:childId>') # 출석 체크 생성
 api.add_resource(AttendanceClassListResource,'/attendance/teacher/class') # 선생님이 속한 반의 출석부 목록 조회
 api.add_resource(AttendanceEditResource,'/attendance/edit/<int:id>') # 출석 체크 수정
-api.add_resource(AttendanceChildListResource,'/attendance/parents/children') # 선생님이 속한 반의 출석부 목록 조회
+api.add_resource(AttendanceChildListResource,'/attendance/parents/children') # 학부모의 원아 출석부 목록 조회
 
 # 번역
 api.add_resource(TranslateResource, '/translate')

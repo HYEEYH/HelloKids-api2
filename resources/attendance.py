@@ -134,7 +134,7 @@ class AttendanceChildListResource(Resource):
         try:
             connection = get_connection()
             query = '''select a.id,childName,date,status,memo from attendanceCheck a
-            `        join children c
+                    join children c
                     on c.id = a.childId
                     join parents p
                     on p.childId = c.id
