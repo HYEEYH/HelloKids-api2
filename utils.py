@@ -1,4 +1,5 @@
 # -------------------------------------------------------------
+import os
 from passlib.hash import pbkdf2_sha256
 
 from config import Config
@@ -39,6 +40,14 @@ def compare_faces1(sourceFile, targetFile):
 
 
 # 4. 컬렉션 생성 함수 --> 유틸에 안쓰고 코드 자체에 써 놓음. --> 삭제
+
+
+# 5. 얼굴비교할 이미지 파일 로컬에 저장하는 함수
+def save_uploaded_file(directory, file, filename):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    with open(os.path.join(directory, filename), 'wb') as f:
+        f.write(file.getbuffer()) 
 
 
 
