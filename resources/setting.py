@@ -110,54 +110,61 @@ class SettingApproveResource(Resource) :
 class SettingClassResource(Resource) :
     
     @jwt_required()
-    def post(self):
+    def post(self,nurseryId):
 
         # 1. 클라이언트로부터 데이터를 받는다.
         data = request.get_json()
-        print(data)
+        # print(data)
 
-        json_array = data["className"]
-        class_list = []
+        # json_array = data["className"]
+        # class_list = []
 
-        for item in json_array:
-            class_info = {"nurseryId":data["nurseryId"], "className":item}
-            print(class_info)
+        # for item in json_array:
+        #     class_info = {"nurseryId":data["nurseryId"], "className":item}
+        #     print(class_info)
+
+        #     "nurseryId": 1,
+        #    "className": [
+        #        "개미반",
+        #        "베짱이반",
+        #        "참새반"
+        #   ]
             
             #2. DB에 이미 반 정보가 있는지 확인한다.
-            try:
-                connection = get_connection()
-                query = '''select * from class 
-                        where nurseryId = %s and className = %s;'''
-                record = (class_info["nurseryId"], class_info["className"])
-                cursor = connection.cursor(dictionary=True)
-                cursor.execute(query,record)
+        try:
+            connection = get_connection()
+            query = '''select * from class 
+                    where nurseryId = %s and className = %s;'''
+            record = (nurseryId, data["className"])
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query,record)
 
-                result_list = cursor.fetchall()
+            result_list = cursor.fetchall()
 
-                print(result_list)
+            print(result_list)
 
-                if len(result_list) == 1:
-                    return {'result':'fail','error':'이미 등록한 원'}, 400
+            if len(result_list) == 1:
+                return {'result':'fail','error':'이미 등록한 원'}, 400
 
-                
-                # 등록 원이 아니므로 등록 코드 작성
-                # DB에 저장
-                query = '''insert into class (nurseryId, className)
-                        values (%s, %s);'''
-                record = (class_info["nurseryId"], class_info["className"])
-                cursor = connection.cursor()
-                cursor.execute(query,record)
+            
+            # 등록 원이 아니므로 등록 코드 작성
+            # DB에 저장
+            query = '''insert into class (nurseryId, className)
+                    values (%s, %s);'''
+            record = (nurseryId, data["className"])
+            cursor = connection.cursor()
+            cursor.execute(query,record)
 
-                connection.commit()
+            connection.commit()
 
-                user_id = cursor.lastrowid
+            user_id = cursor.lastrowid
 
-                cursor.close()
-                connection.close()
+            cursor.close()
+            connection.close()
 
-            except Error as e:
-                print(e)
-                return {'result':'fail','error': str(e)}, 500
+        except Error as e:
+            print(e)
+            return {'result':'fail','error': str(e)}, 500
 
         return {'result' :'success'}
 
