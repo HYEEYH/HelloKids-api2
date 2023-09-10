@@ -318,17 +318,15 @@ class MenuViewResource(Resource):
             record = (id, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
-            result_list = cursor.fetchall()
+            result = cursor.fetchone()
             cursor.close()
             connection.close()
+            print(result)
 
         except Error as e:
             print(e)
             return{'result':'fail', 'error':str(e)}, 400
         
-        i = 0
-        for row in result_list :
-            result_list[i]['mealDate']= row['mealDate'].isoformat()
-            i = i + 1
+        result['mealDate']= result['mealDate'].isoformat()
 
-        return {result_list}
+        return { "item":result }
