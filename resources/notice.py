@@ -211,8 +211,8 @@ class NoticePublishResource(Resource):
 
             try:
                 query = '''update notice 
-                            set teacherId, noticeDate = %s, noticeTitle = %s, noticeContent = %s, noticePhotoUrl = %s, isPublish = %s where id = %s;
-                                (%s, %s, %s, %s, %s, %s);'''
+                            set teacherId = %s, noticeDate = %s, noticeTitle = %s, noticeContent = %s, noticePhotoUrl = %s, isPublish = %s where id = %s;
+                            (%s, %s, %s, %s, %s, %s, %s);'''
                     
                 record = (teacherId, notice_date, notice_contents, notice_title, file_url, notice_ispublish, noticeId)
                 print(record)
