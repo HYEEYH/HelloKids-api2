@@ -85,7 +85,6 @@ class MenuAddResource(Resource) :
                     return {'result':'fail','error': str(e)}, 500                                  
 
             try:
-                connection = get_connection()
 
                 query = '''insert into mealMenu
                         (nurseryId,classId,mealDate,mealPhotoUrl,mealContent,mealType)
