@@ -4,7 +4,7 @@ from config import Config
 from flask_jwt_extended import JWTManager
 
 from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource, PhotoAlbumListResource, PhotoAlbumRekogResource
-from resources.attendance import AttendanceAddResource, AttendanceChildrenListResource, AttendanceClassListResource, AttendanceEditResource
+from resources.attendance import AttendanceAddResource, AttendanceChildListResource, AttendanceChildrenListResource, AttendanceClassListResource, AttendanceEditResource
 
 from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteParentsAddResource, DailyNoteViewResource
 from resources.login import LoginResource, LogoutResource
@@ -172,6 +172,8 @@ api.add_resource(AttendanceChildrenListResource,'/attendance/class/children') # 
 api.add_resource(AttendanceAddResource,'/attendance/add/<int:childId>') # 출석 체크 생성
 api.add_resource(AttendanceClassListResource,'/attendance/teacher/class') # 선생님이 속한 반의 출석부 목록 조회
 api.add_resource(AttendanceEditResource,'/attendance/edit/<int:id>') # 출석 체크 수정
+api.add_resource(AttendanceChildListResource,'/attendance/children/<int:id>') # 선생님이 속한 반의 출석부 목록 조회
+
 # 번역
 api.add_resource(TranslateResource, '/translate')
 

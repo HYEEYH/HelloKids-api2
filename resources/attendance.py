@@ -125,3 +125,37 @@ class AttendanceEditResource(Resource):
             return {'result': 'fail','error': str(e)},500
         
         return {'result': 'success'} 
+    
+class AttendanceChildListResource(Resource):
+    @jwt_required()
+    def get(self):
+
+        parentsId = get_jwt_identity()
+        try:
+            connection = get_connection()
+            query = '''select a.id,childName,date,status,memo from attendanceCheck a
+            `        join children c
+                    on c.id = a.childId
+                    join parents p
+                    on p.childId = c.id
+                    where p.id = %s;'''
+            record = (parentsId, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_list = cursor.fetchall()
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return{'result':'fail', 'error':str(e)}, 400
+        
+
+        i = 0
+        for row in result_list :
+            result_list[i]['date']= row['date'].isoformat()
+            i = i + 1
+        
+
+        return {'items':result_list}
+
