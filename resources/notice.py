@@ -136,7 +136,7 @@ class NoticeAddResource(Resource):
 
             try:
                 query = '''insert into notice
-                                (nurseryId, teacherId, noticeDate, noticeTitle, noticeContent, noticePhotoUrl, isPublish)
+                                (nurseryId, teacherId, noticeDate, noticeTitle, noticeContents, noticePhotoUrl, isPublish)
                                 values
                                 (%s, %s, %s, %s, %s, %s, %s);'''
                     
