@@ -162,85 +162,80 @@ class NoticeAddResource(Resource):
             return {'result':'fail','error': str(e)}, 500
         return{'result': 'success'} 
 
-        # # 데이터베이스 연결
-        # try :
-        #     connection = get_connection()
-        #     query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
-        #     record = (teacherId, )
-        #     cursor = connection.cursor()
-        #     cursor.execute(query,record)
-        #     teacher_result_list = cursor.fetchall()
-        #     urlNurseryId = str(teacher_result_list[0][1])         
-        #     urlNurseryName = teacher_result_list[0][2]
-        #     print(teacher_result_list[0][0], teacher_result_list[0][1], teacher_result_list[0][2])
-        #     print(data["noticePhotoUrl"])
+### 공지사항 - 수정
+class NoticePublishResource(Resource):
 
+    @jwt_required()
+    def put(self, noticeId):
+
+        # 1. 헤더에 담긴 JWT 토큰을 받아온다.
+        teacherId = get_jwt_identity()
+
+        # 사진이 필수인 경우의 코드
+        if 'noticePhotoUrl' not in request.files :  # 이건 이상한경우니까
+            return {  'result' : 'fail', 'error' : '파일없음'  }, 400
+
+        notice_date = request.form['noticeDate'].replace('T', ' ')[0:10]
+        file = request.files['noticePhotoUrl']
+        notice_contents = request.form['noticeContents']
+        notice_title = request.form['noticeTitle']
+        notice_ispublish = request.form['isPublish']
+
+
+        try:
+            # 3-1. 데이터베이스를 연결한다.
+            connection = get_connection()
+            query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
+            record = (teacherId, )
+            cursor = connection.cursor()
+            cursor.execute(query,record)
+            teacher_result_list = cursor.fetchall()
             
-
-        #     noticePhotoList = data["noticePhotoUrl"]
-        #     for noticePhoto in noticePhotoList: 
-        #         print(noticePhoto)
-        #         noticePhotoPath = str(noticePhoto).replace('"', '').replace("'","").replace(",", "")
-
-        #         noticePhotoImage = noticePhotoPath
-
-        #         # print("noticePhotoPath os.path.isdir(noticePhotoPath) 해당 경로의 파일 있는지 확인 : ") 
-        #         # print(os.path.isdir(noticePhotoPath))
-        #         # print("noticePhotoPath os.path.exists(noticePhotoPath) 해당 경로의 파일 있는지 확인 : ") 
-        #         # print(os.path.exists(noticePhotoPath))
-        #         # print("noticePhotoPath Path(noticePhotoPath).resolve() 해당 경로의 파일 있는지 확인 : ") 
-        #         # print(Path(noticePhotoPath).resolve())
-        #         # noticePhotoPathData = open(noticePhotoPath, 'rb')
-        #         # print("noticePhotoPathData = open(noticePhotoPath, 'rb') 해당 경로의 파일 객체 불러오기 : ") 
-        #         # print(noticePhotoPathData )
+            teacher_result_list_str = str(teacher_result_list[0][1]) + '_' + teacher_result_list[0][2]
+            current_time = datetime.now()
+            new_filename = teacher_result_list_str + '/notice/' + current_time.isoformat().replace(':','_').replace('.','_')+'.jpg'
+            print(new_filename)
+            try:
+                s3 = boto3.client('s3',
+                        aws_access_key_id = Config.AWS_ACCESS_KEY_ID,
+                        aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY) 
+                s3.upload_fileobj(file,
+                                Config.S3_BUCKET,
+                                new_filename,
+                                ExtraArgs = {'ACL':'public-read', 'ContentType':'image/jpeg'}) 
                 
+                file_url = Config.S3_BASE_URL + new_filename 
 
+            except Exception as e:
+                print(e)
+                return {'result':'fail','error': str(e)}, 500                                  
 
-        #         # 사진 파일명 변경
-        #         current_time = datetime.now()
-        #         current_time.isoformat()
-
-        #         new_filename = urlNurseryId +'_'+ urlNurseryName + '/notice/' + current_time.isoformat().replace(':', '').replace('.', '')+'.jpg'
-        #         print('new_filename', new_filename)
-
-        #         # 새로운 파일명으로 s3에 파일 업로드
-        #         try :
-        #             # 권한 설정
-        #             s3 = boto3.client('s3', aws_access_key_id = Config.AWS_ACCESS_KEY_ID, aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY)
-        #             # 파일 업로드하기
-        #             s3.upload_file(noticePhotoImage, Config.S3_BUCKET, new_filename, ExtraArgs = {'ACL' : 'public-read', 'ContentType':'image/jpeg'} )  
+            try:
+                query = '''update notice 
+                            set teacherId, noticeDate = %s, noticeTitle = %s, noticeContent = %s, noticePhotoUrl = %s, isPublish = %s where id = %s;
+                                (%s, %s, %s, %s, %s, %s);'''
                     
-        #         except Exception as e :
-        #             print('오류', str(e))
-        #             return { 'result' : 'fail_s3', 'error' : str(e) }, 500
-                
-        #         noticePhotoUrl = Config.S3_BASE_URL + new_filename
-        #         noticePhotoUrlList.append(str(noticePhotoUrl))
-        #         print(noticePhotoUrlList)
+                record = (teacherId, notice_date, notice_contents, notice_title, file_url, notice_ispublish, noticeId)
+                print(record)
 
-        #     query = '''insert into notice
-        #                     (nurseryId, teacherId, noticeDate, noticeTitle, noticeContent, noticePhotoUrl, isPublish)
-        #                     values
-        #                     (%s, %s, %s, %s, %s, %s, %s);'''
-                
-        #     record = (teacher_result_list[0][1], teacherId, data["noticeDate"], data["noticeTitle"], data["noticeContent"], str(noticePhotoUrlList), data["isPublish"])
+                cursor = connection.cursor(prepared=True)
+                cursor.execute(query,record)
+                connection.commit()
+
+                cursor.close()
+                connection.close()
+
+            except Error as e :
+                print(e)
+                return {'result':'fail','error': str(e)}, 500
             
-        #     cursor = connection.cursor()
-        #     cursor.execute(query, record)
-        #     connection.commit()
-
-        #     cursor.close()
-        #     connection.close()
-
-        # except Error as e : 
-        #     print(e)
-        #     return { 'result' : 'fail', 'error' : str(e) }, 500
-        #     # 500 은 http 상태코드 - 내가 찾아서 넣은 에러 코드
-
-        # return {'result' : 'success'}
-    
+        except Error as e :
+            print(e)
+            return {'result':'fail','error': str(e)}, 500
+        return{'result': 'success'} 
 
 
+        
 
 ### 공지사항 - 수정
 class NoticeEditResource(Resource):

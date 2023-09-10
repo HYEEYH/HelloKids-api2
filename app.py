@@ -9,7 +9,7 @@ from resources.attendance import AttendanceAddResource, AttendanceChildListResou
 from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteParentsAddResource, DailyNoteViewResource
 from resources.login import LoginResource, LogoutResource
 from resources.menu import MenuAddResource, MenuDeleteResource, MenuEditResource, MenuListDayResource, MenuListResource, MenuViewResource
-from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticeResource, NoticeAddResource, NoticeViewResource, NoticeListResource
+from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticePublishResource, NoticeAddResource, NoticeViewResource, NoticeListResource
 from resources.register1 import ParentRegisterpResource, ParentEditResource, ParentViewResource, ParentDeleteResource
 from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
@@ -86,7 +86,7 @@ api.add_resource(LogoutResource, '/user/logout')
 
 # 공지사항
 api.add_resource(NoticeAddResource,'/notice/add') # 공지사항-임시저장 : <int:classId>/삭제
-api.add_resource(NoticeResource,'/notice/<int:id>/publish') # 공지사항 발행 #noticeId
+api.add_resource(NoticePublishResource,'/notice/<int:id>/publish') # 공지사항 발행 #noticeId
 api.add_resource(NoticeEditResource,'/notice/<int:id>') # 공지사항 - 수정
 api.add_resource(NoticeDeleteResource,'/notice/<int:id>') # 공지사항 - 삭제
 api.add_resource(NoticeViewResource,'/notice/<int:id>') # 공지사항 - 보기
