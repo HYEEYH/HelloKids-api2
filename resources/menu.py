@@ -331,4 +331,4 @@ class MenuViewResource(Resource):
             result_list[i]['mealDate']= row['mealDate'].isoformat()
             i = i + 1
 
-        return {'result':'success',  'items':result_list}
+        return {result_list}
