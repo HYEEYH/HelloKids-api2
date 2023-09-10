@@ -71,16 +71,18 @@ class AttendanceAddResource(Resource):
 class AttendanceClassListResource(Resource):
 
     @jwt_required()
-    def get(self,id):
+    def get(self):
 
-
+        teacherId = get_jwt_identity()
         try:
             connection = get_connection()
             query = '''select a.id,childName,date,status,memo from attendanceCheck a
                     join children c
                     on c.id = a.childId
-                    where a.classId = %s;'''
-            record = (id, )
+                    join teacher t
+                    on c.classId = t.classId
+                    where t.id = %s;'''
+            record = (teacherId, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
             result_list = cursor.fetchall()

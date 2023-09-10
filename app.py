@@ -170,7 +170,7 @@ api.add_resource(MenuDeleteResource,'/menu/<int:id>') # 개별 메뉴 삭제
 # 출석부 
 api.add_resource(AttendanceChildrenListResource,'/attendance/class/children') # 선생님이 속한 반의 아이들 목록 조회
 api.add_resource(AttendanceAddResource,'/attendance/add/<int:childId>') # 출석 체크 생성
-api.add_resource(AttendanceClassListResource,'/attendance/class/<int:id>') # 선생님이 속한 반의 출석부 목록 조회
+api.add_resource(AttendanceClassListResource,'/attendance/teacher/class') # 선생님이 속한 반의 출석부 목록 조회
 
 # 번역
 api.add_resource(TranslateResource, '/translate')
