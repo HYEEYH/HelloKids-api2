@@ -714,5 +714,27 @@ class SettingChildrenResource(Resource) :
 
 
         return {'result':'success'}
+    
+class SettingNurseryListResource(Resource):
+
+    @jwt_required()
+    def get(self):
+
+        try:
+            connection = get_connection()
+            query = '''select id, nurseryName, nurseryAddress from nursery;'''
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, )
+            result_list = cursor.fetchall()
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return{'result':'fail', 'error':str(e)}, 400
+        
+        print(result_list)
+
+        return {'result':'success', 'items':result_list}
 
 

@@ -18,7 +18,7 @@ from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingD
 from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusDeleteResource
 
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
-from resources.setting import SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingTeachersChildrenListResource
+from resources.setting import SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingNurseryListResource, SettingTeachersChildrenListResource
 from resources.setting import SettingNurseryResource, SettingNurseryViewResource, SettingNurseryEditResource, SettingNurseryDeleteResource
 from resources.setting import SettingClassResource, SettingClassViewResource, SettingClassListResource, SettingClassEditResource, SettingClassDeleteResource, SettingApproveResource, SettingApproveList
 from resources.translate import TranslateResource
@@ -61,6 +61,7 @@ api.add_resource(SettingChildDeleteResource,'/setting/child/<int:id>') # delete
 # 원 입력
 api.add_resource(SettingNurseryResource,'/setting/nursery') # 원 입력 
 api.add_resource(SettingNurseryViewResource,'/setting/nursery/<int:id>/view') # 원 정보 보기
+api.add_resource(SettingNurseryListResource,'/setting/nursery/list') # 원 정보 보기
 api.add_resource(SettingNurseryEditResource,'/setting/nursery/<int:id>/edit') # 원 정보 수정
 api.add_resource(SettingNurseryDeleteResource,'/setting/nursery/<int:id>') # 원 정보 삭제
 
