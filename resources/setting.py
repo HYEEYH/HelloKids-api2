@@ -488,7 +488,7 @@ class SettingChildrenListResource(Resource) :
             result_list[i]['birth']= row['birth'].isoformat()
             i = i + 1
 
-        return {'result':'success', 'item count':len(result_list), 'items':result_list}
+        return {'result':'success','items':result_list}
     
 class SettingTeachersChildrenListResource(Resource):
     @jwt_required()
