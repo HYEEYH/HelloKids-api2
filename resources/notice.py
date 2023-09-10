@@ -24,15 +24,24 @@ import passlib
 class NoticeListResource(Resource) :
 
     @jwt_required()
-    def get(self, nurseryId):
+    def get(self):
+        teacherId = get_jwt_identity()
 
         try:
             connection = get_connection()
+            query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
+            record = (teacherId, )
+            cursor = connection.cursor()
+            cursor.execute(query,record)
+            teacher_result_list = cursor.fetchall()
+            nursery_id = teacher_result_list[0][1]
+
+
             query = '''SELECT * FROM teacher t
                     left join notice n
                     on t.id = n.teacherId
                     where t.nurseryId = %s;'''
-            record = (nurseryId, )
+            record = (nursery_id, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
             result_list = cursor.fetchall()
@@ -57,6 +66,7 @@ class NoticeViewResource(Resource) :
 
     @jwt_required()
     def get(self, id):
+        teacherId = get_jwt_identity()
 
         try:
             connection = get_connection()

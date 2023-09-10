@@ -89,7 +89,7 @@ api.add_resource(NoticeResource,'/notice/<int:id>/publish') # 공지사항 발�
 api.add_resource(NoticeEditResource,'/notice/<int:id>') # 공지사항 - 수정
 api.add_resource(NoticeDeleteResource,'/notice/<int:id>') # 공지사항 - 삭제
 api.add_resource(NoticeViewResource,'/notice/<int:id>') # 공지사항 - 보기
-api.add_resource(NoticeListResource,'/notice/<int:nurseryId>/list') # 공지사항 - 목록
+api.add_resource(NoticeListResource,'/notice/list') # 공지사항 - 목록
 
 
 # 안심등하원
