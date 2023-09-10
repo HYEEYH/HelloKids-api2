@@ -37,7 +37,8 @@ class NoticeListResource(Resource) :
             nursery_id = teacher_result_list[0][1]
 
 
-            query = '''SELECT * FROM teacher t
+            query = '''SELECT teacherId, noticeDate, noticeTitle, noticeContents, noticePhotoUrl, isPublish 
+                    FROM teacher t
                     left join notice n
                     on t.id = n.teacherId
                     where t.nurseryId = %s;'''
@@ -55,11 +56,10 @@ class NoticeListResource(Resource) :
         print(result_list)
         i = 0
         for row in result_list :
-            result_list[i]['createdAt']= row['createdAt'].isoformat()
-            result_list[i]['updatedAt']= row['updatedAt'].isoformat()
+            result_list[i]['noticeDate']= row['noticeDate'].isoformat()
             i = i + 1
 
-        return {'result':'success', 'items':result_list}
+        return {'result':'success', 'count':len(result_list), 'items':result_list}
 
 ### 공지사항 - 상세보기
 class NoticeViewResource(Resource) :
@@ -70,7 +70,7 @@ class NoticeViewResource(Resource) :
 
         try:
             connection = get_connection()
-            query = '''select * from notice 
+            query = '''select teacherId, noticeDate, noticeTitle, noticeContents, noticePhotoUrl, isPublish  from notice 
                     where id = %s;'''
             record = (id, )
             cursor = connection.cursor(dictionary=True)
@@ -86,11 +86,10 @@ class NoticeViewResource(Resource) :
         print(result_list)
         i = 0
         for row in result_list :
-            result_list[i]['createdAt']= row['createdAt'].isoformat()
-            result_list[i]['updatedAt']= row['updatedAt'].isoformat()
+            result_list[i]['noticeDate']= row['noticeDate'].isoformat()
             i = i + 1
 
-        return {'result':'success', 'item count':len(result_list), 'items':result_list}
+        return {'items':result_list}
 
 
 ### 공지사항 - 임시저장
