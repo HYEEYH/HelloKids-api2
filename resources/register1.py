@@ -75,7 +75,7 @@ class ParentEditResource(Resource):
 class ParentViewResource(Resource) :
 
     @jwt_required()
-    def get(self, id):
+    def get(self):
 
         parentsId = get_jwt_identity()
 
