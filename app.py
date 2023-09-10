@@ -84,7 +84,7 @@ api.add_resource(LoginResource, '/user/login')
 api.add_resource(LogoutResource, '/user/logout')
 
 # 공지사항
-api.add_resource(NoticeAddResource,'/notice/publish') # 공지사항-임시저장 : <int:classId>/삭제
+api.add_resource(NoticeAddResource,'/notice/add') # 공지사항-임시저장 : <int:classId>/삭제
 api.add_resource(NoticeResource,'/notice/<int:id>/publish') # 공지사항 발행 #noticeId
 api.add_resource(NoticeEditResource,'/notice/<int:id>') # 공지사항 - 수정
 api.add_resource(NoticeDeleteResource,'/notice/<int:id>') # 공지사항 - 삭제
