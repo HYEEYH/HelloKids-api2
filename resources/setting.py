@@ -721,6 +721,44 @@ class SettingChildrenResource(Resource) :
 
 
         return {'result':'success'}
+class SettingChildrenAddResource(Resource):
+
+    @jwt_required()
+    def post(self,classId):
+
+        data = request.get_json()
+        id = get_jwt_identity()
+
+        try:
+            connection = get_connection()
+
+            query = '''select nurseryId from teacher
+                    where id = %s;'''
+            record = (id, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_one = cursor.fetchone()
+            print(result_one)
+            nurseryId = result_one['nurseryId']
+
+
+            query1 = '''insert into children (classId,nurseryId,childName,birth,sex) values (%s,%s,%s,%s,%s);'''
+            record1 = (classId, nurseryId,data["childName"],data["birth"], data["sex"])
+            cursor1 = connection.cursor()
+            cursor1.execute(query1,record1)
+            connection.commit()
+
+            cursor.close()
+            cursor1.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result':'fail','error': str(e)}, 500
+
+        return {'result' :'success'}
+    
+
     
 class SettingNurseryListResource(Resource):
 

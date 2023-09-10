@@ -18,7 +18,7 @@ from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingD
 from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusDeleteResource
 
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
-from resources.setting import SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingNurseryListResource, SettingTeachersChildrenListResource
+from resources.setting import SettingChildrenAddResource, SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingNurseryListResource, SettingTeachersChildrenListResource
 from resources.setting import SettingNurseryResource, SettingNurseryViewResource, SettingNurseryEditResource, SettingNurseryDeleteResource
 from resources.setting import SettingClassResource, SettingClassViewResource, SettingClassListResource, SettingClassEditResource, SettingClassDeleteResource, SettingApproveResource, SettingApproveList
 from resources.translate import TranslateResource
@@ -50,6 +50,8 @@ api.add_resource(ParentDeleteResource,'/user/parent/<int:id>') # delete
 
 # setting
 api.add_resource(SettingChildrenResource,'/setting/child') # JSON 버전 아이 입력 
+api.add_resource(SettingChildrenAddResource,'/setting/child/add/<int:classId>') # 원아 등록(프로필 사진 일단 제외)
+                                                           # 사진 아이콘 클릭 후 사진 선택해서 해당 원아 데이터에 업데이트
 api.add_resource(SettingAllChildrenListResource,'/setting/children/<int:nurseryId>/all') # read # 어린이집 선택 시 해당 어린이집 원아 목록 조회
 api.add_resource(SettingChildrenListResource,'/setting/children/<int:classId>') # read  반 선택 시 해당 반 원아 목록 조회
 api.add_resource(SettingTeachersChildrenListResource,'/setting/children/list') # 원아 목록 조회 (선생님이 담당한 반의 원아들이 자동으로 설정되서 나오게 하는 API)
@@ -103,8 +105,8 @@ api.add_resource(SchoolBusDeleteResource,'/schoolbus/<int:id>') # 차량 삭제 
 
 api.add_resource(SchoolBusTeacherListResource,'/schoolbus/teacher') # 인솔교사 지정을 위한 교사 리스트 <완료>
 api.add_resource(SchoolBusTeacherAddResource,'/schoolbus/drive/<int:id>/teacher') # 인솔교사 등록 - 차량 운행 기록 생성할 때 같이 등록된다 <완료>
-api.add_resource(SchoolBusBoardingListResource,'/schoolbus/drive/<int:id>/boarding') # 탑승자 리스트  3
-api.add_resource(SchoolBusBoardingTimeResource,'/schoolbus/drive/<int:id>/boarding') # 승하차 시간 체크  4
+api.add_resource(SchoolBusBoardingListResource,'/schoolbus/drive/<int:id>/boarding') # 탑승자 리스트  3 <완료>
+api.add_resource(SchoolBusBoardingTimeResource,'/schoolbus/drive/<int:id>/boarding') # 승하차 시간 체크  4 <완료>
 
 api.add_resource(SchoolBusBoardingAddResource,'/schoolbus/drive/<int:id>/boarding') # 탑승신청 - 학부모화면  1 <완료>
 api.add_resource(SchoolBusBoardingDeleteResource,'/schoolbus/boarding/<int:id>') # 탑승취소 - 학부모화면  2 <완료>
