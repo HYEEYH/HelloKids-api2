@@ -67,7 +67,7 @@ api.add_resource(SettingNurseryDeleteResource,'/setting/nursery/<int:id>') # 원
 
 
 # 반 입력
-api.add_resource(SettingClassResource,'/setting/class') # 반 입력
+api.add_resource(SettingClassResource,'/setting/class/<int:nurseryId>') # 반 입력
 api.add_resource(SettingClassViewResource,'/setting/class/<int:id>/view') # 반 정보 보기
 api.add_resource(SettingClassListResource,'/setting/class/list') # 반 목록 보기 (선생님이 속한 어린이집의 반이 자동으로 설정되서 나오게 하는 API)
 api.add_resource(SettingClassEditResource,'/setting/class/<int:id>/edit') # 반 정보 수정
