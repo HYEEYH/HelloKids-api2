@@ -101,3 +101,27 @@ class AttendanceClassListResource(Resource):
         
 
         return {'items':result_list}
+
+class AttendanceEditResource(Resource):
+    @jwt_required()
+    def put(self,id):
+
+        data = request.get_json()
+        try :
+            connection = get_connection()
+            query = '''update attendanceCheck
+                    set status = %s, memo = %s
+                    where id = %s;''' 
+            record = (data['status'],data['memo'],id) 
+            cursor= connection.cursor()
+            cursor.execute(query,record)
+            connection.commit()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result': 'fail','error': str(e)},500
+        
+        return {'result': 'success'} 
