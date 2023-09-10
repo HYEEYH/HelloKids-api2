@@ -38,10 +38,8 @@ class NoticeListResource(Resource) :
 
 
             query = '''SELECT teacherId, noticeDate, noticeTitle, noticeContents, noticePhotoUrl, isPublish 
-                    FROM teacher t
-                    left join notice n
-                    on t.id = n.teacherId
-                    where t.nurseryId = %s;'''
+                    FROM notice
+                    where nurseryId = %s;'''
             record = (nursery_id, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
