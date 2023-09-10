@@ -77,11 +77,13 @@ class ParentViewResource(Resource) :
     @jwt_required()
     def get(self, id):
 
+        parentsId = get_jwt_identity()
+
         try:
             connection = get_connection()
             query = '''select * from parents 
                     where id = %s;'''
-            record = (id, )
+            record = (parentsId, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
             result_list = cursor.fetchall()
@@ -99,7 +101,7 @@ class ParentViewResource(Resource) :
             i = i + 1
 
 
-        return {'result':'success', 'items':result_list}
+        return {'items':result_list}
 
 
 # 회원가입 - 학부모 - 학부모 정보 : 완

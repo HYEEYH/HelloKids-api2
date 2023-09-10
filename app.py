@@ -44,7 +44,7 @@ api.add_resource(TeacherDeleteResource,'/user/teacher/<int:id>') # delete
 # 회원가입 - 학부모
 api.add_resource(ParentRegisterpResource,'/user/register/parent') # 회원가입-학부모-학부모정보
 api.add_resource(ParentEditResource,'/user/parent/<int:id>') # update
-api.add_resource(ParentViewResource,'/user/parent/<int:id>') # read
+api.add_resource(ParentViewResource,'/user/parent') # read 학부모가 로그인하면 자신의 정보 볼 수 있게 함
 api.add_resource(ParentDeleteResource,'/user/parent/<int:id>') # delete
 
 
