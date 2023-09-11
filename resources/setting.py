@@ -64,15 +64,14 @@ class SettingApproveList(Resource) :
 # 권한 설정 
 class SettingApproveResource(Resource) :
     
-    @jwt_required()
     def put(self,parentsId):
 
         # {
         #  "parentId":1   
         # }
 
-        data = request.get_json()
-        teacherId = get_jwt_identity()
+        # data = request.get_json()
+        # teacherId = get_jwt_identity()
 
         try:
             connection = get_connection()
