@@ -757,7 +757,78 @@ class SettingChildrenAddResource(Resource):
             return {'result':'fail','error': str(e)}, 500
 
         return {'result' :'success'}
-    
+class SettingChildrenPhotoAddResource(Resource):
+
+    @jwt_required()
+    def put(self, id):
+    # 1. 헤더에 담긴 JWT 토큰을 받아온다.
+        teacherId = get_jwt_identity()
+
+        # 사진이 필수인 경우의 코드
+        if 'profileUrl' not in request.files :  # 이건 이상한경우니까
+            return {  'result' : 'fail', 'error' : '파일없음'  }, 400
+
+        file = request.files['profileUrl']
+
+        try:
+            # 3-1. 데이터베이스를 연결한다.
+            connection = get_connection()
+            query = '''SELECT classId, nurseryId, nurseryName FROM nursery n left join teacher t on n.id = t.nurseryId where t.id = %s;'''
+            record = (teacherId, )
+            cursor = connection.cursor()
+            cursor.execute(query,record)
+            teacher_result_list = cursor.fetchall()
+
+            query = '''SELECT birth,childName FROM children where id = %s;'''
+            record = (id, )
+            cursor = connection.cursor()
+            cursor.execute(query,record)
+            children_result_list = cursor.fetchall()
+            
+            current_time = datetime.now().isoformat().replace(':','').replace('.','').replace('-','')[:7]
+            urlNurseryId = str(teacher_result_list[0][1])               
+            urlNurseryName = teacher_result_list[0][2]
+            birth = children_result_list[0][0].isoformat()
+            childName = children_result_list[0][1]
+            new_filename = urlNurseryId +'_'+ urlNurseryName + '/profile/' + birth + '_' + childName + '_' + current_time + '.jpg'
+            print(new_filename)
+            try:
+                s3 = boto3.client('s3',
+                        aws_access_key_id = Config.AWS_ACCESS_KEY_ID,
+                        aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY) 
+                s3.upload_fileobj(file,
+                                Config.S3_BUCKET,
+                                new_filename,
+                                ExtraArgs = {'ACL':'public-read', 'ContentType':'image/jpeg'}) 
+                
+                file_url = Config.S3_BASE_URL + new_filename 
+
+            except Exception as e:
+                print(e)
+                return {'result':'fail','error': str(e)}, 500                                  
+
+            try:
+                query = '''update children
+                            set profileUrl = %s where id = %s;'''
+                    
+                record = (file_url,id)
+                print(record)
+
+                cursor = connection.cursor(prepared=True)
+                cursor.execute(query,record)
+                connection.commit()
+
+                cursor.close()
+                connection.close()
+
+            except Error as e :
+                print(e)
+                return {'result':'fail','error': str(e)}, 500
+            
+        except Error as e :
+            print(e)
+            return {'result':'fail','error': str(e)}, 500
+        return{'result': 'success'} 
 
     
 class SettingNurseryListResource(Resource):
