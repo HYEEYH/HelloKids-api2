@@ -32,7 +32,7 @@ class SettingApproveList(Resource) :
             print(nursery_id, nursery_name, nursery_address)
 
 
-            query = '''select parentsName, email, phone, childNameP, birthP, childId from parents where nurseryName = %s and childId is null;'''
+            query = '''select id, parentsName, email, phone, childNameP, birthP, childId from parents where nurseryName = %s and childId is null;'''
             record = (nursery_name, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query,record)
