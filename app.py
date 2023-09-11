@@ -10,8 +10,9 @@ from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResourc
 from resources.login import LoginResource, LogoutResource
 from resources.menu import MenuAddResource, MenuDeleteResource, MenuEditResource, MenuListDayResource, MenuListResource, MenuViewResource
 from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticePublishResource, NoticeAddResource, NoticeViewResource, NoticeListResource
-from resources.register1 import ParentRegisterpResource, ParentEditResource, ParentViewResource, ParentDeleteResource
-from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
+
+from resources.register import TeacherMyViewResource, TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
+from resources.register1 import ParentRegisterpResource, ParentEditResource, ParentViewResource, ParentDeleteResource, ParentWaitingResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
 
 from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveAddResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveTimeResource, SchoolBusDriveTodayListResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusNurseryListResource, SchoolBusResource, SchoolBusEditResource,SchoolBusTeacherAddResource, SchoolBusTeacherListResource, SchoolBusViewResource
@@ -39,6 +40,7 @@ api = Api(app)
 api.add_resource(TeacherRegisterResource,'/user/register/teacher')
 api.add_resource(TeacherEditResource,'/user/teacher/<int:id>') # update
 api.add_resource(TeacherViewResource,'/user/teacher/<int:id>') # read
+api.add_resource(TeacherMyViewResource,'/user/teacher') # 내 정보 보기(선생님)
 api.add_resource(TeacherDeleteResource,'/user/teacher/<int:id>') # delete
 
 # 회원가입 - 학부모
@@ -46,14 +48,14 @@ api.add_resource(ParentRegisterpResource,'/user/register/parent') # 회원가입
 api.add_resource(ParentEditResource,'/user/parent/<int:id>') # update
 api.add_resource(ParentViewResource,'/user/parent') # read 학부모가 로그인하면 자신의 정보 볼 수 있게 함
 api.add_resource(ParentDeleteResource,'/user/parent/<int:id>') # delete
-
+api.add_resource(ParentWaitingResource, '/user/waiting')
 
 # setting
 api.add_resource(SettingChildrenResource,'/setting/child') # JSON 버전 아이 입력 
 api.add_resource(SettingChildrenAddResource,'/setting/child/add/<int:classId>') # 원아 등록(프로필 사진 일단 제외) 
 api.add_resource(SettingChildrenPhotoAddResource,'/setting/child/<int:id>/photo') # 사진 아이콘 클릭 후 사진 선택해서 해당 원아 데이터에 업데이트 (바로 위의 방법을 쓸 경우)
-api.add_resource(SettingAllChildrenListResource,'/setting/children/<int:nurseryId>/all') # read # 어린이집 선택 시 해당 어린이집 원아 목록 조회
-api.add_resource(SettingChildrenListResource,'/setting/children/<int:classId>') # read  반 선택 시 해당 반 원아 목록 조회
+api.add_resource(SettingAllChildrenListResource,'/setting/children/<int:nurseryId>/all') # 어린이집 선택 시 해당 어린이집 원아 목록 조회
+api.add_resource(SettingChildrenListResource,'/setting/children/<int:classId>') # 반 선택 시 해당 반 원아 목록 조회
 api.add_resource(SettingTeachersChildrenListResource,'/setting/children/list') # 원아 목록 조회 (선생님이 담당한 반의 원아들이 자동으로 설정되서 나오게 하는 API)
 api.add_resource(SettingChildViewResource,'/setting/child/<int:id>') # read
 api.add_resource(SettingChildEditResource,'/setting/child/<int:id>') # update

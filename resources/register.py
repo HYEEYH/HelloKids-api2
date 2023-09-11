@@ -89,6 +89,31 @@ class TeacherViewResource(Resource) :
         print(result_list)
 
         return {'result':'success', 'items':result_list}
+class TeacherMyViewResource(Resource):
+    @jwt_required()
+    def get(self):
+        
+        id = get_jwt_identity()
+
+        try:
+            connection = get_connection()
+            query = '''select * from teacher 
+                    where id = %s;'''
+            record = (id, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_list = cursor.fetchall()
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return{'result':'fail', 'error':str(e)}, 400
+        
+        print(result_list)
+
+        return {'result':'success', 'items':result_list}
+
 
 
 jwt_blocklist = set()
