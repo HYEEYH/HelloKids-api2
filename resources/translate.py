@@ -7,6 +7,7 @@ from flask import request
 # import requests
 
 from config import Config
+import requests
 # ---------------------------------------------------------------
 
 
