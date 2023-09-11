@@ -773,7 +773,7 @@ class SettingChildrenPhotoAddResource(Resource):
         if 'profileUrl' not in request.files :  # 이건 이상한경우니까
             return {  'result' : 'fail', 'error' : '파일없음'  }, 400
 
-        # 유저에게 프로필 사진을 입력받는다
+        # 유저에게 프로필 사진을 입력받는다.
         file = request.files['profileUrl']
 
         try:
