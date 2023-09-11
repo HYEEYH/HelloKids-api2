@@ -18,8 +18,9 @@ from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, j
 class ParentWaitingResource(Resource):
 
     @jwt_required()
-    def get(self, id):
+    def get(self):
 
+        id = get_jwt_identity()
         try : 
             connection = get_connection()
             query = '''select isnull(childId) from parents where id = %s;'''
