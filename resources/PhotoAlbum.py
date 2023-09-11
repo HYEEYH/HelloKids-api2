@@ -420,7 +420,7 @@ class PhotoAlbumAddResource(Resource):
 
 
 
-### 3. 원아별 사진폴더 생성 및 자동분류
+### 3. 원아별 사진폴더 생성 및 자동분류.
 class PhotoAlbumRekogResource(Resource):
 
     @jwt_required()
