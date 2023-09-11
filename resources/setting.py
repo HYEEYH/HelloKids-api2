@@ -51,7 +51,7 @@ class SettingApproveList(Resource) :
         except Error as e:
             print(e)
             return {'result':'fail','error':'선생님의 원 정보가 등록되지 않았습니다.'}, 500
-        return {'result' :'success', 'items':result_list}
+        return {'items':result_list}
 
 
 
