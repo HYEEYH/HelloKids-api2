@@ -10,3 +10,4 @@ passlib
 googlemaps
 boto3
 Pillow
+requests

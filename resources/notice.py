@@ -37,7 +37,7 @@ class NoticeListResource(Resource) :
             nursery_id = teacher_result_list[0][1]
 
 
-            query = '''SELECT teacherId, noticeDate, noticeTitle, noticeContents, noticePhotoUrl, isPublish 
+            query = '''SELECT id, teacherId, noticeDate, noticeTitle, noticeContents, noticePhotoUrl, isPublish 
                     FROM notice
                     where nurseryId = %s;'''
             record = (nursery_id, )
@@ -68,7 +68,7 @@ class NoticeViewResource(Resource) :
 
         try:
             connection = get_connection()
-            query = '''select teacherId, noticeDate, noticeTitle, noticeContents, noticePhotoUrl, isPublish  from notice 
+            query = '''select id, teacherId, noticeDate, noticeTitle, noticeContents, noticePhotoUrl, isPublish  from notice 
                     where id = %s;'''
             record = (id, )
             cursor = connection.cursor(dictionary=True)
@@ -312,9 +312,7 @@ class NoticeEditResource(Resource):
 ### 공지사항 - 삭제
 class NoticeDeleteResource(Resource):
     @jwt_required()
-    def delete(self, noticeId):
-
-        print(noticeId)
+    def delete(self, id):
 
         # 1. 헤더에 담긴 JWT 토큰을 받아온다.
         teacherId = get_jwt_identity()
@@ -325,7 +323,7 @@ class NoticeDeleteResource(Resource):
             connection = get_connection()
             query = '''delete from notice
                         where id = %s;'''
-            record = (noticeId, )
+            record = (id, )
             cursor = connection.cursor()
             cursor.execute(query, record)
             connection.commit()
