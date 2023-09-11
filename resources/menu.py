@@ -328,4 +328,4 @@ class MenuViewResource(Resource):
         
         result['mealDate']= result['mealDate'].isoformat()
 
-        return { "item":result }
+        return { "items":result }
