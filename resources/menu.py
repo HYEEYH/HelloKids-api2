@@ -215,7 +215,7 @@ class MenuListResource(Resource):
             cursor.execute(query,record)
             teacher_result_list = cursor.fetchall()
             
-            query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s;'''
+            query = '''select id, mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s;'''
             record = (teacher_result_list[0][1], )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
@@ -250,7 +250,7 @@ class MenuListClassResource(Resource):
             teacher_result_list = cursor.fetchall()
             
            
-            query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s and classId = %s;'''
+            query = '''select id, mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s and classId = %s;'''
             record = (teacher_result_list[0][1], classId)
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
@@ -285,7 +285,7 @@ class MenuListDayResource(Resource):
             cursor.execute(query,record)
             teacher_result_list = cursor.fetchall()
            
-            query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s and mealDate = %s;'''
+            query = '''select id, mealDate, mealPhotoUrl, mealContent, mealType from mealMenu where nurseryId = %s and mealDate = %s;'''
             record = (teacher_result_list[0][1], mealDate)
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
@@ -312,7 +312,7 @@ class MenuViewResource(Resource):
 
         try:
             connection = get_connection()
-            query = '''select mealDate, mealPhotoUrl, mealContent, mealType from mealMenu 
+            query = '''select id, mealDate, mealPhotoUrl, mealContent, mealType from mealMenu 
                     where id = %s;'''
             record = (id, )
             cursor = connection.cursor(dictionary=True)
