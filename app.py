@@ -11,7 +11,7 @@ from resources.login import LoginResource, LogoutResource
 from resources.menu import MenuAddResource, MenuDeleteResource, MenuEditResource, MenuListDayResource, MenuListResource, MenuViewResource
 from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticePublishResource, NoticeAddResource, NoticeViewResource, NoticeListResource
 from resources.register1 import ParentRegisterpResource, ParentEditResource, ParentViewResource, ParentDeleteResource
-from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
+from resources.register import TeacherMyViewResource, TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
 
 from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingDeleteResource, SchoolBusBoardingListResource, SchoolBusBoardingTimeResource, SchoolBusDriveAddResource, SchoolBusDriveEditResource, SchoolBusDriveListResource, SchoolBusDriveTimeResource, SchoolBusDriveTodayListResource, SchoolBusDriveViewResource, SchoolBusLocationAddResource, SchoolBusLocationViewResource, SchoolBusNurseryListResource, SchoolBusResource, SchoolBusEditResource,SchoolBusTeacherAddResource, SchoolBusTeacherListResource, SchoolBusViewResource
@@ -39,6 +39,7 @@ api = Api(app)
 api.add_resource(TeacherRegisterResource,'/user/register/teacher')
 api.add_resource(TeacherEditResource,'/user/teacher/<int:id>') # update
 api.add_resource(TeacherViewResource,'/user/teacher/<int:id>') # read
+api.add_resource(TeacherMyViewResource,'/user/teacher') # 내 정보 보기(선생님)
 api.add_resource(TeacherDeleteResource,'/user/teacher/<int:id>') # delete
 
 # 회원가입 - 학부모
