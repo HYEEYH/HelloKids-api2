@@ -50,14 +50,14 @@ def check_password(original_password, hashed_password) :
 #         f.write(file.getbuffer()) 
 
 
-# # 5. 이미지 파일 로컬에 저장 함수 2
-# def save_uploaded_file2(directory, file, filename):
-#     if not os.path.exists(directory):
-#         os.makedirs(directory)
-#     else :
-#         file_1 = open(os.path.join(directory, filename), 'wb')
-#         file_1.write(file.getbuffer())
-#         file_1.close()
+# 5. 이미지 파일 로컬에 저장 함수 2
+def save_uploaded_file2(directory, file, filename):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    else :
+        file_1 = open(os.path.join(directory, filename), 'wb')
+        file_1.write(file.getbuffer())
+        file_1.close()
 
 
 

@@ -13,7 +13,7 @@ import mysql.connector
 from mysql.connector import Error
 from config import Config
 from mysql_connection import get_connection
-from utils import check_password, hash_password, save_uploaded_file, save_uploaded_file2
+from utils import check_password, hash_password, save_uploaded_file2
 from email_validator import validate_email,EmailNotValidError 
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 
@@ -593,7 +593,7 @@ class PhotoAlbumRekogResource(Resource):
             today = datetime.date.today()
             print("* today : ", today)
 
-            os.chdir('../')
+            os.chdir('../') # 상위 폴더로 이동
             print('*  현재 경로 표시 : ', os.getcwd())
             
             if profile_image1[0][0] == nursery_class :

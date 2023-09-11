@@ -3,7 +3,7 @@ from flask import request
 import mysql.connector
 from mysql.connector import Error
 from mysql_connection import get_connection
-from utils import check_password, hash_password
+from utils import check_password, hash_password, save_uploaded_file2
 from email_validator import validate_email,EmailNotValidError 
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 from datetime import datetime
@@ -757,17 +757,23 @@ class SettingChildrenAddResource(Resource):
             return {'result':'fail','error': str(e)}, 500
 
         return {'result' :'success'}
+    
+
 class SettingChildrenPhotoAddResource(Resource):
 
     @jwt_required()
     def put(self, id):
-    # 1. 헤더에 담긴 JWT 토큰을 받아온다.
+
+        # 1. 헤더에 담긴 JWT 토큰을 받아온다.
         teacherId = get_jwt_identity()
+
+        # 원아 아이디 : id
 
         # 사진이 필수인 경우의 코드
         if 'profileUrl' not in request.files :  # 이건 이상한경우니까
             return {  'result' : 'fail', 'error' : '파일없음'  }, 400
 
+        # 유저에게 프로필 사진을 입력받는다
         file = request.files['profileUrl']
 
         try:
@@ -778,6 +784,7 @@ class SettingChildrenPhotoAddResource(Resource):
             cursor = connection.cursor()
             cursor.execute(query,record)
             teacher_result_list = cursor.fetchall()
+            print('* teacher_result_list : ', teacher_result_list)
 
             query = '''SELECT birth,childName FROM children where id = %s;'''
             record = (id, )
@@ -786,10 +793,26 @@ class SettingChildrenPhotoAddResource(Resource):
             children_result_list = cursor.fetchall()
             
             current_time = datetime.now().isoformat().replace(':','').replace('.','').replace('-','')[:7]
-            urlNurseryId = str(teacher_result_list[0][1])               
+
             urlNurseryName = teacher_result_list[0][2]
             birth = children_result_list[0][0].isoformat()
+            urlNurseryId = str(teacher_result_list[0][1])
+            print('* 원 아이디 urlNurseryId : ', urlNurseryId) 
+            class_id = str(teacher_result_list[0][0])
+            print('* 반 아이디 cladd_id : ', class_id)
             childName = children_result_list[0][1]
+            print('* 원아 이름 childName : ', childName) 
+
+
+            # 로컬에 사진 먼저 저장
+            # 사진 이름 형식 : 원아이디_반아이디.원아아이디.원아이름.jpg (예 : 1_1.14.이채은.jpg)
+            img_file = file
+            filename = urlNurseryId + '_' + class_id + '.' + str(id) + '.' + childName + '.jpg'
+            print('* 업로드 파일 이름 filename : ', filename)
+            save_uploaded_file2('profileUrl_image', img_file, filename)
+
+
+            # 버킷에 저장
             new_filename = urlNurseryId +'_'+ urlNurseryName + '/profile/' + birth + '_' + childName + '_' + current_time + '.jpg'
             print(new_filename)
             try:
