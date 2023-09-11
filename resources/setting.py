@@ -51,6 +51,12 @@ class SettingApproveList(Resource) :
         except Error as e:
             print(e)
             return {'result':'fail','error':'선생님의 원 정보가 등록되지 않았습니다.'}, 500
+        
+        i = 0
+        for row in result_list :
+            result_list[i]['birthP']= row['birthP'].isoformat()
+            i = i + 1
+
         return {'items':result_list}
 
 
