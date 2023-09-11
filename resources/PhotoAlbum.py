@@ -13,7 +13,7 @@ import mysql.connector
 from mysql.connector import Error
 from config import Config
 from mysql_connection import get_connection
-from utils import check_password, hash_password, save_uploaded_file
+from utils import check_password, hash_password, save_uploaded_file, save_uploaded_file2
 from email_validator import validate_email,EmailNotValidError 
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 
@@ -428,30 +428,29 @@ class PhotoAlbumRekogResource(Resource):
 
         # 1. 데이터 받아오기(유저 정보)
         teacherId = get_jwt_identity()
-        print("teacherId : ", teacherId)
+        print("* teacherId : ", teacherId)
 
         # 유저가 입력한 데이터
         date = request.form['date'].replace('T', ' ')[0:10]
-        print("date : ", date )
+        print("* date : ", date )
         title = request.form['title']
-        print("title : ", title )
+        print("* title : ", title )
         contents = request.form['contents']
-        print("contents : ", contents )
+        print("* contents : ", contents )
         classId = request.form['classId']
-        print("classId : ", classId )
+        print("* classId : ", classId )
+        childId = request.form['childId']
+        print("* childId : ", childId )
         photoUrl_1 = request.files['photoUrl_1']
-        print("photoUrl_1 : ", photoUrl_1 )
+        print("* photoUrl_1 : ", photoUrl_1 )
         photoUrl_2 = request.files['photoUrl_2']
-        print("photoUrl_2 : ", photoUrl_2 )
+        print("* photoUrl_2 : ", photoUrl_2 )
         photoUrl_3 = request.files['photoUrl_3']
-        print("photoUrl_3 : ", photoUrl_3 )
+        print("* photoUrl_3 : ", photoUrl_3 )
         photoUrl_4 = request.files['photoUrl_4']
-        print("photoUrl_4 : ", photoUrl_4 )
+        print("* photoUrl_4 : ", photoUrl_4 )
         photoUrl_5 = request.files['photoUrl_5']
-        print("photoUrl_5 : ", photoUrl_5 )
-
-        # 로컬에 있는 원아 사진과 입력받은 사진을 비교하기
-        # 사진을 비교하여 결과가 일치하면 버킷에 사진 올리기
+        print("* photoUrl_5 : ", photoUrl_5 )
 
 
         # 1. 데이터베이스에서 원 아이디 + 반 아이디 + 원아 이름 가져오기
@@ -467,24 +466,13 @@ class PhotoAlbumRekogResource(Resource):
             photoUrl_list.append(photoUrl_3)
             photoUrl_list.append(photoUrl_4)
             photoUrl_list.append(photoUrl_5)
-            print('photoUrl_list : ', photoUrl_list)
-            print('len(photoUrl_list) : ', len(photoUrl_list))
-
-            # 입력받은 사진 로컬에 저장 --> todo : 한개씩밖에 저장이 안됨. 수정 필요
-            # current_time1 = datetime.datetime.now()
-
-            # h=0
-            # for h in range( len (photoUrl_list) ):
-            #     img_file2 = photoUrl_list[h]
-            #     filename2 = current_time1.isoformat().replace(':', '_') + '_target.jpg'
-                
-            #     save_uploaded_file('photoUrl_image', img_file2, filename2)
-            #     h = h+1
+            print('* photoUrl_list : ', photoUrl_list)
+            print('* len(photoUrl_list) : ', len(photoUrl_list))
 
 
             # 로컬에 저장 되어있는지 확인
-            print("-- os.path.abspath('./photoUrl_image')", os.path.abspath('./photoUrl_image'))
-            print("-- os.listdir()" , os.listdir())
+            print("* os.path.abspath('./photoUrl_image')", os.path.abspath('./photoUrl_image'))
+            print("* os.listdir()" , os.listdir())
 
 
             # 선생님이 속한 원, 반의 아이디 가져오기
@@ -498,11 +486,11 @@ class PhotoAlbumRekogResource(Resource):
             cursor.execute(query, record)
 
             teacher_result_list = cursor.fetchall()
-            print("선생님 원 ID, 반ID teacher_result_list : ", teacher_result_list)
+            print("* 선생님 원 ID, 반ID teacher_result_list : ", teacher_result_list)
 
             # --- 원 아이디
             nursery_id = teacher_result_list[0][1]
-            print("선생님 원 ID nursery_id : ",  nursery_id)
+            print("* 선생님 원 ID nursery_id : ",  nursery_id)
 
             # --- 반 아이디 : 유저가 입력하는 반 아이디 가져와서 쓰면 됨 : classId
 
@@ -518,15 +506,15 @@ class PhotoAlbumRekogResource(Resource):
             cursor.execute(query1, record1)
 
             child_result = cursor.fetchall()
-            print("아이들 수 len(child_result) : ", len(child_result))
-            print("아이들 이름만 child_result[0]['childName']", child_result[0]['childName'] )
+            print("* 아이들 수 len(child_result) : ", len(child_result))
+            print("* 아이들 이름만 child_result[0]['childName']", child_result[0]['childName'] )
 
             childName_list = []  # ---> 원아이름 순서대로 담아논 리스트
             i = 0
             for i in range ( len( child_result ) ) :
                  childName_list.append(child_result[i]['childName'])
                  i = i + 1
-            print("원아 이름 childName_list : ", childName_list)
+            print("* 원아 이름 childName_list : ", childName_list)
 
 
             # 원아 아이디 가져오기
@@ -538,8 +526,8 @@ class PhotoAlbumRekogResource(Resource):
             cursor.execute(query2, record2)
 
             child_id_result = cursor.fetchall()
-            print("원아 아이디 개수 len(child_id_result) : ", len(child_id_result))
-            print("원아 1행 아이디만 가져오기 child_id_result[0]['id']", child_id_result[0]['id'] )
+            print("* 원아 아이디 개수 len(child_id_result) : ", len(child_id_result))
+            print("* 원아 1행 아이디만 가져오기 child_id_result[0]['id']", child_id_result[0]['id'] )
 
             child_id_list = []   # ---> 원아 아이디 담아논 리스트
             i = 0
@@ -547,7 +535,7 @@ class PhotoAlbumRekogResource(Resource):
                 #profileUrl_list = profileUrl_result[i]['profileUrl']
                 child_id_list.append(child_id_result[i]['id'])
                 i = i + 1
-            print("원아 아이디 리스트 child_id_list : ", child_id_list)
+            print("* 원아 아이디 리스트 child_id_list : ", child_id_list)
 
             
             # 사진첩 글 아이디 가져오기 
@@ -561,27 +549,27 @@ class PhotoAlbumRekogResource(Resource):
             cursor.execute(query4, record4)
 
             totalAlbumId_result = cursor.fetchall()
-            print("totalAlbumId_result : ", totalAlbumId_result)
+            print("* totalAlbumId_result : ", totalAlbumId_result)
 
             # --- 사진첩 글 아이디
             totalAlbumId = str(totalAlbumId_result[0][0])
-            print("totalAlbumId : ", totalAlbumId)
+            print("* totalAlbumId : ", totalAlbumId)
 
 
             # 얼굴 비교해서 같은 얼굴 분류하기
             # 과정 : 파일 1, 파일 2 비교 같은얼굴이면 버킷에 사진 올리기
             # 파일1 = 로컬 폴더에 저장되어있는 사진
             # 파일2 = 유저에게 입력받은 사진
-            # 유사성이 99 이상이면 버킷에 사진 올리기 (사진 올리기 전에 유저에게 입력받은 사진의 이름을 바꾸기)
+            # 유사성이 80 이상이면 버킷에 사진 올리기 (사진 올리기 전에 유저에게 입력받은 사진의 이름을 바꾸기)
 
 
             # 로컬사진첩에서 원+반 아이디가 같은 아이들만 가져오기.
-            print('os.getswd() : ', os.getcwd()) # - 현재 경로 확인
+            print('* os.getswd() : ', os.getcwd()) # - 현재 경로 확인
             os.chdir('./profileUrl_image')       # - 프로필이미지 폴더로 이동
-            print('os.chdir2 : ', os.getcwd())   # - 이동 후 현재 경로 확인
+            print('* os.chdir2 : ', os.getcwd())   # - 이동 후 현재 경로 확인
 
             profile_image_list = os.listdir()         # - 폴더에 있는 파일을 리스트 형식으로 가져오기
-            print('profile_image_list : ', profile_image_list)
+            print('* profile_image_list : ', profile_image_list)
 
 
             # - 파일 중 원과 반 아이디가 같은 사진만 분리하기
@@ -589,137 +577,140 @@ class PhotoAlbumRekogResource(Resource):
             # - 원과 반 아이디 
             nursery_class = str( nursery_id ) + '_' + str(classId)
 
-            profile_image1 = []
+            profile_image1 = []      # ---- 원+반 과 원아아이디, 원아 이름 나눈 리스트
             i = 0
             for i in range( len(profile_image_list) ) :
                 profile_image1.append( profile_image_list[i].split('.') )
                 i = i+1
-            print('프로필 사진 이름 나누기 profile_image1 : ', profile_image1)
+            print('* 프로필 사진 이름 나누기 profile_image1 : ', profile_image1)
+
+
 
 
             # 프로필이미지의 원+반아이디와, 입력받은 원+반 아이디가 같을때 얼굴 비교 실행
             # profile_image[0][0] = nursery_class
 
             today = datetime.date.today()
-            print("today : ", today)
+            print("* today : ", today)
 
             os.chdir('../')
-            print('-- 현재 경로 표시 : ', os.getcwd())
+            print('*  현재 경로 표시 : ', os.getcwd())
             
             if profile_image1[0][0] == nursery_class :
 
-                i = 0
-                for i in range( len(profile_image_list) ) : # 원아 프로필 사진 수 만큼 돌려야 함.
+                # 현재시간을 파일 이름에 넣기
+                current_time1 = datetime.datetime.now()
 
-                    # 현재시간을 파일 이름에 넣기
-                    current_time1 = datetime.datetime.now()
+                # 원+반 이 같을 때 선생님이 선택한 원아 프로필 사진 원아 아이디와
+                # 프로필 이미지 폴더에 있는 원아 아이디가 같은 아이의 사진을 가져오기.
+                child_photo_get = []
+                h = 0
+                for h in range( len(profile_image1) ):
+                    if profile_image1[h][1] == childId :    # --> 원+반과 원아아이디 분리된 리스트의 원아 아이디==입력받은원아 아이디
+                        child_photo_get.append( profile_image1[h][1])
+                        img_file1 = profile_image_list[h]   # --> 프로필 이미지 담아논 리스트에서 해당 사진 가져오기
+                        childindex = h                      # --> 몇번째 인덱스인지 저장
+                        h = h+1
+                print('* 선택된 원아 프로필 사진 : ', child_photo_get)
+
+                # 원아 아이디
+                child_photo_getId = child_photo_get[0]
+                print('* 선택된 원아 프로필 아이디 child_photo_getId: ', child_photo_getId)
+
+                print('*  img_file1 : ', img_file1)
+
+                filename1 = current_time1.isoformat().replace(':', '_') + '_source.jpg'
+                print("*  프로필 이름 수정 filename1 : ", filename1)
+
+
+                j = 0
+                for j in range( len(photoUrl_list) ) : # 입력 받은 사진 수 만큼 돌려야 함          
+
+                    # 유저가 입력한 사진 가져오기
+                    img_file2 = photoUrl_list[j]
+
+                    # 유저가 입력한 사진 이름 바꾸기
+                    filename2 = current_time1.isoformat().replace(':', '_') + '_target.jpg'
+                    filename2 = re.sub("[\/:*?\"<>|]","", filename2)
+                    print("* 유저가 올린 사진 이름 수정 filename2 : ", filename2)
+
+                    # 유저에게 받은 사진 저장
+                    save_uploaded_file2('photoUrl_image', img_file2, filename2)
+
+                    
+                    # - 저장되어있는 폴더의 절대 경로를 반환
+                    # abspath_profile =  os.path.abspath('./profileUrl_image')
+                    # print('-- 절대경로 반환 abspath_profile : ' , abspath_profile)
+                    # abspath_photo =  os.path.abspath('./photoUrl_image')
+                    # print('-- 절대경로 반환 abspath_photo : ' , abspath_photo)
+
+
+
+                    # 얼굴 비교 함수 실행        
+                    # 오류(해결) : can only concatenate str (not "FileStorage") to str --> str로 묶어서 해결
+                    num_face_matches = compare_faces1( 'profileUrl_image/'+ str(img_file1), 'photoUrl_image/'+ filename2)
+                    print('* 얼굴매칭Num num_face_matches : ', num_face_matches)
                 
-                    img_file1 = profile_image_list[i]
-                    print('-- img_file1 : ', img_file1)
-                    filename1 = current_time1.isoformat().replace(':', '_') + '_source.jpg'
-                    print(" 프로필 이름 수정 filename1 : ", filename1)
 
-                    j = 0
-                    for j in range( len(photoUrl_list) ) : # 입력 받은 사진 수 만큼 돌려야 함          
+                    # 얼굴 유사도가 존재하면(다른얼굴이라면 유사도가 아예 안나옴) 넘는다면 버킷에 저장하고 데이터베이스에도 저장
+                    if num_face_matches > 0:
+                        # 경로는 원 아이디+원 이름/ 포토앨범 / 
+                        # 파일이름 : 클래스 아이디 + 원아 아이디 + (원아이름) + 날짜 + r + .jpg
+                        new_filename = nurseryIdName + '/photo_album/' + classId + '_' + childId + '_' + profile_image1[childindex][2] +'_'+ str(today) + '_' + 'r' + '.jpg'
+                        print('* 새 파일 이름 new_filename : ' , new_filename)
 
-                        # 사진 저장하는걸 맨 위로 이동해봄 --> 잘 안됨.
-                        img_file2 = photoUrl_list[j]
-                        filename2 = current_time1.isoformat().replace(':', '_') + '_target.jpg'
-                        
-                        save_uploaded_file('photoUrl_image', img_file2, filename2)
-                        
 
-                        def compare_faces1(sourceFile, targetFile):
-                            client = boto3.client('rekognition', region_name='ap-northeast-2', aws_access_key_id=Config.AWS_ACCESS_KEY_ID, aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY)
-                            imageSource = open(sourceFile, 'rb')  # todo 오류 : OSError: [Errno 22] Invalid argument: "profileUrl_image/<FileStorage: '1_1_김담연.png' ('image/png')>"
-                            imageTarget = open(targetFile, 'rb')
+                        # 일치하는 얼굴이면 파일을 버킷에 저장.
+                        try: 
+                            # 사진부터 S3에 저장
+                            s3 = boto3.client('s3',
+                                    aws_access_key_id = Config.AWS_ACCESS_KEY_ID,
+                                    aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY) 
+                            s3.upload_fileobj(photoUrl_list[j], # --? 사진파일 
+                                            Config.S3_BUCKET,
+                                            new_filename,
+                                            ExtraArgs = {'ACL':'public-read', 'ContentType':'image/jpeg'}) 
                             
-                            response = client.compare_faces(
-                                SimilarityThreshold=80,
-                                SourceImage={'Bytes': imageSource.read()},
-                                TargetImage={'Bytes': imageTarget.read()}
-                            )
-                            print("얼굴 비교 응답 response" , response)
+                            file_url = Config.S3_BASE_URL + new_filename 
+                            print("* 저장한 파일 주소 file_url : ", file_url)
 
-                            response.get('FaceMatches')
-                            print("얼굴일치 응답만 보기 response.get('FaceMatches')", response.get('FaceMatches'))
-
-                            face_matches = response.get('FaceMatches')[0].get('Similarity')
-                            print("얼굴일치 - 유사성 response.get('FaceMatches')[0].get('Similarity')", response.get('FaceMatches')[0].get('Similarity'))
-
-                            # face_matches = response.get('FaceMatches', [])
-                            imageSource.close()
-                            imageTarget.close()
-                            print("얼굴 매칭 face_matches : ", face_matches)
-                            return int(face_matches)
+                        except Exception as e:
+                            print(e)
+                            return {'result1':'fail','error1': str(e)}, 500
                         
-                        # - 저장되어있는 폴더의 절대 경로를 반환
-                        # abspath_profile =  os.path.abspath('./profileUrl_image')
-                        # print('-- 절대경로 반환 abspath_profile : ' , abspath_profile)
-                        # abspath_photo =  os.path.abspath('./photoUrl_image')
-                        # print('-- 절대경로 반환 abspath_photo : ' , abspath_photo)
- 
-                        # 얼굴 비교 함수 실행        # 오류 : can only concatenate str (not "FileStorage") to str --> str로 묶어서 해결
-                        num_face_matches = compare_faces1( 'profileUrl_image/'+ str(img_file2), 'photoUrl_image'+str(filename2))
-                        print('얼굴매칭 num - num_face_matches : ', num_face_matches)
                         
-                        # 얼굴 유사도가 80이 넘는다면 버킷에 저장하고 데이터베이스에도 저장
-                        if num_face_matches >= 80 :
-                            # 경로는 원 아이디+원 이름/ 포토앨범 / 
-                            # 파일이름 : 클래스 아이디 + 원아 아이디 + (원아이름) + 날짜 + r + .jpg
-                            new_filename = nurseryIdName + '/photo_album/' + classId + '_' + str(profile_image1[i][1]) + '_' + str(profile_image1[i][2]) +'_'+ str(today) + '_' + 'r' + '.jpg'
-                            print('새 파일 이름 new_filename : ' , new_filename)
-
-                            # 일치하는 얼굴이면 파일을 버킷에 저장.
-                            try: 
-                                # 사진부터 S3에 저장
-                                s3 = boto3.client('s3',
-                                        aws_access_key_id = Config.AWS_ACCESS_KEY_ID,
-                                        aws_secret_access_key = Config.AWS_SECRET_ACCESS_KEY) 
-                                s3.upload_fileobj(photoUrl_list[j], # --? 사진파일 
-                                                Config.S3_BUCKET,
-                                                new_filename,
-                                                ExtraArgs = {'ACL':'public-read', 'ContentType':'image/jpeg'}) 
-                                
-                                file_url = Config.S3_BASE_URL + new_filename 
-                                print("저장한 파일 주소 file_url : ", file_url)
-
-                            except Exception as e:
-                                print(e)
-                                return {'result1':'fail','error1': str(e)}, 500
+                        # 버킷에 사진 저장한걸 다시 데이터 베이스에 저장 해야 함.
+                        # - 사진첩 글 아이디 가져오기 --> 위에서 가져옴
+                        try :
                             
-                            
-                            # 버킷에 사진 저장한걸 다시 데이터 베이스에 저장 해야 함.
-                            # - 사진첩 글 아이디 가져오기 --> 위에서 가져옴
-                            try :
-                                
-                                # - 원 아이디를 포함해서 데이터베이스에 입력하기 위한 쿼리
-                                # - 글 아이디 포함하기 추가
-                                query6 = '''insert into myAlbum
-                                            (nurseryId, classId, childId, totalAlbumId, date, title, contents, photoUrl)
-                                            values
-                                            (%s,%s,%s,%s,%s,%s,%s,%s);'''
+                            # - 원 아이디를 포함해서 데이터베이스에 입력하기 위한 쿼리
+                            # - 글 아이디 포함하기 추가
+                            query6 = '''insert into myAlbum
+                                        (nurseryId, classId, childId, totalAlbumId, date, title, contents, photoUrl)
+                                        values
+                                        (%s,%s,%s,%s,%s,%s,%s,%s);'''
 
-                                record6 = ( nursery_id, classId, profile_image1[i][1], totalAlbumId, date, title, contents, file_url)
-                                print("record6 : ", record6)
+                            record6 = ( nursery_id, classId, childId, totalAlbumId, date, title, contents, file_url)
+                            print("record6 : ", record6)
 
-                                cursor = connection.cursor(prepared=True)
-                                cursor.execute(query6, record6)
+                            cursor = connection.cursor(prepared=True)
+                            cursor.execute(query6, record6)
 
-                                connection.commit()
+                            connection.commit()
 
-                                # 이미지 파일 삭제 (필요한 경우)
-                                # os.remove('profileUrl_image/' + profileUrl_list[i])
-                                # os.remove('photoUrl_image/' + photoUrl_list[j])
-
-                            except Error as e :
-                                print(e)
-                                return {'result2':'fail','error2': str(e)}, 500
-                        j = j+1
-                    i = i+1
+                            # 이미지 파일 삭제 (필요한 경우)
+                            # os.remove('profileUrl_image/' + profileUrl_list[i])
+                            # os.remove('photoUrl_image/' + photoUrl_list[j])
 
 
-                        
+                        except Error as e :
+                            print(e)
+                            return {'result2':'fail','error2': str(e)}, 500
+
+                    # else : continue
+
+                    j = j+1
+
             cursor.close()
             connection.close()
 
@@ -733,6 +724,55 @@ class PhotoAlbumRekogResource(Resource):
         #         'profileUrl_result_list Count' : len(profileUrl_result_list),
         #         'profileUrl_result_list' : profileUrl_result_list
         #         }
+    
+
+
+# 5. 얼굴비교할 이미지 파일 로컬에 저장하는 함수
+def save_uploaded_file(directory, file, filename):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    with open(os.path.join(directory, filename), 'wb') as f:
+        f.write(file.getbuffer()) 
+
+
+# 5. 이미지 파일 로컬에 저장 함수 2
+def save_uploaded_file2(directory, file, filename):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    else : 
+        file_1 = open(os.path.join(directory, filename), 'wb')
+        file_1.write(file.getbuffer())
+        file_1.close()
+
+
+# 얼굴인식 실행 함수 
+def compare_faces1(sourceFile, targetFile):
+    client = boto3.client('rekognition', region_name='ap-northeast-2', 
+                            aws_access_key_id=Config.AWS_ACCESS_KEY_ID, 
+                            aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY)
+    imageSource = open(sourceFile, 'rb')  # 오류 (해결): OSError: [Errno 22] Invalid argument: "profileUrl_image/<FileStorage: '1_1_김담연.png' ('image/png')>"
+    imageTarget = open(targetFile, 'rb')
+    
+    response = client.compare_faces(
+        SimilarityThreshold=80,
+        SourceImage={'Bytes': imageSource.read()},
+        TargetImage={'Bytes': imageTarget.read()}
+    )
+
+    print("* 얼굴 비교 응답 response" , response)
+
+    # responseGet = response.get('FaceMatches')
+    print("* 얼굴일치 응답만 보기 response.get('FaceMatches')", response.get('FaceMatches'))                   
+
+    face_matches = response.get('FaceMatches', [])
+    print("* 얼굴일치 - 유사성 response.get('FaceMatches', []) : ", response.get('FaceMatches', []))
+
+    print("* 얼굴 매칭 face_matches : ", face_matches)
+
+    imageSource.close()
+    imageTarget.close()
+
+    return len(face_matches)
 
 
 
