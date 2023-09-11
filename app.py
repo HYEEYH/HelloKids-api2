@@ -38,7 +38,7 @@ api = Api(app)
 
 # 회원가입 - 선생님
 api.add_resource(TeacherRegisterResource,'/user/register/teacher')
-api.add_resource(TeacherEditResource,'/user/teacher/<int:id>') # update
+api.add_resource(TeacherEditResource,'/user/teacher') # update
 api.add_resource(TeacherViewResource,'/user/teacher/<int:id>') # read
 api.add_resource(TeacherMyViewResource,'/user/teacher') # 내 정보 보기(선생님)
 api.add_resource(TeacherDeleteResource,'/user/teacher/<int:id>') # delete

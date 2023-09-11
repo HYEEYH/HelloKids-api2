@@ -36,8 +36,9 @@ class TeacherDeleteResource(Resource):
 class TeacherEditResource(Resource):
 
     @jwt_required()
-    def put(self, id):
-
+    def put(self):
+        
+        id = get_jwt_identity()
         data = request.get_json()
         hashed_password = hash_password(data['password'])
 
