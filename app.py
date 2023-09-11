@@ -46,7 +46,7 @@ api.add_resource(ParentRegisterpResource,'/user/register/parent') # 회원가입
 api.add_resource(ParentEditResource,'/user/parent/<int:id>') # update
 api.add_resource(ParentViewResource,'/user/parent') # read 학부모가 로그인하면 자신의 정보 볼 수 있게 함
 api.add_resource(ParentDeleteResource,'/user/parent/<int:id>') # delete
-api.add_resource(ParentWaitingResource, '/user/waiting/<int:id>')
+api.add_resource(ParentWaitingResource, '/user/waiting')
 
 # setting
 api.add_resource(SettingChildrenResource,'/setting/child') # JSON 버전 아이 입력 
