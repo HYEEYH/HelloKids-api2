@@ -227,6 +227,32 @@ class SettingClassListResource(Resource) :
          # 가공이 필요하면 가공한다. 
 
         return {'items':result_list}
+    
+class SettingNurseryClassListResource(Resource):
+    @jwt_required()
+    def get(self,nurseryId):
+
+        try:
+            connection = get_connection()
+            query = '''select id,className
+                    from class 
+                    where nurseryId = %s;'''
+            record = (nurseryId, )
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+            result_list = cursor.fetchall()
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return{'result':'fail', 'error':str(e)}, 400
+        
+        print(result_list)
+         # 가공이 필요하면 가공한다. 
+
+        return {'items':result_list}
+
 
 class SettingClassEditResource(Resource) :
 

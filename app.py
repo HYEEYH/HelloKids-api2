@@ -19,7 +19,7 @@ from resources.schoolbus import SchoolBusBoardingAddResource, SchoolBusBoardingD
 from resources.schoolbus import SchoolBusResource, SchoolBusEditResource, SchoolBusDeleteResource
 
 from resources.teacher import TeacherChildrenResource, TeacherNurseryResource
-from resources.setting import SettingChildrenAddResource, SettingChildrenPhotoAddResource, SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingNurseryListResource, SettingTeachersChildrenListResource
+from resources.setting import SettingChildrenAddResource, SettingChildrenPhotoAddResource, SettingChildrenResource, SettingChildEditResource, SettingChildViewResource, SettingChildDeleteResource, SettingChildrenListResource, SettingAllChildrenListResource, SettingNurseryClassListResource, SettingNurseryListResource, SettingTeachersChildrenListResource
 from resources.setting import SettingNurseryResource, SettingNurseryViewResource, SettingNurseryEditResource, SettingNurseryDeleteResource
 from resources.setting import SettingClassResource, SettingClassViewResource, SettingClassListResource, SettingClassEditResource, SettingClassDeleteResource, SettingApproveResource, SettingApproveList
 from resources.translate import TranslateResource
@@ -74,6 +74,7 @@ api.add_resource(SettingNurseryDeleteResource,'/setting/nursery/<int:id>') # 원
 api.add_resource(SettingClassResource,'/setting/class/<int:nurseryId>') # 반 입력
 api.add_resource(SettingClassViewResource,'/setting/class/<int:id>/view') # 반 정보 보기
 api.add_resource(SettingClassListResource,'/setting/class/list') # 반 목록 보기 (선생님이 속한 어린이집의 반이 자동으로 설정되서 나오게 하는 API)
+api.add_resource(SettingNurseryClassListResource,'/setting/class/list/<int:nurseryId>') # 선택한 어린이집 반 목록 보기 
 api.add_resource(SettingClassEditResource,'/setting/class/<int:id>/edit') # 반 정보 수정
 api.add_resource(SettingClassDeleteResource,'/setting/class/<int:id>') # 반 정보 삭제
 
