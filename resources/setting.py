@@ -65,7 +65,7 @@ class SettingApproveList(Resource) :
 class SettingApproveResource(Resource) :
     
     @jwt_required()
-    def put(self):
+    def put(self,parentsId):
 
         # {
         #  "parentId":1   
@@ -81,7 +81,7 @@ class SettingApproveResource(Resource) :
                     left outer join children c 
                     on p.childNameP = c.childName
                     where p.id = %s;'''
-            record = (data["parentId"], )
+            record = (parentsId, )
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query,record)
 
@@ -95,7 +95,7 @@ class SettingApproveResource(Resource) :
             # 매칭되는 원아가 있으므로 앱 사용권한 설정 코드 작성 
             # parents table의 childId 값이 null인지 아닌지 확인하여 사용 권한을 부여한다. 
             query =  '''update parents set childId = %s where id = %s;'''  
-            record = (child_id, data["parentId"])
+            record = (child_id, parentsId)
             cursor = connection.cursor()
             cursor.execute(query,record)
 
