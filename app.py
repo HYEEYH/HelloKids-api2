@@ -10,7 +10,7 @@ from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResourc
 from resources.login import LoginResource, LogoutResource
 from resources.menu import MenuAddResource, MenuDeleteResource, MenuEditResource, MenuListDayResource, MenuListResource, MenuViewResource
 from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticePublishResource, NoticeAddResource, NoticeViewResource, NoticeListResource
-from resources.register1 import ParentRegisterpResource, ParentEditResource, ParentViewResource, ParentDeleteResource
+from resources.register1 import ParentRegisterpResource, ParentEditResource, ParentViewResource, ParentDeleteResource, ParentWaitingResource
 from resources.register import TeacherRegisterResource, TeacherViewResource, TeacherEditResource, TeacherDeleteResource
 from resources.schedule import ScheduleAddResource, ScheduleViewResource, ScheduleAllListResource, ScheduleClassListResource, ScheduleEditResource, ScheduleDeleteResource, ScheduleChildListResource
 
@@ -46,7 +46,7 @@ api.add_resource(ParentRegisterpResource,'/user/register/parent') # 회원가입
 api.add_resource(ParentEditResource,'/user/parent/<int:id>') # update
 api.add_resource(ParentViewResource,'/user/parent') # read 학부모가 로그인하면 자신의 정보 볼 수 있게 함
 api.add_resource(ParentDeleteResource,'/user/parent/<int:id>') # delete
-
+api.add_resource(ParentWaitingResource, '/user/waiting/<int:id>')
 
 # setting
 api.add_resource(SettingChildrenResource,'/setting/child') # JSON 버전 아이 입력 

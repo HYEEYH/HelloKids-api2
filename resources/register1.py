@@ -15,6 +15,32 @@ from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, j
 
 
 
+class ParentWaitingResource(Resource):
+
+    @jwt_required()
+    def get(self, id):
+
+        try : 
+            connection = get_connection()
+            query = '''select isnull(childId) from parents where id = %s;'''
+            record = (id, )
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+            result_list = cursor.fetchall()
+            connection.commit()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result':'fail', 'error':str(e)}
+
+        return {'childId' : result_list}
+
+
+
+
 class ParentDeleteResource(Resource):
 
     @jwt_required()
