@@ -3,7 +3,7 @@ from flask_restful import Api
 from config import Config
 from flask_jwt_extended import JWTManager
 
-from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource, PhotoAlbumChildProfileListIdResource, PhotoAlbumListResource, PhotoAlbumRekogListResource, PhotoAlbumRekogResource, PhotoAlbumViewResource
+from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource, PhotoAlbumChildProfileListIdResource, PhotoAlbumListResource, PhotoAlbumRekogListResource, PhotoAlbumRekogResource, PhotoAlbumRekogViewResource, PhotoAlbumViewResource
 from resources.attendance import AttendanceAddResource, AttendanceChildListResource, AttendanceChildrenListResource, AttendanceClassListResource, AttendanceEditResource
 
 from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteParentsAddResource, DailyNoteViewResource
@@ -140,7 +140,7 @@ api.add_resource(PhotoAlbumRekogResource,'/photoAlbum/autoRekog') # 사진첩 �
 api.add_resource(PhotoAlbumListResource,'/photoAlbum/classlist') # 사진첩 목록 보기
 api.add_resource(PhotoAlbumRekogListResource,'/photoAlbum/rekoglist') # 사진첩 얼굴인식 폴더 리스트 보기 - 원아별
 api.add_resource(PhotoAlbumViewResource,'/photoAlbum/classlistView') # 사진첩 목록보기 - 상세(같은 글 목록 아이디 사진들)
-# api.add_resource(PhotoAlbumViewResource,'/photoAlbum/<int:id>') # 사진첩 상세 보기
+api.add_resource(PhotoAlbumRekogViewResource,'/photoAlbum/rekoglistView') # 사진첩 목록보기 - 상세(얼굴인식 사진들)
 # api.add_resource(PhotoAlbumEditResource,'/photoAlbum/<int:id>') # 사진첩 수정
 # api.add_resource(PhotoAlbumDeleteResource,'/photoAlbum/<int:id>') # 사진첩 삭제
 # api.add_resource(PhotoAlbumSelectResource,'/photoAlbum/<int:id>') # 개별 사진첩의 사진 선택 수정(사진첩 안에 있다.)
