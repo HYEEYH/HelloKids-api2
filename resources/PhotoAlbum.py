@@ -1346,7 +1346,7 @@ class PhotoAlbumGetProfileUrlResource(Resource):
             connection = get_connection()
 
             # 해당 원아의 프로필 사진 Url 가져오기
-            query1 = '''select id, classId, nurseryId, childName, profileUrl 
+            query1 = '''select id, classId, nurseryId, childName, birth, profileUrl 
                         from children
                         where id = %s;'''
             record1 = ( id, )
@@ -1354,11 +1354,11 @@ class PhotoAlbumGetProfileUrlResource(Resource):
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query1, record1)
 
-            profileUrl_result = cursor.fetchall()
-            print("* totalAlbumId_result : ", profileUrl_result)
+            profile = cursor.fetchall()
+            print("* totalAlbumId_result : ", profile)
 
             # 토탈 앨범 아이디
-            profileUrl = profileUrl_result[0]['profileUrl']
+            profile = profileUrl_result[0]['profileUrl']
             print(" * profileUrl : ", profileUrl)
 
             cursor.close()
@@ -1368,6 +1368,42 @@ class PhotoAlbumGetProfileUrlResource(Resource):
             print(e)
             return {'result':'fail', 'error':str(e)}
         
-        return {'result' : 'success', 'profileUrl' : profileUrl}
+        return {'result' : 'success', 'profile' : profile}
 
+
+
+class PhotoAlbumGetProfileListResource(Resource):
+
+    @jwt_required()
+    def get(self, classId):
+
+        # 데이터 받아오기
+        # - 유저정보
+        teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
+            
+        print("* id : ", id )  # 원아 아이디
+
+        #
+        try :
+            connection = get_connection()
+
+            # 해당 원아의 프로필 사진 Url 가져오기
+            query1 = '''select id, classId, nurseryId, childName, birth, profileUrl 
+                        from children
+                        where classId = %s;'''
+            record1 = ( classId, )
+            
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query1, record1)
+
+            items = cursor.fetchall()
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result':'fail', 'error':str(e)}
+        
+        return {'result' : 'success','count':len(items), 'items' :items}
 

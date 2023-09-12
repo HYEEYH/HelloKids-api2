@@ -145,7 +145,8 @@ api.add_resource(PhotoAlbumEditResource,'/photoAlbum/edit/<int:id>') # 사진첩
 api.add_resource(PhotoAlbumRekogEditResource,'/photoAlbum/rekogEdit/<int:id>') # 사진첩 수정(얼굴비교사진첩)  <미완>
 api.add_resource(PhotoAlbumDeleteResource,'/photoAlbum/delete/<int:id>') # 사진첩 삭제(전체 사진첩)
 api.add_resource(PhotoAlbumRekogDeleteResource,'/photoAlbum/delete/Rekog/<int:id>') # 사진첩 삭제(전체 사진첩)
-api.add_resource(PhotoAlbumGetProfileUrlResource,'/photoAlbum/getProfileUrl/<int:id>') # 원아 프로필사진만 가져오기
+api.add_resource(PhotoAlbumGetProfileUrlResource,'/photoAlbum/getProfile/<int:id>') # 원아 프로필 사진포함 가져오기
+api.add_resource(PhotoAlbumGetProfileListResource,'/photoAlbum/getProfileList/<int:classId>') # 원아 프로필 반별 목록
 
 
 # 사진첩 보기 권한 설정을 해 줘야 한다. 원별사진첩:1 반별 사진첩:2 개인사진첩:3
