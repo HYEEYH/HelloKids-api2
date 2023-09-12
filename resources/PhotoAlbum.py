@@ -1358,8 +1358,8 @@ class PhotoAlbumGetProfileUrlResource(Resource):
             print("* totalAlbumId_result : ", profileUrl_result)
 
             # 토탈 앨범 아이디
-            ProfileUrl = profileUrl_result[0]['profileUrl']
-            print(" * ProfileUrl : ", ProfileUrl)
+            profileUrl = profileUrl_result[0]['profileUrl']
+            print(" * profileUrl : ", profileUrl)
 
             cursor.close()
             connection.close()
@@ -1368,6 +1368,6 @@ class PhotoAlbumGetProfileUrlResource(Resource):
             print(e)
             return {'result':'fail', 'error':str(e)}
         
-        return {'result' : 'success', 'ProfileUrl' : ProfileUrl}
+        return {'result' : 'success', 'profileUrl' : profileUrl}
 
 
