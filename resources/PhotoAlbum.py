@@ -96,11 +96,76 @@ class PhotoAlbumListResource(Resource):
 
 
 
+
+### 사진첩 얼굴인식 폴더 리스트 보기 - 원아별
+class PhotoAlbumRekogListResource(Resource):
+    @jwt_required()
+    def get(self):
+
+        # 유저 정보 가져오기
+        teacherId = get_jwt_identity()
+        print("* teacherId : ", teacherId)
+        
+        try:
+            connection = get_connection()
+
+            # 선생님이 속한 원과 반 아이디 가져오기
+            query1 = '''SELECT classId, nurseryId, nurseryName 
+                        FROM nursery n 
+                        left join teacher t on n.id = t.nurseryId 
+                        where t.id = %s;'''
+            record1 = (teacherId, )
+
+            cursor = connection.cursor()
+            cursor.execute(query1, record1)
+
+            teacher_result_list = cursor.fetchone()
+            print("teacher_result_list : ", teacher_result_list)
+
+            # - 원 아이디
+            nursery_id = teacher_result_list[1]
+            print("* nursery_id : ", nursery_id)
+
+            # - 반 아이디
+            class_id = teacher_result_list[0]
+            print("* class_id : ", class_id)
+            
+
+            # 사진첩 목록 가져오기
+            query = '''select id, nurseryId, classId, childId, totalAlbumId, date, title, contents, photoUrl 
+                        from myAlbum
+                        where nurseryId = %s and classId = %s
+                        group by totalAlbumId
+                        order by createdAt desc;'''
+            record = (nursery_id, class_id)
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query, record)
+
+            myAlbumList_result = cursor.fetchall()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return{'result':'fail', 'error':str(e)}, 400
+        
+        i = 0
+        for row in myAlbumList_result :
+            myAlbumList_result[i]['date']= row['date'].isoformat().replace('T', ' ')[0:10]
+            i = i + 1
+
+        return {'result':'success', 'items':myAlbumList_result}
+
+
+
+
+
 ### 사진첩 글 아이디별 사진 개수 가져오기
 # - api 경로 안 만들어 놨음.
 # - 포스트맨 API 안 만들어 놨음.
 # - 잠시 정지. 레코그니션 먼저 하러 감.
-class PhotoAlbumListCountResource(Resource):
+class PhotoAlbumViewResource(Resource):
 
     @jwt_required()
     def get(self):
@@ -405,12 +470,6 @@ class PhotoAlbumAddResource(Resource):
         #         'photoUrl' : file_url }
 
 
-
-
-
-
-### 사진첩 - 원아별 사진 폴더 생성 및 자동분류
-# class PhotoAlbumAddCollectionResource(Resource):
 
 
 
