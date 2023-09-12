@@ -1133,26 +1133,78 @@ class PhotoAlbumEditResource(Resource):
 class PhotoAlbumRekogEditResource(Resource):
 
     @jwt_required()
-    def put(self):
+    def put(self, id): # 아이디는 마이앨범 사진첩 아이디
 
+        # 데이터 받아오기
+        # - 유저정보
+        teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
+            
         # body에 있는 json 데이터를 받아온다.
         data = request.get_json()
-       
-        # 데이터베이스에 update한다.
+
+        print("* data['title'] : ", data['title'])
+        print("* data['contents'] : ", data['contents'])
+        print("* id : ", id )
+
+        #
         try :
             connection = get_connection()
 
-            # 사진첩 그룹바이해서 토탈앨범 아이디를 가져온다
-            query = '''update schoolBus
-                    set shuttleName = %s, shuttleNum = %s, shuttleTime = %s, shuttleDriver = %s, shuttleDriverNum = %s
-                    where id = %s;''' 
-            record = (data['shuttleName'],data['shuttleNum'], data['shuttleTime'],data['shuttleDriver'],data['shuttleDriverNum'],id) 
-            cursor= connection.cursor()
-            cursor.execute(query,record)
+            # 선생님이 속한 원과 반 아이디 가져오기
+            query = '''SELECT classId, nurseryId, nurseryName 
+                        FROM nursery n 
+                        left join teacher t on n.id = t.nurseryId 
+                        where t.id = %s;'''
+            record = (teacherId, )
 
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+
+            teacher_result_list = cursor.fetchone()
+            print("* teacher_result_list : ", teacher_result_list)
+
+            # 원 아이디 
+            nursery_id = teacher_result_list[1]
+            print("* nursery_id : ", nursery_id)
+            # 반 아이디
+            class_id = teacher_result_list[0]
+            print("* class_id : ", class_id)
+       
+
+            # 해당 글 목록 아이디와 연결된 사진들 전부 가져오기
+            # id와 같은 행의 토탈앨범아이디 가져오기
+            query1 = '''select * 
+                        from myAlbum
+                        where id = %s
+                        group by totalAlbumId
+                        order by createdAt desc;'''
+            record1 = ( id, )
+            
+            cursor = connection.cursor()
+            cursor.execute(query1, record1)
+
+            totalAlbumId_result = cursor.fetchall()
+            print("* totalAlbumId_result : ", totalAlbumId_result)
+
+            # 마이 아이디
+            totalAlbumId = totalAlbumId_result[0][4]
+            print(" * myAlbumId : ", totalAlbumId)
+
+
+            # 마이 앨범 아이디에 해당하는 글들 수정하기
+            query3 = '''update myAlbum
+                        set title = %s , contents = %s
+                        where totalAlbumId = %s;'''
+            record3 = ( data['title'], data['contents'], totalAlbumId )
+            
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query3, record3)
+
+            photoRekogEdit_result = cursor.fetchall()
+            print("* photoRekogEdit_result : " , photoRekogEdit_result)
 
             connection.commit()
-
             cursor.close()
             connection.close()
 

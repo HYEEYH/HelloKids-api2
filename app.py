@@ -141,8 +141,8 @@ api.add_resource(PhotoAlbumListResource,'/photoAlbum/classlist') # 사진첩 목
 api.add_resource(PhotoAlbumRekogListResource,'/photoAlbum/rekoglist') # 사진첩 얼굴인식 폴더 리스트 보기 - 원아별
 api.add_resource(PhotoAlbumViewResource,'/photoAlbum/classlistView/<int:id>') # 사진첩 목록보기 - 상세(같은 글 목록 아이디 사진들)
 api.add_resource(PhotoAlbumRekogViewResource,'/photoAlbum/rekoglistView/<int:id>') # 사진첩 목록보기 - 상세(얼굴인식 사진들)
-api.add_resource(PhotoAlbumEditResource,'/photoAlbum/edit/<int:id>') # 사진첩 수정(전체사진첩)  <미완>
-api.add_resource(PhotoAlbumRekogEditResource,'/photoAlbum/rekogEdit') # 사진첩 수정(얼굴비교사진첩)  <미완>
+api.add_resource(PhotoAlbumEditResource,'/photoAlbum/edit/<int:id>') # 사진첩 수정(전체사진첩)
+api.add_resource(PhotoAlbumRekogEditResource,'/photoAlbum/rekogEdit/<int:id>') # 사진첩 수정(얼굴비교사진첩)  <미완>
 # api.add_resource(PhotoAlbumDeleteResource,'/photoAlbum/<int:id>') # 사진첩 삭제
 
 
