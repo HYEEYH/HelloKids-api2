@@ -142,6 +142,7 @@ class PhotoAlbumRekogListResource(Resource):
             cursor.execute(query, record)
 
             myAlbumList_result = cursor.fetchall()
+            print("* myAlbumList_result : ", myAlbumList_result)
 
             cursor.close()
             connection.close()
@@ -161,10 +162,8 @@ class PhotoAlbumRekogListResource(Resource):
 
 
 
-### 사진첩 글 아이디별 사진 개수 가져오기
-# - api 경로 안 만들어 놨음.
-# - 포스트맨 API 안 만들어 놨음.
-# - 잠시 정지. 레코그니션 먼저 하러 감.
+
+### 사진첩 목록보기 - 상세(같은 글 목록 아이디 사진들)
 class PhotoAlbumViewResource(Resource):
 
     @jwt_required()
@@ -174,6 +173,9 @@ class PhotoAlbumViewResource(Resource):
         # - 유저정보
         teacherId = get_jwt_identity()
         print("teacherId : ", teacherId)
+
+        id = request.form['id']
+        print("* id : ", id )
 
         #
         try :
@@ -190,28 +192,48 @@ class PhotoAlbumViewResource(Resource):
             cursor.execute(query1, record1)
 
             teacher_result_list = cursor.fetchone()
-            print("teacher_result_list : ", teacher_result_list)
+            print("* teacher_result_list : ", teacher_result_list)
 
+            # 원 아이디 
             nursery_id = teacher_result_list[1]
-            print("nursery_id : ", nursery_id)
-
+            print("* nursery_id : ", nursery_id)
+            # 반 아이디
             class_id = teacher_result_list[0]
-            print("class_id : ", class_id)
+            print("* class_id : ", class_id)
 
 
-            # 글 아이디 별 사진 개수 가져오기
-            query2 = '''SELECT totalAlbumId, count(totalAlbumId) as count, photoUrl, teacherId, classId
+            # 해당 글 목록 아이디와 연결된 사진들 전부 가져오기
+            # id와 같은 행의 토탈앨범아이디 가져오기
+            query2 = '''SELECT id, nurseryId , classId, teacherId, totalAlbumId, date, title, contents, photoUrl
                         FROM totalPhoto
-                        where nurseryId = %s and classId = %s and teacherId = %s
+                        where id = %s and nurseryId = %s and classId = %s and teacherId = %s
                         group by totalAlbumId
                         order by createdAt desc;'''
-            
-            record2 = ( nursery_id, class_id, teacherId )
+            record2 = ( id, nursery_id, class_id, teacherId )
             
             cursor = connection.cursor()
             cursor.execute(query2, record2)
 
-            photoCount_result = cursor.fetchall()
+            totalAlbumId_result = cursor.fetchall()
+            print("* totalAlbumId_result : ", totalAlbumId_result)
+
+            # 토탈 앨범 아이디
+            totalAlbumId = totalAlbumId_result[0][4]
+            print(" * totalAlbumId : ", totalAlbumId)
+
+
+            # 토탈 앨범 아이디에 해당하는 사진 다 가져오기
+            query3 = '''SELECT id, nurseryId , classId, teacherId, totalAlbumId, date, title, contents, photoUrl
+                        FROM totalPhoto
+                        where totalAlbumId = %s
+                        order by createdAt desc;'''
+            record3 = ( totalAlbumId, )
+            
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query3, record3)
+
+            photoList_result = cursor.fetchall()
+            print(" * photoList_result : ", photoList_result)
             
             cursor.close()
             connection.close()
@@ -220,13 +242,20 @@ class PhotoAlbumViewResource(Resource):
             print('오류1', e)
             return {'result':'fail', 'error':str(e) }, 500
         
-        totalAlbum_photoCount_list = []
         i = 0
-        for row in photoCount_result :
-            totalAlbum_photoCount_list.append(photoCount_result[i]['count'])
+        for row in photoList_result :
+            photoList_result[i]['date']= row['date'].isoformat().replace('T', ' ')[0:10]
             i = i + 1
 
-        return {'result':'success', 'item count':len(photoCount_result), 'items':photoCount_result}
+        return { 'result':'success', 'items': photoList_result }
+        
+        # totalAlbum_photoCount_list = []
+        # i = 0
+        # for row in photoCount_result :
+        #     totalAlbum_photoCount_list.append(photoCount_result[i]['count'])
+        #     i = i + 1
+
+        # return {'result':'success', 'item count':len(photoCount_result), 'items':photoCount_result}
 
 
 
