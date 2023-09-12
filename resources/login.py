@@ -81,7 +81,7 @@ class UserCheckResource(Resource):
             record = (email, )
             cursor = connection.cursor()
             cursor.execute(query, record)
-            result_list = cursor.fetchall()
+            result_list = cursor.fetchone()
             connection.commit()
 
             cursor.close()

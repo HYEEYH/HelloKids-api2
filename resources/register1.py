@@ -23,11 +23,11 @@ class ParentWaitingResource(Resource):
         id = get_jwt_identity()
         try : 
             connection = get_connection()
-            query = '''select isnull(childId) from parents where id = %s;'''
+            query = '''select isnull(childId) from parents where id = %s ;'''
             record = (id, )
             cursor = connection.cursor()
             cursor.execute(query, record)
-            result_list = cursor.fetchall()
+            result_list = cursor.fetchone()
             connection.commit()
 
             cursor.close()
