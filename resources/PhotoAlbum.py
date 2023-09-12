@@ -167,15 +167,15 @@ class PhotoAlbumRekogListResource(Resource):
 class PhotoAlbumViewResource(Resource):
 
     @jwt_required()
-    def get(self):
+    def get(self, id):
 
         # 데이터 받아오기
         # - 유저정보
         teacherId = get_jwt_identity()
         print("teacherId : ", teacherId)
 
-        id = request.form['id']
-        print("* id : ", id )
+        # id = request.form['id']
+        # print("* id : ", id )
 
         #
         try :
@@ -266,14 +266,14 @@ class PhotoAlbumViewResource(Resource):
 class PhotoAlbumRekogViewResource(Resource):
 
     @jwt_required()
-    def get(self):
+    def get(self, id):
 
         # 데이터 받아오기
         # - 유저정보
         teacherId = get_jwt_identity()
         print("teacherId : ", teacherId)
 
-        id = request.form['id'] # myAlbum의 아이디
+        # id = request.form['id'] # myAlbum의 아이디
         print("* id : ", id )
 
         #
@@ -356,7 +356,6 @@ class PhotoAlbumRekogViewResource(Resource):
 
 ### 사진첩 글 아이디 생성 : 로컬 테스트 완료
 # - 선생님 아이디도 추가하도록 수정
-
 class PhotoAlbumAddIdResource(Resource):
 
     @jwt_required()
@@ -423,12 +422,12 @@ class PhotoAlbumAddIdResource(Resource):
 
 
 
-### 사진첩 사진 추가
 
+
+### 1. 사진첩 사진 추가
 # 의문점 ) 주소에 int를 두번이나 써야 하는데 이거 괜찮은걸까? ---> int 삭제함.
 # 사진 여러장 받아서 AWS 올리고 그 내용 다운받아서 어레이로 데이터베이스에 저장 
 #            --> 한개씩 올리고 DB에 한줄씩 저장하는걸로 바꿈
-
 class PhotoAlbumAddResource(Resource):
 
     @jwt_required()
@@ -597,7 +596,7 @@ class PhotoAlbumAddResource(Resource):
 
 
 
-# ### 2. 원아 프로필 사진을 눌렀을 때 글 목록 아이디 생성
+### 2. 원아 프로필 사진을 눌렀을 때 글 목록 아이디 생성
 class PhotoAlbumChildProfileListIdResource(Resource):
 
     @jwt_required()
@@ -669,6 +668,7 @@ class PhotoAlbumChildProfileListIdResource(Resource):
         return { 'result': 'success'}
 
         
+
 
 
 
@@ -1038,12 +1038,27 @@ def compare_faces1(sourceFile, targetFile):
 
 
 
-### 4. 원아별 사진 폴더 생성 및 자동분류
-# class PhotoAlbumAutoAddResource(Resource):
+### 사진첩 수정(전체 사진첩)
+class PhotoAlbumEditResource(Resource):
 
-#     def post(self):
+    @jwt_required()
+    def put(self):
 
-#         return
+        return
+    
+
+
+
+
+
+
+### 사진첩 수정(얼굴비교 사진첩)
+class PhotoAlbumRekogEditResource(Resource):
+
+    @jwt_required()
+    def put(self):
+
+        return
     
 
 
