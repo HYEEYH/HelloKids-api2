@@ -714,16 +714,6 @@ class PhotoAlbumRekogResource(Resource):
             # 데이터베이스 연결
             connection = get_connection()
 
-            # 유저에게 입력받은 사진을 리스트로 만들기
-            # photoUrl_list = []
-            # photoUrl_list.append(photoUrl_1)
-            # photoUrl_list.append(photoUrl_2)
-            # photoUrl_list.append(photoUrl_3)
-            # photoUrl_list.append(photoUrl_4)
-            # photoUrl_list.append(photoUrl_5)
-            # print('* photoUrl_list : ', photoUrl_list)
-            # print('* len(photoUrl_list) : ', len(photoUrl_list))
-
 
             # 로컬에 저장 되어있는지 확인
             print("* os.path.abspath('./photoUrl_image')", os.path.abspath('./photoUrl_image'))
@@ -752,47 +742,8 @@ class PhotoAlbumRekogResource(Resource):
             # --- 원 아이디 + 원 이름
             nurseryIdName = str(teacher_result_list[0][1]) + '_' + teacher_result_list[0][2]
 
-            # 반의 원아 이름 가져오기
-            query1 = '''SELECT id, nurseryId, classId, childName, birth, profileUrl
-                    FROM children
-                    where id = %s;'''
-            record1 = (childId, )
-            cursor = connection.cursor(dictionary=True)
-            cursor.execute(query1, record1)
-
-            child_result = cursor.fetchall()
-            print("* 아이들 수 len(child_result) : ", len(child_result))
-            print("* 아이들 이름만 child_result[0]['childName']", child_result[0]['childName'] )
-
-            # 
-
-            childName_list = []  # ---> 원아이름 순서대로 담아논 리스트
-            i = 0
-            for i in range ( len( child_result ) ) :
-                 childName_list.append(child_result[i]['childName'])
-                 i = i + 1
-            print("* 원아 이름 childName_list : ", childName_list)
-
 
             # 원아 아이디 가져오기 : childId
-            # query2 = '''select *
-            #             from children
-            #             where nurseryId = %s and classId = %s;'''
-            # record2 = (nursery_id, classId)
-            # cursor = connection.cursor(dictionary=True)
-            # cursor.execute(query2, record2)
-
-            # child_id_result = cursor.fetchall()
-            # print("* 원아 아이디 개수 len(child_id_result) : ", len(child_id_result))
-            # print("* 원아 1행 아이디만 가져오기 child_id_result[0]['id']", child_id_result[0]['id'] )
-
-            # child_id_list = []   # ---> 원아 아이디 담아논 리스트
-            # i = 0
-            # for i in range( len(child_id_result) ) :
-            #     #profileUrl_list = profileUrl_result[i]['profileUrl']
-            #     child_id_list.append(child_id_result[i]['id'])
-            #     i = i + 1
-            # print("* 원아 아이디 리스트 child_id_list : ", child_id_list)
 
             
             # 사진첩 글 아이디 가져오기 
@@ -813,26 +764,18 @@ class PhotoAlbumRekogResource(Resource):
             print("* totalAlbumId : ", totalAlbumId)
 
 
-            # 얼굴 비교해서 같은 얼굴 분류하기
-            # 과정 : 파일 1, 파일 2 비교 같은얼굴이면 버킷에 사진 올리기
-            # 파일1 = 로컬 폴더에 저장되어있는 사진
-            # 파일2 = 유저에게 입력받은 사진
-            # 유사성이 80 이상이면 버킷에 사진 올리기 (사진 올리기 전에 유저에게 입력받은 사진의 이름을 바꾸기)
-
-
-            # 로컬사진첩에서 원+반 아이디가 같은 아이만 가져오기.
+            # 로컬사진첩의 원아 프로필 이미지 리스트 가져오기
             print('* os.getswd() : ', os.getcwd()) # - 현재 경로 확인
             os.chdir('./profileUrl_image')       # - 프로필이미지 폴더로 이동
-            print('* os.chdir2 : ', os.getcwd())   # - 이동 후 현재 경로 확인
+            print('* os.chdir : ', os.getcwd())   # - 이동 후 현재 경로 확인
 
             profile_image_list = os.listdir()         # - 폴더에 있는 파일을 리스트 형식으로 가져오기
             print('* profile_image_list : ', profile_image_list)
 
 
-            # - 파일 중 원과 반 아이디가 같은 사진만 분리하기
-
             # - 원과 반 아이디 
             nursery_class = str( nursery_id ) + '_' + str(classId)
+            print("* nursery_class : ", nursery_class)
 
             profile_image1 = []      # ---- 원+반 과 원아아이디, 원아 이름 나눈 리스트
             i = 0
@@ -840,23 +783,33 @@ class PhotoAlbumRekogResource(Resource):
                 profile_image1.append( profile_image_list[i].split('.') )
                 i = i+1
             print('* 프로필 사진 이름 나누기 profile_image1 : ', profile_image1)
+            print('* 프로필 사진 이름 나누기 원+반 profile_image1[0][0] : ', profile_image1[13][0])
+            print('* 프로필 사진 이름 나누기 원아아이디 profile_image1[0][1] : ', profile_image1[13][1])
+            print('* 프로필 사진 이름 나누기 원아 이름 profile_image1[0][2] : ', profile_image1[13][2])
 
 
 
-
-            # 프로필이미지의 원+반아이디와, 입력받은 원+반 아이디가 같을때 얼굴 비교 실행
-            # profile_image[0][0] = nursery_class
 
             today = datetime.date.today()
             print("* today : ", today)
 
             os.chdir('../') # 상위 폴더로 이동
             print('*  현재 경로 표시 : ', os.getcwd())
+
+            # 선생님이 선택한 원아의 프로필 사진을 가져온다.
+            profile_image_get = []
+            i=0
+            for i in range( len(profile_image1) ):
+                if profile_image1[i][1] == childId :
+                    profile_image_get.append( profile_image1[i] )
+                i = i+1
+            print("* profile_image_get : ", profile_image_get)
             
-            if profile_image1[0][0] == nursery_class :
+            if profile_image_get[0][0] == nursery_class :
 
                 # 현재시간을 파일 이름에 넣기
                 current_time1 = datetime.datetime.now()
+                print("* current_time1 : ", current_time1)
 
                 # 원+반 이 같을 때 선생님이 선택한 원아 프로필 사진 원아 아이디와
                 # 프로필 이미지 폴더에 있는 원아 아이디가 같은 아이의 사진을 가져오기.
@@ -870,18 +823,13 @@ class PhotoAlbumRekogResource(Resource):
                         h = h+1
                 print('* 선택된 원아 프로필 사진 : ', child_photo_get)
 
-                # 원아 아이디
-                child_photo_getId = child_photo_get[0]
-                print('* 선택된 원아 프로필 아이디 child_photo_getId: ', child_photo_getId)
 
                 print('*  img_file1 : ', img_file1)
 
                 filename1 = current_time1.isoformat().replace(':', '_') + '_source.jpg'
                 print("*  프로필 이름 수정 filename1 : ", filename1)
 
-
-                #j = 0
-                #for j in range( len(photoUrl_list) ) : # 입력 받은 사진 수 만큼 돌려야 함          
+       
 
                 # 유저가 입력한 사진 가져오기
                 img_file2 = photoUrl_1
@@ -904,7 +852,6 @@ class PhotoAlbumRekogResource(Resource):
 
 
                 # 얼굴 비교 함수 실행        
-                # 오류(해결) : can only concatenate str (not "FileStorage") to str --> str로 묶어서 해결
                 num_face_matches = compare_faces1( 'profileUrl_image/'+ str(img_file1), 'photoUrl_image/'+ filename2)
                 print('* 얼굴매칭Num num_face_matches : ', num_face_matches)
             
@@ -1215,4 +1162,167 @@ class PhotoAlbumRekogEditResource(Resource):
         return {'result': 'success'}
     
 
+
+
+
+
+
+### 사진첩 삭제(전체 사진첩)
+class PhotoAlbumDeleteResource(Resource):
+
+    @jwt_required()
+    def delete(self, id):
+
+        # 데이터 받아오기
+        # - 유저정보
+        teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
+            
+        print("* id : ", id )  # 사진첩 아이디
+
+        #
+        try :
+            connection = get_connection()
+
+            # 선생님이 속한 원과 반 아이디 가져오기
+            query = '''SELECT classId, nurseryId, nurseryName 
+                        FROM nursery n 
+                        left join teacher t on n.id = t.nurseryId 
+                        where t.id = %s;'''
+            record = (teacherId, )
+
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+
+            teacher_result_list = cursor.fetchone()
+            print("* teacher_result_list : ", teacher_result_list)
+
+            # 원 아이디 
+            nursery_id = teacher_result_list[1]
+            print("* nursery_id : ", nursery_id)
+            # 반 아이디
+            class_id = teacher_result_list[0]
+            print("* class_id : ", class_id)
+       
+
+            # 해당 글 목록 아이디와 연결된 사진들 전부 가져오기
+            # id와 같은 행의 토탈앨범아이디 가져오기
+            query1 = '''select id, nurseryId, classId, teacherId, totalAlbumId, date, title, contents, photoUrl 
+                        from totalPhoto
+                        where id = %s and nurseryId = %s and classId = %s
+                        group by totalAlbumId
+                        order by createdAt desc;'''
+            record1 = ( id, nursery_id, class_id)
+            
+            cursor = connection.cursor()
+            cursor.execute(query1, record1)
+
+            totalAlbumId_result = cursor.fetchall()
+            print("* totalAlbumId_result : ", totalAlbumId_result)
+
+            # 토탈 앨범 아이디
+            totalAlbumId = totalAlbumId_result[0][4]
+            print(" * totalAlbumId : ", totalAlbumId)
+
+
+            # 토탈 앨범 아이디에 해당하는 사진 전부 삭제
+            query = '''delete from totalPhoto
+                        where totalAlbumId = %s;'''
+            record = (totalAlbumId, )
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+
+            connection.commit()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result':'fail', 'error':str(e)}
+        
+        return {'result' : 'success'}
+    
+
+
+
+
+
+
+
+### 사진첩 삭제(얼굴비교 사진첩)
+class PhotoAlbumRekogDeleteResource(Resource):
+
+    @jwt_required()
+    def delete(self, id):
+
+        # 데이터 받아오기
+        # - 유저정보
+        teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
+            
+        print("* id : ", id )  # 마이앨범 아이디
+
+        #
+        try :
+            connection = get_connection()
+
+            # 선생님이 속한 원과 반 아이디 가져오기
+            query = '''SELECT classId, nurseryId, nurseryName 
+                        FROM nursery n 
+                        left join teacher t on n.id = t.nurseryId 
+                        where t.id = %s;'''
+            record = (teacherId, )
+
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+
+            teacher_result_list = cursor.fetchone()
+            print("* teacher_result_list : ", teacher_result_list)
+
+            # 원 아이디 
+            nursery_id = teacher_result_list[1]
+            print("* nursery_id : ", nursery_id)
+            # 반 아이디
+            class_id = teacher_result_list[0]
+            print("* class_id : ", class_id)
+       
+
+            # 해당 글 목록 아이디와 연결된 사진들 전부 가져오기
+            # id와 같은 행의 토탈앨범아이디 가져오기
+            query1 = '''select id, nurseryId, classId, childId, totalAlbumId, date, title, contents, photoUrl 
+                        from myAlbum
+                        where id = %s
+                        group by totalAlbumId
+                        order by createdAt desc;'''
+            record1 = ( id, )
+            
+            cursor = connection.cursor()
+            cursor.execute(query1, record1)
+
+            totalAlbumId_result = cursor.fetchall()
+            print("* totalAlbumId_result : ", totalAlbumId_result)
+
+            # 토탈 앨범 아이디
+            totalAlbumId = totalAlbumId_result[0][4]
+            print(" * totalAlbumId : ", totalAlbumId)
+
+
+            # 토탈 앨범 아이디에 해당하는 사진 전부 삭제
+            query = '''delete from myAlbum
+                        where totalAlbumId = %s;'''
+            record = (totalAlbumId, )
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+
+            connection.commit()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result':'fail', 'error':str(e)}
+        
+        return {'result' : 'success'}
 
