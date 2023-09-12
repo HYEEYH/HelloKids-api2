@@ -34,7 +34,7 @@ class PhotoAlbumListResource(Resource):
 
         # 유저 정보 가져오기
         teacherId = get_jwt_identity()
-        print("teacherId : ", teacherId)
+        print("* teacherId : ", teacherId)
         
         try:
             connection = get_connection()
@@ -52,37 +52,31 @@ class PhotoAlbumListResource(Resource):
             teacher_result_list = cursor.fetchone()
             print("teacher_result_list : ", teacher_result_list)
 
+            # - 원 아이디
+            nursery_id = teacher_result_list[1]
+            print("* nursery_id : ", nursery_id)
+
             # - 반 아이디
             class_id = teacher_result_list[0]
-            print("class_id : ", class_id)
+            print("* class_id : ", class_id)
 
 
-            ### 사진첩 글 아이디 가져오기 -> 글 아이디에 해당하는 사진 그룹바이로 가져오기
+            ### 사진첩 글 아이디 가져오기
+            # 사진첩 글 아이디 가져올 필요 없이 선생님 아이디로 구분 후 글목록 아이디로 그룹바이 하면 됨.
             
-            # 사진첩 글 아이디 가져오기
-            query = '''SELECT id, teacherId 
-                        FROM totalAlbum
-                        where classId = %s and teacherId = %s and totalAlbumId is not null
-                        order by totalAlbumId desc;'''
-            record = (class_id, teacherId)
-            cursor = connection.cursor(dictionary=True)
-            cursor.execute(query, record)
-
-            totalAlbumList_result = cursor.fetchall()
-
-
-
 
             # 일단 사진첩 목록 가져오기
-            query = '''SELECT classId, teacherId, totalAlbumId, date, title, contents, photoUrl 
-                        FROM totalPhoto
-                        where classId = %s and teacherId = %s and totalAlbumId is not null
-                        order by totalAlbumId desc;'''
-            record = (class_id, teacherId)
+            query = '''select id, nurseryId , classId, teacherId, totalAlbumId, date, title, contents, photoUrl
+                    from totalPhoto
+                    where nurseryId = %s and classId = %s and teacherId = %s
+                    group by totalAlbumId
+                    order by createdAt desc;'''
+            record = (nursery_id, class_id, teacherId)
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query, record)
 
-            totalAlbumList_result = cursor.fetchall()
+            totalPhotoList_result = cursor.fetchall()
+
             cursor.close()
             connection.close()
 
@@ -91,11 +85,11 @@ class PhotoAlbumListResource(Resource):
             return{'result':'fail', 'error':str(e)}, 400
         
         i = 0
-        for row in totalAlbumList_result :
-            totalAlbumList_result[i]['date']= row['date'].isoformat().replace('T', ' ')[0:10]
+        for row in totalPhotoList_result :
+            totalPhotoList_result[i]['date']= row['date'].isoformat().replace('T', ' ')[0:10]
             i = i + 1
 
-        return {'result':'success', 'items':totalAlbumList_result}
+        return {'result':'success', 'items':totalPhotoList_result}
     
 
 
@@ -417,6 +411,8 @@ class PhotoAlbumAddResource(Resource):
 
 ### 사진첩 - 원아별 사진 폴더 생성 및 자동분류
 # class PhotoAlbumAddCollectionResource(Resource):
+
+
 
 
 
