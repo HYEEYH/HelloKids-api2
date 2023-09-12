@@ -7,7 +7,7 @@ from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource,
 from resources.attendance import AttendanceAddResource, AttendanceChildListResource, AttendanceChildrenListResource, AttendanceClassListResource, AttendanceEditResource
 
 from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteParentsAddResource, DailyNoteViewResource
-from resources.login import LoginResource, LogoutResource
+from resources.login import LoginResource, LogoutResource, UserCheckResource
 from resources.menu import MenuAddResource, MenuDeleteResource, MenuEditResource, MenuListDayResource, MenuListResource, MenuViewResource
 from resources.notice import NoticeDeleteResource, NoticeEditResource, NoticePublishResource, NoticeAddResource, NoticeViewResource, NoticeListResource
 
@@ -34,6 +34,7 @@ app.config.from_object(Config)
 # JWT 매니저 초기화
 jwt = JWTManager(app)
 api = Api(app)
+
 
 
 # 회원가입 - 선생님
@@ -88,6 +89,8 @@ api.add_resource(SettingApproveResource,'/setting/approve/<int:parentsId>') # �
 # 로그인,로그아웃
 api.add_resource(LoginResource, '/user/login')
 api.add_resource(LogoutResource, '/user/logout')
+api.add_resource(UserCheckResource,'/user/check/<string:email>') # 선생님인지 확인하기
+
 
 # 공지사항
 api.add_resource(NoticeAddResource,'/notice/add') # 공지사항-임시저장 : <int:classId>/삭제

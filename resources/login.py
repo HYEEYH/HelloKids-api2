@@ -4,7 +4,7 @@ import mysql.connector
 from mysql.connector import Error
 from mysql_connection import get_connection
 from utils import check_password, hash_password
-from flask_jwt_extended import create_access_token, get_jwt, jwt_required
+from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, jwt_required
 
 
 
@@ -67,4 +67,28 @@ class LogoutResource(Resource):
         jwt_blocklist.add(jti)
 
         return {'result': '로그아웃 되었습니다'}
-        
+    
+
+
+class UserCheckResource(Resource):
+
+    @jwt_required()
+    def get(self, email):
+       
+        try : 
+            connection = get_connection()
+            query = '''select id from teacher where email = %s;'''
+            record = (email, )
+            cursor = connection.cursor()
+            cursor.execute(query, record)
+            result_list = cursor.fetchall()
+            connection.commit()
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result':'fail', 'error':str(e)}
+
+        return {'isTeacher' : result_list}
