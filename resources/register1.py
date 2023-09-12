@@ -37,7 +37,7 @@ class ParentWaitingResource(Resource):
             print(e)
             return {'result':'fail', 'error':str(e)}
 
-        return {'childId' : result_list}
+        return {'childId' : result_list[0]}
 
 
 

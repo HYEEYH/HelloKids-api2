@@ -91,4 +91,4 @@ class UserCheckResource(Resource):
             print(e)
             return {'result':'fail', 'error':str(e)}
 
-        return {'isTeacher' : result_list}
+        return {'isTeacher' : result_list[0]}
