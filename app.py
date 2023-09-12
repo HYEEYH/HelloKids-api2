@@ -3,7 +3,7 @@ from flask_restful import Api
 from config import Config
 from flask_jwt_extended import JWTManager
 
-from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource, PhotoAlbumChildProfileListIdResource, PhotoAlbumDeleteResource, PhotoAlbumEditResource, PhotoAlbumListResource, PhotoAlbumRekogDeleteResource, PhotoAlbumRekogEditResource, PhotoAlbumRekogListResource, PhotoAlbumRekogResource, PhotoAlbumRekogViewResource, PhotoAlbumViewResource
+from resources.PhotoAlbum import PhotoAlbumAddIdResource, PhotoAlbumAddResource, PhotoAlbumChildProfileListIdResource, PhotoAlbumDeleteResource, PhotoAlbumEditResource, PhotoAlbumGetProfileUrlResource, PhotoAlbumListResource, PhotoAlbumRekogDeleteResource, PhotoAlbumRekogEditResource, PhotoAlbumRekogListResource, PhotoAlbumRekogResource, PhotoAlbumRekogViewResource, PhotoAlbumViewResource
 from resources.attendance import AttendanceAddResource, AttendanceChildListResource, AttendanceChildrenListResource, AttendanceClassListResource, AttendanceEditResource
 
 from resources.dailynote import DailyNoteChildListResource, DailyNoteEditResource, DailyNoteAddResource, DailyNoteDeleteResource, DailyNoteListResource, DailyNoteParentsAddResource, DailyNoteViewResource
@@ -145,6 +145,7 @@ api.add_resource(PhotoAlbumEditResource,'/photoAlbum/edit/<int:id>') # 사진첩
 api.add_resource(PhotoAlbumRekogEditResource,'/photoAlbum/rekogEdit/<int:id>') # 사진첩 수정(얼굴비교사진첩)  <미완>
 api.add_resource(PhotoAlbumDeleteResource,'/photoAlbum/delete/<int:id>') # 사진첩 삭제(전체 사진첩)
 api.add_resource(PhotoAlbumRekogDeleteResource,'/photoAlbum/delete/Rekog/<int:id>') # 사진첩 삭제(전체 사진첩)
+api.add_resource(PhotoAlbumGetProfileUrlResource,'/photoAlbum/getProfileUrl/<int:id>') # 원아 프로필사진만 가져오기
 
 
 # 사진첩 보기 권한 설정을 해 줘야 한다. 원별사진첩:1 반별 사진첩:2 개인사진첩:3

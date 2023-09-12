@@ -1326,3 +1326,48 @@ class PhotoAlbumRekogDeleteResource(Resource):
         
         return {'result' : 'success'}
 
+
+
+
+class PhotoAlbumGetProfileUrlResource(Resource):
+
+    @jwt_required()
+    def get(self, id):
+
+        # 데이터 받아오기
+        # - 유저정보
+        teacherId = get_jwt_identity()
+        print("teacherId : ", teacherId)
+            
+        print("* id : ", id )  # 원아 아이디
+
+        #
+        try :
+            connection = get_connection()
+
+            # 해당 원아의 프로필 사진 Url 가져오기
+            query1 = '''select id, classId, nurseryId, childName, profileUrl 
+                        from children
+                        where id = %s;'''
+            record1 = ( id, )
+            
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(query1, record1)
+
+            profileUrl_result = cursor.fetchall()
+            print("* totalAlbumId_result : ", profileUrl_result)
+
+            # 토탈 앨범 아이디
+            ProfileUrl = profileUrl_result[0]['profileUrl']
+            print(" * ProfileUrl : ", ProfileUrl)
+
+            cursor.close()
+            connection.close()
+
+        except Error as e:
+            print(e)
+            return {'result':'fail', 'error':str(e)}
+        
+        return {'result' : 'success', 'ProfileUrl' : ProfileUrl}
+
+
