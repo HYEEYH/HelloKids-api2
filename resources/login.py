@@ -77,7 +77,7 @@ class UserCheckResource(Resource):
        
         try : 
             connection = get_connection()
-            query = '''select id from teacher where email = %s;'''
+            query = '''select count(*) from teacher where email = %s;'''
             record = (email, )
             cursor = connection.cursor()
             cursor.execute(query, record)
