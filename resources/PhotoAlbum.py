@@ -1354,12 +1354,13 @@ class PhotoAlbumGetProfileUrlResource(Resource):
             cursor = connection.cursor(dictionary=True)
             cursor.execute(query1, record1)
 
-            profile = cursor.fetchall()
-            print("* totalAlbumId_result : ", profile)
+            profileUrl_result = cursor.fetchall()
+            print("* profileUrl_result : ",profileUrl_result)
 
-            # 토탈 앨범 아이디
+            # 원아 프로필 결과
             profile = profileUrl_result[0]['profileUrl']
-            print(" * profileUrl : ", profileUrl)
+            profile = str(profile)
+            print(" * profile : ", profile)
 
             cursor.close()
             connection.close()
