@@ -4,7 +4,10 @@
 ## 사용 툴
  <img src="https://img.shields.io/badge/Visual Studio Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white"/>
  <img src="https://img.shields.io/badge/Android Studio-3DDC84?style=flat&logo=androidstudio&logoColor=white"/>
-
+ 
+## Open API
+* Papago API: 다국어 번역 기능 구현 
+* AWS Rekognition: 얼굴 비교 기능 구현
 ## 사용된 기술
 * Flask 프레임워크 사용, 100개의 Restful API 개발
 * JWT(JSON Web Token) 회원가입 로그인 구현
