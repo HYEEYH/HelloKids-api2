@@ -5,6 +5,11 @@
  <img src="https://img.shields.io/badge/Visual Studio Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white"/>
  <img src="https://img.shields.io/badge/Android Studio-3DDC84?style=flat&logo=androidstudio&logoColor=white"/>
 
+## 사용된 기술
+* Flask 프레임워크 사용, 100개의 Restful API 개발
+* JWT(JSON Web Token) 회원가입 로그인 구현
+* boto3로 S3에 디렉토리 생성하여 이미지 파일 업로드
+
 ##  프로젝트 일정
 
 | Week | 진행 내용 |
