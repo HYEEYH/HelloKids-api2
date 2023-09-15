@@ -10,26 +10,40 @@ HelloKids(헬로키즈) 앱의 백엔드 개발 내용을 보실 수 있습니�
 <a href= "https://drive.google.com/file/d/1WKZkOnatBQTaRcdXXQeS9JwYQLpF5cm1/view">[프로젝트 소개 프리젠테이션 문서 보러 가기]</a><br/>
 <img src="https://github.com/bopool/aws-hellokids-api/assets/130967557/65ea1f81-0585-42a1-b4ab-3b7a2f4aa3d8"  width="700" height="387" /><br/><br/>
 
-## 사용된 기술
-### Visual Studio Code (Python)
+## 사용한 기술
+
+### Back-ends
+#### Visual Studio Code (Python)
 - Flask 프레임워크 사용, 100개의 Restful API 개발
 - JWT(JSON Web Token) 회원가입 로그인 구현
 - boto3로 S3에 디렉토리 생성하며 이미지 파일 업로드
 
-### AWS
+#### AWS
 - 서버리스 컴퓨팅 플랫폼 AWS Lambda에 프로젝트 함수 생성
 - AWS IAM에서 프로젝트 액세스키 생성, 권한 셋팅
 - Amazon RDS 서비스를 통해 RDBMS 생성 및 사용
 - AWS S3 버킷 스토리지 생성하여 이미지 데이터 저장
 - AWS CloudWatch에서 배포 오류 확인
 
-### Serverless
+#### Serverless
 - Serverless 프레임워크에서 프로젝트 IAM 액세스키 
    셋팅하여 AWS Lambda에 배포
 
-### MySQL (SQL)
+#### MySQL (SQL)
 - MySQL Workbench를 사용하여 AWS RDS 접속 DB 구축
-- 각 DB Table의 CRUD 기능 쿼리문 작성<br/><br/><br/>
+- 각 DB Table의 CRUD 기능 쿼리문 작성
+
+### Front-ends
+#### Android Studio (Java)
+- Retrofit2 라이브러리로 Restful API 구현
+- Glide 라이브러리로 이미지 파일 데이터 로딩
+- RecyclerView로 리스트 구현
+- GMS Location 라이브러리로 위치확인기능 구현
+
+### Open API
+#### Papago API 다국어 번역 기능 구현 
+#### AWS Rekognition 얼굴 비교 기능 구현
+<br/><br/><br/>
 
 
 ##  프로젝트 일정
