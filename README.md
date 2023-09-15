@@ -11,7 +11,6 @@ HelloKids(헬로키즈) 앱의 백엔드 개발 내용을 보실 수 있습니�
 <img src="https://github.com/bopool/aws-hellokids-api/assets/130967557/65ea1f81-0585-42a1-b4ab-3b7a2f4aa3d8"  width="700" height="387" /><br/><br/>
 
 ## 사용한 기술
-
 ### Back-ends
 #### Visual Studio Code (Python)
 - Flask 프레임워크 사용, 100개의 Restful API 개발
@@ -32,6 +31,7 @@ HelloKids(헬로키즈) 앱의 백엔드 개발 내용을 보실 수 있습니�
 #### MySQL (SQL)
 - MySQL Workbench를 사용하여 AWS RDS 접속 DB 구축
 - 각 DB Table의 CRUD 기능 쿼리문 작성
+<br/><br/>
 
 ### Front-ends
 #### Android Studio (Java)
@@ -39,12 +39,14 @@ HelloKids(헬로키즈) 앱의 백엔드 개발 내용을 보실 수 있습니�
 - Glide 라이브러리로 이미지 파일 데이터 로딩
 - RecyclerView로 리스트 구현
 - GMS Location 라이브러리로 위치확인기능 구현
+- Spinner로 드롭다운 메뉴 구현
+- CalendarView로 날짜 선택 구현
+<br/><br/>
 
 ### Open API
 - Papago API 다국어 번역 기능 구현 
 - AWS Rekognition 얼굴 비교 기능 구현
 <br/><br/><br/>
-
 
 ##  프로젝트 일정
 | Week | 진행 내용 |
