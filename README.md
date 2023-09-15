@@ -6,7 +6,8 @@ HelloKids(헬로키즈) 앱의 백엔드 개발 내용을 보실 수 있습니�
 <img src="https://github.com/bopool/HelloKids/blob/master/app/src/main/res/drawable-v24/hellokidsmainmovie1.gif"/><br/><br/><br/>
 
 ## 프리젠테이션
-* HelloKids(헬로키즈)는 선생님에게는 효율적인 원아관리를 학부모님에게는 자녀의 어린이집 활동을 잘 파악할 수 있는 편리한 기능을 제공합니다. <br/>
+* HelloKids(헬로키즈)는 선생님에게는 효율적인 원아관리를 <br/>
+학부모님에게는 자녀의 어린이집 활동을 잘 파악할 수 있는 편리한 기능을 제공합니다. <br/>
 <a href= "https://drive.google.com/file/d/1WKZkOnatBQTaRcdXXQeS9JwYQLpF5cm1/view">[프로젝트 소개 프리젠테이션 문서 보러 가기]</a><br/>
 <img src="https://github.com/bopool/aws-hellokids-api/assets/130967557/65ea1f81-0585-42a1-b4ab-3b7a2f4aa3d8"  width="700" height="387" /><br/><br/>
 
