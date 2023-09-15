@@ -41,8 +41,8 @@ HelloKids(헬로키즈) 앱의 백엔드 개발 내용을 보실 수 있습니�
 - GMS Location 라이브러리로 위치확인기능 구현
 
 ### Open API
-#### Papago API 다국어 번역 기능 구현 
-#### AWS Rekognition 얼굴 비교 기능 구현
+- Papago API 다국어 번역 기능 구현 
+- AWS Rekognition 얼굴 비교 기능 구현
 <br/><br/><br/>
 
 
