@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=Hello%20Kids&fontSize=70)
+![header](https://github.com/bopool/HelloKids/blob/master/app/src/main/res/drawable-v24/git_top.jpg)
 
 # HelloKids API
 HelloKids(헬로키즈) 앱의 백엔드 개발 내용을 보실 수 있습니다. <a href= "https://github.com/bopool/HelloKids">프론트엔드 보러가기</a><br/><br/>
